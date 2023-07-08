@@ -12,6 +12,7 @@ function byid(id) {
     return document.getElementById(id);
 }
 
+// function to switch between light/dark themes
 ogst.changetheme = function(mode = 'toggle') {
     const themetoggle = byid('themetoggle');
     const themetoggleicon = byid('themetoggleicon');
@@ -24,9 +25,38 @@ ogst.changetheme = function(mode = 'toggle') {
     themetoggle.blur();
 }
 
-// determine which mode to start in
-const wantsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+// function to choose a project
+ogst.chooseproject = function(projectname) {
+    window.projectname = projects[projectname].title;
+    ogst.updatenav();
+    // TODO: got to either project or login
+}
 
+// function to update the top navigation
+ogst.updatenav = function() {
+    if (window.isloggedin) {
+        byid('logoutbutton').parentNode.style.display = 'inline-block';
+    } else {
+       byid('logoutbutton').parentNode.style.display = 'none';
+    }
+    if (window.projectname != '') {
+        const spsp = byid('projecttitle').getElementsByTagName("span");
+        if (!spsp) { return; }
+        spsp[0].innerHTML = window.projectname;
+        spsp[1].style.display = 'inline';
+    }
+}
+
+
+//
+// Things to do at load
+//
+
+// determine which color theme to start in
+const wantsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 ogst.changetheme((wantsDark) ? 'dark' : 'light');
+ogst.chooseProject(window.projectname);
+
+ogst.updatenav();
 
 export default ogst;

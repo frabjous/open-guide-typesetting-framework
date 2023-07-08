@@ -16,6 +16,8 @@ $projects->jhap->title = 'Journal for the History of Analytical Philosophy';
 $projects->russellguide = new StdClass();
 $projects->russellguide->title = 'Open Guide to Bertrand Russell’s Philosophy';
 
+$projectname = '';
+
 ?><!DOCTYPE html>
 <html lang="en">
     <head>
@@ -44,12 +46,9 @@ $projects->russellguide->title = 'Open Guide to Bertrand Russell’s Philosophy'
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
         <title>Open Guide Typesetting Framework</title>
 
-
-
-        <!-- pics css -->
+        <!-- simple css framework -->
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-        <!-- javascript file -->
-        <!-- <script type="text/javascript" charset="utf-8" src="/kcklib/kckdialog.js"></script> -->
+
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
             @import url('https://fonts.googleapis.com/css?family=Material+Symbols+Outlined');
@@ -79,13 +78,12 @@ $projects->russellguide->title = 'Open Guide to Bertrand Russell’s Philosophy'
                 position: relative;
                 top: 0.2rem;
             }
-            nav li.projecttitle span:first-child {
+            nav li#projecttitle span:first-child {
                 font-size: 200%;
                 font-weight: bold;
                 color: var(--primary);
             }
-            nav li.projecttitle span:last-child {
-                padding-left: 0.5em;
+            nav li#projecttitle span:last-child {
                 display: none;
             }
             body > footer.container-fluid {
@@ -104,6 +102,12 @@ $projects->russellguide->title = 'Open Guide to Bertrand Russell’s Philosophy'
                 visibility: hidden;
             }
         </style>
+        <script>
+            // starting globals
+            window.isloggedin = false;
+            window.projectname = '<?php echo $projectname; ?>';
+            window.projects = <?php echo json_encode($projects); ?>;
+        </script>
         <script type="module">
             import ogst from './js/ogst.mjs';
             window.ogst = ogst;
@@ -112,7 +116,9 @@ $projects->russellguide->title = 'Open Guide to Bertrand Russell’s Philosophy'
     <body>
 
         <header class="container-fluid"><nav>
-            <ul><li class="projecttitle"><span>Open Guide Typesetting Framework</span><span><br>typesetting framework</span></li></ul>
+            <ul><li id="projecttitle"><span>Open Guide Typesetting
+                Framework</span><span><br>&nbsp;typesetting framework</span>
+            </li></ul>
             <ul>
                 <li><a
                     id="themetoggle"
@@ -145,7 +151,7 @@ $projects->russellguide->title = 'Open Guide to Bertrand Russell’s Philosophy'
                         <summary aria-haspopup="listbox">Choose one…</summary>
                         <ul role="listbox">
                             <?php foreach ($projects as $projectname => $project) {
-                                echo '<li><a href="javascript:ogst.chooseProject(\'' .
+                                echo '<li><a href="javascript:ogst.chooseproject(\'' .
                                 $projectname . '\');">' .
                                 $project->title . '</a></li>';
                             }
@@ -209,7 +215,14 @@ $projects->russellguide->title = 'Open Guide to Bertrand Russell’s Philosophy'
         </main>
 
         <footer class="container-fluid">
-            <p><small>The Open Guide Typesetting Framework is Copyright 2023 © <a href="https://people.umass.edu/klement">Kevin C. Klement</a>. This is free software, which can be redistributed and/or modified under the terms of the <a href="https://www.gnu.org/licenses/gpl.html">GNU General Public License (GPL), version 3</a>. See the <a href="https://github.com/frabjous/open-guide-typesetting-framework">project github page</a> for more information.</small></p>
+            <p><small>The Open Guide Typesetting Framework is Copyright
+            2023 © <a href="https://people.umass.edu/klement">Kevin C.
+            Klement</a>. This is free software, which can be redistributed
+            and/or modified under the terms of the
+            <a href="https://www.gnu.org/licenses/gpl.html">GNU General
+            Public License (GPL), version 3</a>. See the <a
+            href="https://github.com/frabjous/open-guide-typesetting-framework">
+            project github page</a> for more information.</small></p>
         </footer>
 
     </body>
