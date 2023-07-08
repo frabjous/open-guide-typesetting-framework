@@ -26,11 +26,22 @@
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
         <title>Open Guide Typesetting Framework</title>
 
-        <!-- css file -->
+
+
+        <!-- pics css -->
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
         <!-- javascript file -->
         <!-- <script type="text/javascript" charset="utf-8" src="/kcklib/kckdialog.js"></script> -->
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+            :root {
+                --font-family: 'Nunito Sans', 'Roboto', 'Noto Sans', 'TeX Gyre Heros', 'Arimo', 'Helvetica', 'Arial', sans-serif;
+            }
+        </style>
     </head>
     <body>
+        <main class="container">
+            <h2>Welcome!</h2>
+        </main>
     </body>
 </html>
