@@ -38,6 +38,19 @@
             :root {
                 --font-family: 'Nunito Sans', 'Roboto', 'Noto Sans', 'TeX Gyre Heros', 'Arimo', 'Helvetica', 'Arial', sans-serif;
             }
+            nav {
+                padding: 0.5rem;
+                vertical-align: baseline;
+            }
+
+            nav a[role="button"] {
+                height: 2.4rem;
+                tab-index: -1;
+            }
+            nav a[role="button"] span.material-symbols-outlined {
+                position: relative;
+                top: 0.2rem;
+            }
         </style>
         <script type="module">
             import ogst from './js/ogst.mjs';
@@ -48,14 +61,21 @@
 
         <nav>
             <ul><li>Open Guide Typesetting Framework</li></ul>
-            <ul><li><a
-                id="themetoggle"
-                href="#"
-                role="button"
-                class="material-symbols-outlined"
-                onclick="ogst.changetheme()"
-                title="toggle light/dark theme"
-            >light_mode</a><li></ul>
+            <ul>
+                <li><a
+                    id="themetoggle"
+                    href="#"
+                    role="button"
+                    onclick="ogst.changetheme()"
+                    title="toggle light/dark theme"
+                ><span class="material-symbols-outlined">light_mode</span></a></li>
+                <li><a
+                    id="logoutbutton"
+                    href=""
+                    role="button"
+                    onclick="ogst.logout()"
+                >log out</a></li>
+            </ul>
         </nav>
 
         <main class="container" id="login">

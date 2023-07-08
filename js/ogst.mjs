@@ -19,7 +19,8 @@ ogst.changetheme = function(mode = 'toggle') {
             'dark' : 'light');
     }
     document.documentElement.dataset.theme = mode;
-    themetoggle.innerHTML = mode + '_mode';
+    themetoggle.innerHTML = '<span class="material-symbols-outlined">' +
+        mode + '_mode</span>';
 
 }
 
