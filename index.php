@@ -38,22 +38,24 @@
             :root {
                 --font-family: 'Nunito Sans', 'Roboto', 'Noto Sans', 'TeX Gyre Heros', 'Arimo', 'Helvetica', 'Arial', sans-serif;
             }
+            body > footer,
             body > header,
             body > header.container-fluid {
                 padding: 0;
                 margin: 0;
             }
-            nav {
+            header > nav {
                 vertical-align: baseline;
                 background-color: var(--secondary-focus);
                 border-bottom: 1px solid var(--primary);
                 padding-left: 0.5rem;
-                padding-right: 0.5rem;
+                padding-right: 1rem;
                 margin: 0;
             }
 
             nav a[role="button"] {
                 height: 2.4rem;
+                white-space: nowrap;
             }
             nav a[role="button"] span.material-symbols-outlined {
                 position: relative;
@@ -63,6 +65,10 @@
                 font-size: 200%;
                 font-weight: bold;
                 color: var(--primary);
+            }
+            body > footer.container-fluid {
+                border-top: 1px solid var(--primary);
+                padding: 0.5rem;
             }
             #themetoggle {
                 position: relative;
@@ -88,9 +94,8 @@
             <ul>
                 <li><a
                     id="themetoggle"
-                    href="#"
+                    href="javascript:ogst.changetheme()"
                     role="button"
-                    onclick="ogst.changetheme()"
                     tabindex="-1"
                     title="toggle light/dark theme"
                 >
@@ -102,10 +107,9 @@
                 </a></li>
                 <li><a
                     id="logoutbutton"
-                    href=""
                     role="button"
                     tabindex="-1"
-                    onclick="ogst.logout()"
+                    href="javascript:ogst.logout()"
                 >log out</a></li>
             </ul>
         </nav></header>
@@ -160,6 +164,10 @@
                 </button>
             </form>
         </main>
+
+        <footer class="container-fluid">
+            <p><small>The Open Guide Typesetting Framework is Copyright 2023 © <a href="https://people.umass.edu/klement">Kevin C. Klement</a>. This is free software, which can be redistributed and/or modified under the terms of the <a href="https://www.gnu.org/licenses/gpl.html">GNU General Public License (GPL), version 3</a>. See the <a href="https://github.com/frabjous/open-guide-typesetting-framework">project github page</a> for more information.</small></p>
+        </footer>
 
     </body>
 </html>
