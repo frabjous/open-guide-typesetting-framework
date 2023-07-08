@@ -38,17 +38,16 @@
                 --font-family: 'Nunito Sans', 'Roboto', 'Noto Sans', 'TeX Gyre Heros', 'Arimo', 'Helvetica', 'Arial', sans-serif;
             }
         </style>
-<script type="module">
-window.changeTheme = function() {
-    document.getElementsByTagName("html")[0].dataset.theme = "light";
-}
+        <script type="module">
+            import ogst from './js/ogst.mjs';
+            window.ogst = ogst;
         </script>
     </head>
     <body>
 
         <nav>
             <ul><li>Open Guide Typesetting Framework</li></ul>
-            <ul><li><a id="themebutton" href="#" role="button" onclick="changeTheme()">Link</a><li></ul>
+            <ul><li><a id="themebutton" href="#" role="button" onclick="ogst.changetheme()">Link</a><li></ul>
         </nav>
 
         <main class="container" id="login">
