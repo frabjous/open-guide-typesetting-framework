@@ -27,9 +27,20 @@ ogst.changetheme = function(mode = 'toggle') {
 
 // function to choose a project
 ogst.chooseproject = function(projectname) {
-    window.projectname = projects[projectname].title;
-    ogst.updatenav();
+    if (projectname != '') {
+        window.projectname = projects[projectname].title;
+        ogst.updatenav();
+    }
+    if (window.isloggedin) {
+    } else {
+        ogst.showview('login');
+    }
     // TODO: got to either project or login
+}
+
+ogst.login = function() {
+    let form = byid('login').getElementsByTagName('form')[0];
+
 }
 
 // function to update the top navigation
@@ -47,6 +58,13 @@ ogst.updatenav = function() {
     }
 }
 
+ogst.showview = function(id) {
+    const vv = document.getElementsByClassName("ogstview");
+    for (const v of vv) {
+        v.style.display='none';
+    };
+    byid(id).style.display = 'block';
+}
 
 //
 // Things to do at load
@@ -55,7 +73,8 @@ ogst.updatenav = function() {
 // determine which color theme to start in
 const wantsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 ogst.changetheme((wantsDark) ? 'dark' : 'light');
-ogst.chooseProject(window.projectname);
+ogst.chooseproject(window.projectname);
+ogst.showview('chooseproject');
 
 ogst.updatenav();
 
