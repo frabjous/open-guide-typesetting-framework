@@ -34,6 +34,7 @@
         <!-- <script type="text/javascript" charset="utf-8" src="/kcklib/kckdialog.js"></script> -->
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+            @import url('https://fonts.googleapis.com/css?family=Material+Symbols+Outlined');
             :root {
                 --font-family: 'Nunito Sans', 'Roboto', 'Noto Sans', 'TeX Gyre Heros', 'Arimo', 'Helvetica', 'Arial', sans-serif;
             }
@@ -47,7 +48,14 @@
 
         <nav>
             <ul><li>Open Guide Typesetting Framework</li></ul>
-            <ul><li><a id="themebutton" href="#" role="button" onclick="ogst.changetheme()">Link</a><li></ul>
+            <ul><li><a
+                id="themetoggle"
+                href="#"
+                role="button"
+                class="material-symbols-outlined"
+                onclick="ogst.changetheme()"
+                title="toggle light/dark theme"
+            >light_mode</a><li></ul>
         </nav>
 
         <main class="container" id="login">
