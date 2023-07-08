@@ -13,14 +13,13 @@ function byid(id) {
 }
 
 ogst.changetheme = function(mode = 'toggle') {
-    const themetoggle = byid('themetoggle');
+    const themetoggleicon = byid('themetoggleicon');
     if (mode === 'toggle') {
-        mode = ((themetoggle.innerHTML.includes('light_mode')) ?
+        mode = ((themetoggleicon.innerHTML.includes('light_mode')) ?
             'dark' : 'light');
     }
     document.documentElement.dataset.theme = mode;
-    themetoggle.innerHTML = '<span class="material-symbols-outlined">' +
-        mode + '_mode</span>';
+    themetoggleicon.innerHTML = mode + '_mode</span>';
 
 }
 

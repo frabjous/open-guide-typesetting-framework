@@ -41,15 +41,30 @@
             nav {
                 padding: 0.5rem;
                 vertical-align: baseline;
+                border-bottom: 1px solid white;
+                font-weight: bold;
             }
 
             nav a[role="button"] {
                 height: 2.4rem;
-                tab-index: -1;
             }
             nav a[role="button"] span.material-symbols-outlined {
                 position: relative;
                 top: 0.2rem;
+            }
+            nav li.projecttitle {
+                font-size: 200%;
+            }
+            #themetoggle {
+                position: relative;
+            }
+            #themetoggleicon {
+                position: absolute;
+                top: 0.6rem;
+                left: 0.6rem;
+            }
+            #themetogglefakecontents {
+                visibility: hidden;
             }
         </style>
         <script type="module">
@@ -59,24 +74,32 @@
     </head>
     <body>
 
-        <nav>
-            <ul><li>Open Guide Typesetting Framework</li></ul>
+        <header class="container-fluid"><nav>
+            <ul><li class="projecttitle">Open Guide Typesetting Framework</li></ul>
             <ul>
                 <li><a
                     id="themetoggle"
                     href="#"
                     role="button"
                     onclick="ogst.changetheme()"
+                    tabindex="-1"
                     title="toggle light/dark theme"
-                ><span class="material-symbols-outlined">light_mode</span></a></li>
+                >
+                    <span
+                        id="themetoggleicon" class="material-symbols-outlined"
+                    >light_mode</span>
+                    <span id="themetogglefakecontents">XX</span>
+
+                </a></li>
                 <li><a
                     id="logoutbutton"
                     href=""
                     role="button"
+                    tabindex="-1"
                     onclick="ogst.logout()"
                 >log out</a></li>
             </ul>
-        </nav>
+        </nav></header>
 
         <main class="container" id="login">
             <h2>Please log in</h2>
