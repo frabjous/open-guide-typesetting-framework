@@ -38,12 +38,14 @@
                 --font-family: 'Nunito Sans', 'Roboto', 'Noto Sans', 'TeX Gyre Heros', 'Arimo', 'Helvetica', 'Arial', sans-serif;
             }
         </style>
+        <script type="module">
+        </script>
     </head>
     <body>
-        
+
         <main class="container" id="login">
             <h2>Please log in</h2>
-            <form onsubmit="">
+            <form onsubmit="event.preventDefault();">
                 <label for="ogstname">
                     <input
                         name="ogstname"
@@ -70,9 +72,27 @@
                         > remember me on this device
                     </label>
                 </fieldset>
-                <button>log in</button>
-                <p><a href="#main-forgotpassword">Forgot your password?</a></p>
+                <button type="button" onclick="ogst.login()">log in</button>
+                <p><a href="#forgotpwd">Forgot your password?</a></p>
             </form>
         </main>
+
+        <main class="container" id="forgotpwd">
+            <h2>Password reset</h2>
+            <form onsubmit="event.preventDefault();">
+                <label for="ogstpwdreset">
+                    <input
+                        id="ogstpwdreset"
+                        name="ogstpwdreset"
+                        type="email"
+                        placeholder="email address"
+                    >
+                </label>
+                <button type="button" onclick="ogst.resetpwd()">
+                    email a password reset link
+                </button>
+            </form>
+        </main>
+
     </body>
 </html>
