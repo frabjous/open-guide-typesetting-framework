@@ -1,4 +1,22 @@
-<!DOCTYPE html>
+<?php
+// LICENSE: GNU GPL v3 You should have received a copy of the GNU General
+// Public License along with this program. If not, see
+// https://www.gnu.org/licenses/.
+
+//////////////////////// index.php ///////////////////////////////
+// serves the main page of the open guide typesetting framework //
+//////////////////////////////////////////////////////////////////
+
+
+//TODO: fix this
+$projects = new StdClass();
+
+$projects->jhap = new StdClass();
+$projects->jhap->title = 'Journal for the History of Analytical Philosophy';
+$projects->russellguide = new StdClass();
+$projects->russellguide->title = 'Open Guide to Bertrand Russell’s Philosophy';
+
+?><!DOCTYPE html>
 <html lang="en">
     <head>
         <!-- standard metadata -->
@@ -61,10 +79,14 @@
                 position: relative;
                 top: 0.2rem;
             }
-            nav li.projecttitle {
+            nav li.projecttitle span:first-child {
                 font-size: 200%;
                 font-weight: bold;
                 color: var(--primary);
+            }
+            nav li.projecttitle span:last-child {
+                padding-left: 0.5em;
+                display: none;
             }
             body > footer.container-fluid {
                 border-top: 1px solid var(--primary);
@@ -90,7 +112,7 @@
     <body>
 
         <header class="container-fluid"><nav>
-            <ul><li class="projecttitle">Open Guide Typesetting Framework</li></ul>
+            <ul><li class="projecttitle"><span>Open Guide Typesetting Framework</span><span><br>typesetting framework</span></li></ul>
             <ul>
                 <li><a
                     id="themetoggle"
@@ -114,55 +136,76 @@
             </ul>
         </nav></header>
 
-        <main class="container" id="login">
-            <h2>Please log in</h2>
-            <form onsubmit="event.preventDefault();">
-                <label for="ogstname">
-                    <input
-                        name="ogstname"
-                        type="text"
-                        id="ogstname"
-                        placeholder="Username"
-                    >
-                </label>
-                <label for="ogstpwd">
-                    <input
-                        name="ogstpwd"
-                        type="password"
-                        id="ogstpwd"
-                        placeholder="Password"
-                    >
-                </label>
-                <fieldset>
-                    <label for="ogstremember">
-                        <input
-                            type="checkbox"
-                            role="switch"
-                            id="ogstremember"
-                            name="ogstremember"
-                        > remember me on this device
-                    </label>
-                </fieldset>
-                <button type="button" onclick="ogst.login()">log in</button>
-                <p><a href="#forgotpwd">Forgot your password?</a></p>
-            </form>
-        </main>
+        <main class="container">
 
-        <main class="container" id="forgotpwd">
-            <h2>Password reset</h2>
-            <form onsubmit="event.preventDefault();">
-                <label for="ogstpwdreset">
-                    <input
-                        id="ogstpwdreset"
-                        name="ogstpwdreset"
-                        type="email"
-                        placeholder="email address"
-                    >
-                </label>
-                <button type="button" onclick="ogst.resetpwd()">
-                    email a password reset link
-                </button>
-            </form>
+            <div class="ogstview" id="chooseproject">
+                <h2>Please choose a project</h2>
+                <form onsubmit="event.preventDefault();">
+                    <details role="list">
+                        <summary aria-haspopup="listbox">Choose one…</summary>
+                        <ul role="listbox">
+                            <?php foreach ($projects as $projectname => $project) {
+                                echo '<li><a href="javascript:ogst.chooseProject(\'' .
+                                $projectname . '\');">' .
+                                $project->title . '</a></li>';
+                            }
+                            ?>
+                        </ul>
+                    </details>
+                </form>
+            </div>
+
+            <div class="ogstview" id="login">
+                <h2>Please log in</h2>
+                <form onsubmit="event.preventDefault();">
+                    <label for="ogstname">
+                        <input
+                            name="ogstname"
+                            type="text"
+                            id="ogstname"
+                            placeholder="Username"
+                        >
+                    </label>
+                    <label for="ogstpwd">
+                        <input
+                            name="ogstpwd"
+                            type="password"
+                            id="ogstpwd"
+                            placeholder="Password"
+                        >
+                    </label>
+                    <fieldset>
+                        <label for="ogstremember">
+                            <input
+                                type="checkbox"
+                                role="switch"
+                                id="ogstremember"
+                                name="ogstremember"
+                            > remember me on this device
+                        </label>
+                    </fieldset>
+                    <button type="button" onclick="ogst.login()">log in</button>
+                    <p><a href="#forgotpwd">Forgot your password?</a></p>
+                </form>
+            </div>
+
+            <div class="ogstview" id="forgotpwd">
+                <h2>Password reset</h2>
+                <form onsubmit="event.preventDefault();">
+                    <label for="ogstpwdreset">
+                        <input
+                            id="ogstpwdreset"
+                            name="ogstpwdreset"
+                            type="email"
+                            placeholder="email address"
+                        >
+                    </label>
+                    <button type="button" onclick="ogst.resetpwd()">
+                        email a password reset link
+                    </button>
+                </form>
+            </div>
+
         </main>
 
         <footer class="container-fluid">
