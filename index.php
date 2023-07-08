@@ -40,8 +40,41 @@
         </style>
     </head>
     <body>
-        <main class="container">
+        <main class="container" id="main-welcome" style="display: none;">
             <h2>Welcome!</h2>
+        </main>
+        <main class="container" id="main-login">
+            <h2>Please log in</h2>
+            <form>
+                <label for="ogstname">
+                    <input
+                        name="ogstname"
+                        type="text"
+                        id="ogstname"
+                        placeholder="Username"
+                    >
+                </label>
+                <label for="ogstpwd">
+                    <input
+                        name="ogstpwd"
+                        type="password"
+                        id="ogstpwd"
+                        placeholder="Password"
+                    >
+                </label>
+                <fieldset>
+                    <label for="ogstremember">
+                        <input
+                            type="checkbox"
+                            role="switch"
+                            id="ogstremember"
+                            name="ogstremember"
+                        > remember me on this device
+                    </label>
+                </fieldset>
+                <button>log in</button>
+                <p><a href="#main-forgotpassword">Forgot your password?</a></p>
+            </form>
         </main>
     </body>
 </html>
