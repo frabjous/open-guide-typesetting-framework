@@ -40,12 +40,10 @@
         </style>
     </head>
     <body>
-        <main class="container" id="main-welcome" style="display: none;">
-            <h2>Welcome!</h2>
-        </main>
-        <main class="container" id="main-login">
+        
+        <main class="container" id="login">
             <h2>Please log in</h2>
-            <form>
+            <form onsubmit="">
                 <label for="ogstname">
                     <input
                         name="ogstname"
