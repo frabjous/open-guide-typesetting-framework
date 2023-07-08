@@ -38,11 +38,18 @@
             :root {
                 --font-family: 'Nunito Sans', 'Roboto', 'Noto Sans', 'TeX Gyre Heros', 'Arimo', 'Helvetica', 'Arial', sans-serif;
             }
+            body > header,
+            body > header.container-fluid {
+                padding: 0;
+                margin: 0;
+            }
             nav {
-                padding: 0.5rem;
                 vertical-align: baseline;
-                border-bottom: 1px solid white;
-                font-weight: bold;
+                background-color: var(--secondary-focus);
+                border-bottom: 1px solid var(--primary);
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+                margin: 0;
             }
 
             nav a[role="button"] {
@@ -54,6 +61,8 @@
             }
             nav li.projecttitle {
                 font-size: 200%;
+                font-weight: bold;
+                color: var(--primary);
             }
             #themetoggle {
                 position: relative;

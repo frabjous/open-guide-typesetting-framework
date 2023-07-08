@@ -13,6 +13,7 @@ function byid(id) {
 }
 
 ogst.changetheme = function(mode = 'toggle') {
+    const themetoggle = byid('themetoggle');
     const themetoggleicon = byid('themetoggleicon');
     if (mode === 'toggle') {
         mode = ((themetoggleicon.innerHTML.includes('light_mode')) ?
@@ -20,7 +21,7 @@ ogst.changetheme = function(mode = 'toggle') {
     }
     document.documentElement.dataset.theme = mode;
     themetoggleicon.innerHTML = mode + '_mode</span>';
-
+    themetoggle.blur();
 }
 
 // determine which mode to start in
