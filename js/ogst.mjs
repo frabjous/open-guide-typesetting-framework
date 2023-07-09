@@ -265,6 +265,7 @@ ogst.setnewpwd = async function() {
     msg.classList.add('okmsg');
     msg.innerHTML = 'Password changed. You should get an email confirmation.';
     window.newpwdlink = '';
+    history.pushState('',document.title,'./');
     // in four seconds, redirect back to login form and reset form
     if (!window.isloggedin) {
         setTimeout(function() {
@@ -275,8 +276,6 @@ ogst.setnewpwd = async function() {
             byid('ogstpwd').value='';
             byid('ogstremember').checked = false;
             byid('loginmsg').style.display = "none";
-            window.location.search = '?project=' .
-                encodeURIComponent(window.project);
         },
         4000);
     }
