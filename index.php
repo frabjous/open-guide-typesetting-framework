@@ -129,10 +129,13 @@ if ($cookie_login) {
             #themetogglefakecontents {
                 visibility: hidden;
             }
-            #loginmsg {
+            #resetmsg, #loginmsg {
                 border: 3px solid var(--form-element-invalid-border-color);
                 border-radius: 5px;
                 padding: 0.5rem;
+            }
+            #resetmsg.okmsg {
+                border: 3px solid var(--primary);
             }
         </style>
         <script>

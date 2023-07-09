@@ -175,17 +175,37 @@ ogst.resetpwd = async function() {
         project: window.projectname,
         email: forminfo.ogstpwdreset
     }
-    const response = await postData('/php/jsonhandler.php', request);
+    const response = await postData('php/jsonhandler.php', request);
     // no longer waiting
     btn.setAttribute('aria-busy','false');
     btn.innerHTML = 'email a password reset link';
+    // we show msg in any case
+    const msg = byid('resetmsg');
+    msg.style.display = 'block';
+
     // check for error
     document.body.style.cursor = 'default';
-        if (response?.error || !("respObj" in response) ||
+    if (response?.error || !("respObj" in response) ||
         response?.respObj?.error) {
+        msg.innerHTML = 'Error requesting password reset. ' +
+            (response?.errMsg ?? '') + ' ' +
+            (response?.respObj?.errMsg ?? '');
+        byid('forgotpwd').getElementsByTagName('h2')[0].scrollIntoView();
         return;
     }
-
+    // check for lack of success
+    const respObj = response.respObj;
+    if (!respObj.success) {
+        msg.innerHTML = 'Error with password request. ' +
+            (response?.resetErrMsg ?? '');
+        byid('forgotpwd').getElementsByTagName('h2')[0].scrollIntoView();
+        return;
+    }
+    // it was successful, destroy the form
+    form.innerHTML = '';
+    msg.classList.add('okmsg');
+    msg.innerHTML = 'Check your email in a minute or two ' +
+        'for the reset link. You should close this tab now.';
 }
 
 // function to update the top navigation
