@@ -1,4 +1,11 @@
 <?php
+// LICENSE: GNU GPL v3 You should have received a copy of the GNU General
+// Public License along with this program. If not, see
+// https://www.gnu.org/licenses/.
+
+////////////////// login.php /////////////////////////////////
+// handler that processes login attempts                    //
+//////////////////////////////////////////////////////////////
 
 $rv->error = false;
 
@@ -50,6 +57,15 @@ $rv->wrongpassword = false;
 $rv->nosuchuser = false;
 $rv->loginErrMsg = '';
 $rv->loggedinuser = $ogstname;
+
+// grant access to OGE
+$projectdir = get_projectdir($project);
+if (!isset($_SESSION["open-guide-editor-access"])) {
+    $_SESSION["open-guide-editor-access"] = array();
+}
+if (!in_array($projectdir, $_SESSION["open-guide-editor-access"])) {
+    array_push($_SESSION["open-guide-editor-access"], $projectdir);
+}
 
 // generate a new access key
 $rv->loginaccesskey = new_access_key($project, $ogstname);
