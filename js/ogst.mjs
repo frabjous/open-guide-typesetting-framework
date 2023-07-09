@@ -34,11 +34,7 @@ ogst.chooseproject = function(projectname) {
         window.projectname = projectname;
         ogst.updatenav();
     }
-    if (window.isloggedin) {
-        ogst.loadprojectmain();
-    } else {
-        ogst.showview('login');
-    }
+    ogst.loadhash((window?.location?.hash ?? ''));
 }
 
 ogst.establishuser = function(respObj) {
@@ -54,7 +50,28 @@ ogst.establishuser = function(respObj) {
     window.loginaccesskey = respObj.loginaccesskey;
     ogst.updatenav();
     // TODO: save if remember
-    ogst.loadprojectmain();
+    ogst.loadhash((window?.location?.hash ?? ''));
+}
+
+ogst.loadhash = function(hash) {
+    // choosing a project and logging in always
+    // takes precedent
+    if (window.projectname == '') {
+        ogst.showview('chooseproject');
+        return;
+    } else {
+        if (!window.isloggedin) {
+            if (hash == "#forgotpwd") {
+                ogst.showview("forgotpwd");
+                return;
+            }
+            ogst.showview('login');
+            return;
+        }
+    }
+    if (hash == '') {
+        ogst.loadprojectmain();
+    }
 }
 
 ogst.loadprojectmain = function() {
@@ -170,18 +187,18 @@ ogst.showview = function(id) {
 //
 // Things to do at load
 //
+// attach load change listener
+window.onhashchange = function(e) {
+    ogst.loadhash(window?.location?.hash ?? '');
+}
 
 // determine which color theme to start in
 const wantsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 ogst.changetheme((wantsDark) ? 'dark' : 'light');
 
-// start at appropriate thingy
-if (ogst.projectname == '') {
-    ogst.showview('chooseproject');
-    ogst.chooseproject(window.projectname);
-} else {
-    if (ogst.isloggedin) {
-ogst.updatenav();
+ogst.loadhash(window?.location?.hash ?? '');
 
+// set the nav and title appropriately
+ogst.updatenav();
 
 export default ogst;
