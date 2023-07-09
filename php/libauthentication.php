@@ -157,3 +157,19 @@ function verify_by_password($project, $user, $password) {
     if (!isset($users->{$user}->passwordhash)) { return 'nosuchuser'; }
     return password_verify($password, $users->{$user}->passwordhash);
 }
+
+function verify_newpwd_link($project, $user, $pwdlink) {
+    // note that loading the users removes expired links
+    // so that doesn't need to be checked here;
+    // also, we do not remove things here because it is checked
+    // by index.php before the actual request and needs to be
+    // checked again
+    $users = load_users($project);
+    if (!isset($users->{$user}->newpwdlinks)) { return false; }
+    foreach($newpwdlinks as $pwdobj) {
+        if (password_verify($pwdlink, $pwdobj->hash)) {
+            return true;
+        }
+    }
+    return false;
+}

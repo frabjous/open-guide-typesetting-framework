@@ -54,6 +54,12 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
         $newpwdmode = true;
         $username = $_GET["user"];
         $newpasswordlink = $_GET["newpwd"];
+    } else {
+        header('Content-Type: text/plain; charset=UTF-8');
+        echo 'An invalid or expired link for a new password was given.';
+        echo ' You may need to ask your project leader for help ';
+        echo 'or do another password reset request.';
+        exit();
     }
 }
 
@@ -269,6 +275,40 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                         onclick="ogst.resetpwd();"
                     >
                         email a password reset link
+                    </button>
+                </form>
+            </div>
+
+            <div class="ogstview" id="newpwd">
+                <h2>Set new password</h2>
+                <p id="newpwdmsg" style="display: none;"></p>
+                <form onsubmit="event.preventDefault();" autcomplete="off">
+                    <label for="ogstnewpwd1">
+                        <input
+                            id="ogstnewpwd1"
+                            name="ogstnewpwd1"
+                            type="password"
+                            placeholder="enter new password"
+                            autocomplete="off"
+                            required
+                        >
+                    </label>
+                    <label for="ogstnewpwd2">
+                        <input
+                            id="ogstnewpwd2"
+                            name="ogstnewpwd2"
+                            type="password"
+                            autocomplete="off"
+                            placeholder="re-enter new password"
+                            required
+                        >
+                    </label>
+                    <button
+                        type="button" 
+                        id="newpwdbutton"
+                        onclick="ogst.setnewpwd();"
+                    >
+                        set new password
                     </button>
                 </form>
             </div>
