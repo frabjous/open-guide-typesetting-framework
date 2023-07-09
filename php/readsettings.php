@@ -63,9 +63,7 @@ $cookie_projectname = '';
 $cookie_username = '';
 $cookie_loginaccesskey = '';
 
-error_log("looking for cookie");
 if (isset($_COOKIE['open-guide-typesetting-framework-saved-login'])) {
-    error_log("mm cookies");
     $cookiestr = $_COOKIE['open-guide-typesetting-framework-saved-login'];
     $cookieparts = explode('|',$cookiestr);
     if (count($cookieparts) == 3) {

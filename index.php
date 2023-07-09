@@ -32,7 +32,6 @@ require_once('php/libauthentication.php');
 $cookie_login = false;
 if (($cookie_projectname != '') &&
     ($project == '' || $project == $cookie_project)) {
-    error_log("Checking cookie");
     $cookie_login = verify_by_accesskey(
         $cookie_projectname,
         $cookie_username,
@@ -46,7 +45,6 @@ if ($cookie_login) {
     $project = $cookie_projectname;
     $accesskey = $cookie_loginaccesskey;
     grant_oge_access($project);
-    error_log("cookie login");
 }
 
 $newpwdmode = false;

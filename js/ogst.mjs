@@ -11,6 +11,26 @@ const ogst = {};
 import getformfields from '../open-guide-editor/open-guide-misc/formreader.mjs';
 import postData from '../open-guide-editor/open-guide-misc/fetch.mjs';
 
+function addelem(opts) {
+    if (!("tag" in opts)) { return false; }
+    const elem = document.createElement(opts.tag);
+    for (const opt in opts) {
+        if (opt == "tag") { continue; }
+        if (opt == "parent") {
+            opts[opt].appendChild(elem);
+            continue;
+        }
+        if (opt == "classes") {
+            for (const cln of opts[opt]) {
+                elem.classList.add(cln);
+            }
+            continue;
+        }
+        elem[opt] = opts[opt];
+    }
+    return elem;
+}
+
 function byid(id) { 
     return document.getElementById(id);
 }
@@ -35,6 +55,18 @@ ogst.chooseproject = function(projectname) {
         ogst.updatenav();
     }
     ogst.loadhash((window?.location?.hash ?? ''));
+}
+
+ogst.clearmain = function() {
+    ogst.showview("projectmain");
+    const main = byid('projectmain');
+    main.innerHTML = '';
+    const crd = addelem({
+        tag: 'article',
+        innerHTML: 'loading',
+        parent: main
+    });
+    crd.setAttribute('aria-busy', true);
 }
 
 ogst.establishuser = function(respObj) {
@@ -80,7 +112,7 @@ ogst.loadhash = function(hash) {
 }
 
 ogst.loadprojectmain = function() {
-    ogst.showview("projectmain");
+    ogst.clearmain();
 }
 
 ogst.login = async function() {
@@ -153,7 +185,7 @@ ogst.logout = async function() {
     window.username = '';
     window.isloggedin = false;
     window.loginaccesskey = '';
-    byid("projectmain").innerHTML = '';
+    ogst.clearmain();
     // unmark button as processing
     logoutbtn.innerHTML = 'log out';
     logoutbtn.setAttribute("aria-busy", "false");
