@@ -17,7 +17,7 @@
 // be available
 
 function send_email($to, $subject, $htmlcontents) {
-    global $project;
+    global $project, $libemail_loc;
     $projectdir = get_projectdir($project);
     $customscript = "$projectdir/customemail.php";
     if (file_exists($customscript)) {
