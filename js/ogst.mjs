@@ -114,6 +114,29 @@ ogst.login = async function() {
     ogst.establishuser(respObj);
 }
 
+ogst.logout = async function() {
+    // mark button as processing
+    const logoutbtn = byid("logoutbutton");
+    logoutbtn.innerHTML = '';
+    logoutbtn.setAttribute("aria-busy", "true");
+    const request = {
+        username: window.username,
+        project: window.projectname,
+        accesskey: window.loginaccesskey
+    }
+    // handle things browser-side
+    window.username = '';
+    window.loggedin = false;
+    window.loginaccesskey = '';
+    byid("projectmain").innerHTML = '';
+    // unmark button as processing
+    logoutbtn.innerHTML = 'log out';
+    logoutbtn.setAttribute("aria-busy", "false");
+    // update navigation panel
+    ogst.updatenav();
+    ogst.showview('login')
+}
+
 // function to update the top navigation
 ogst.updatenav = function() {
     if (window.isloggedin) {

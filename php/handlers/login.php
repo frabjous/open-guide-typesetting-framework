@@ -58,14 +58,7 @@ $rv->nosuchuser = false;
 $rv->loginErrMsg = '';
 $rv->loggedinuser = $ogstname;
 
-// grant access to OGE
-$projectdir = get_projectdir($project);
-if (!isset($_SESSION["open-guide-editor-access"])) {
-    $_SESSION["open-guide-editor-access"] = array();
-}
-if (!in_array($projectdir, $_SESSION["open-guide-editor-access"])) {
-    array_push($_SESSION["open-guide-editor-access"], $projectdir);
-}
+grant_oge_access($project);
 
 // generate a new access key
 $rv->loginaccesskey = new_access_key($project, $ogstname);

@@ -44,6 +44,7 @@ if ($cookie_login) {
     $username = $cookie_username;
     $project = $cookie_projectname;
     $accesskey = $cookie_loginaccesskey;
+    grant_oge_access($project);
 }
 
 ?><!DOCTYPE html>
@@ -246,7 +247,6 @@ if ($cookie_login) {
             </div>
 
             <div class="ogstview" id="projectmain">
-                The main project stuff goes here
             </div>
 
         </main>
