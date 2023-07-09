@@ -235,7 +235,7 @@ if ($cookie_login) {
 
             <div class="ogstview" id="forgotpwd">
                 <h2>Password reset</h2>
-                <p id="loginmsg" style="display: none;"></p>
+                <p id="resetmsg" style="display: none;"></p>
                 <form onsubmit="event.preventDefault();">
                     <label for="ogstpwdreset">
                         <input
@@ -243,9 +243,14 @@ if ($cookie_login) {
                             name="ogstpwdreset"
                             type="email"
                             placeholder="email address"
+                            required
                         >
                     </label>
-                    <button type="button" onclick="ogst.resetpwd();">
+                    <button
+                        type="button" 
+                        id="pwdresetbutton"
+                        onclick="ogst.resetpwd();"
+                    >
                         email a password reset link
                     </button>
                 </form>

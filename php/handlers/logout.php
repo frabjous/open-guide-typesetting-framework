@@ -28,7 +28,6 @@ $rv->success = remove_access_key($project, $username, $accesskey);
 // take away oge access
 remove_oge_access($project);
 
-
 // remove cookie
 if (isset($_COOKIE['open-guide-typesetting-framework-saved-login'])) {
     // unset it server-side
@@ -45,3 +44,4 @@ if (isset($_COOKIE['open-guide-typesetting-framework-saved-login'])) {
     );
 }
 
+jsend();

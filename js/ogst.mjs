@@ -159,6 +159,35 @@ ogst.logout = async function() {
     byid("loginmsg").innerHTML = "You have been logged out."
 }
 
+ogst.resetpwd = async function() {
+    // read form
+    const form = byid('forgotpwd').getElementsByTagName('form')[0];
+    const forminfo = getformfields(form);
+    if (forminfo.anyinvalid) { return; }
+    // mark as processing
+    const btn = byid('pwdresetbutton');
+    btn.innerHTML = 'sending a password reset link';
+    btn.setAttribute('aria-busy','true');
+    document.body.style.cursor = 'wait';
+    // request link
+    const request = {
+        postcmd: 'resetpwd',
+        project: window.projectname,
+        email: forminfo.ogstpwdreset
+    }
+    const response = await postData('/php/jsonhandler.php', request);
+    // no longer waiting
+    btn.setAttribute('aria-busy','false');
+    btn.innerHTML = 'email a password reset link';
+    // check for error
+    document.body.style.cursor = 'default';
+        if (response?.error || !("respObj" in response) ||
+        response?.respObj?.error) {
+        return;
+    }
+
+}
+
 // function to update the top navigation
 ogst.updatenav = function() {
     if (window.isloggedin) {
