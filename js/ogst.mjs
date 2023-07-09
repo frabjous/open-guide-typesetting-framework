@@ -59,7 +59,52 @@ ogst.chooseproject = function(projectname) {
 
 ogst.clearmain = function() {
     const main = byid('projectmain');
-    main.innerHTML = '';
+    if (!main?.hasbuttons) {
+        main.innerHTML = '';
+        const d = addelem({
+            tag: 'div',
+            parent: main,
+            classes: ['mainnav']
+        });
+        const currentbutton = addelem({
+            parent: d,
+            tag: 'a',
+            id: 'currentbutton',
+            href: '#current',
+            innerHTML: 'current'
+        });
+        const archivebutton = addelem({
+            parent: d,
+            tag: 'a',
+            id: 'archivebutton',
+            href: '#archived',
+            innerHTML: 'archived'
+        });
+        const mydetailsbutton = addelem({
+            parent: d,
+            tag: 'a',
+            id: 'mydetailsbutton',
+            href: '#mydetails',
+            innerHTML: 'my details'
+        });
+        const usersbutton = addelem({
+            parent: d,
+            tag: 'a',
+            id: 'usersbutton',
+            href: '#users',
+            innerHTML: 'users'
+        });
+        for (const b of d.getElementsByTagName('a')) {
+            b.setAttribute('role','button');
+            b.classList.add('secondary');
+        }
+        main.contents = addelem({
+            parent: main,
+            tag: 'section',
+            id: 'projectcontents'
+        });
+        main.hasbuttons = true;
+    }
     const crd = addelem({
         tag: 'article',
         innerHTML: 'loading',
@@ -105,13 +150,22 @@ ogst.loadhash = function(hash) {
         ogst.showview('login');
         return;
     }
-    if (hash == 
+    // can always get new password screen if logged in
+    if (hash == '#newpwd') {
+        ogst.showview('newpwd');
+        return;
+    }
+    // everything else requires adding to the main element
     ogst.loadprojectmain();
+    if (hash == '#mydetails') {
+        ogst.show
+    }
 }
 
 ogst.loadprojectmain = function() {
     ogst.clearmain();
     ogst.showview("projectmain");
+    const main = byid("projectmain");
 }
 
 ogst.login = async function() {
