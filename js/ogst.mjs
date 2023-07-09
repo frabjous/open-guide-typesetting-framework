@@ -49,7 +49,6 @@ ogst.establishuser = function(respObj) {
     window.username = respObj.loggedinuser;
     window.loginaccesskey = respObj.loginaccesskey;
     ogst.updatenav();
-    // TODO: save if remember
     ogst.loadhash((window?.location?.hash ?? ''));
 }
 
@@ -265,6 +264,7 @@ ogst.setnewpwd = async function() {
     form.innerHTML = '';
     msg.classList.add('okmsg');
     msg.innerHTML = 'Password changed. You should get an email confirmation.';
+    window.newpwdlink = '';
     // in four seconds, redirect back to login form and reset form
     if (!window.isloggedin) {
         setTimeout(function() {
@@ -275,6 +275,8 @@ ogst.setnewpwd = async function() {
             byid('ogstpwd').value='';
             byid('ogstremember').checked = false;
             byid('loginmsg').style.display = "none";
+            window.location.search = '?project=' .
+                encodeURIComponent(window.project);
         },
         4000);
     }
