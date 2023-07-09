@@ -35,10 +35,10 @@ ogst.chooseproject = function(projectname) {
         ogst.updatenav();
     }
     if (window.isloggedin) {
+        ogst.loadprojectmain();
     } else {
         ogst.showview('login');
     }
-    // TODO: got to either project or login
 }
 
 ogst.establishuser = function(respObj) {
@@ -119,14 +119,17 @@ ogst.logout = async function() {
     const logoutbtn = byid("logoutbutton");
     logoutbtn.innerHTML = '';
     logoutbtn.setAttribute("aria-busy", "true");
+    // do request
     const request = {
+        postcmd: 'logout',
         username: window.username,
         project: window.projectname,
         accesskey: window.loginaccesskey
     }
+    const logoutResp = await postData('php/jsonhandler.php', request);
     // handle things browser-side
     window.username = '';
-    window.loggedin = false;
+    window.isloggedin = false;
     window.loginaccesskey = '';
     byid("projectmain").innerHTML = '';
     // unmark button as processing
@@ -134,7 +137,9 @@ ogst.logout = async function() {
     logoutbtn.setAttribute("aria-busy", "false");
     // update navigation panel
     ogst.updatenav();
-    ogst.showview('login')
+    ogst.showview('login');
+    byid("loginmsg").style.display = "block";
+    byid("loginmsg").innerHTML = "You have been logged out."
 }
 
 // function to update the top navigation
@@ -169,9 +174,14 @@ ogst.showview = function(id) {
 // determine which color theme to start in
 const wantsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 ogst.changetheme((wantsDark) ? 'dark' : 'light');
-ogst.chooseproject(window.projectname);
-ogst.showview('chooseproject');
 
+// start at appropriate thingy
+if (ogst.projectname == '') {
+    ogst.showview('chooseproject');
+    ogst.chooseproject(window.projectname);
+} else {
+    if (ogst.isloggedin) {
 ogst.updatenav();
+
 
 export default ogst;

@@ -7,8 +7,6 @@
 // functions that verify logins, etc., for the typesetting framework  //
 ////////////////////////////////////////////////////////////////////////
 
-session_start();
-
 function grant_oge_access($project) {
     $projectdir = get_projectdir($project);
     if (!isset($_SESSION["open-guide-editor-access"])) {
@@ -91,7 +89,7 @@ function remove_oge_access($project) {
         if (count($new_oge_access) > 0) {
             $_SESSION["open-guide-editor-access"] = $new_oge_access;
         } else {
-            unset($_SESSION["open-guide-editor-access");
+            unset($_SESSION["open-guide-editor-access"]);
         }
     }
 }
