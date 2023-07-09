@@ -23,7 +23,7 @@ function send_email($to, $subject, $htmlcontents) {
     if (file_exists($customscript)) {
         require_once($customscript);
     }
-    if (function_exists('custom_send_email') {
+    if (function_exists('custom_send_email')) {
         return custom_send_email($to, $subject, $htmlcontents);
     }
     // determine sender; hopefully overwriting default nonexistent gmail
