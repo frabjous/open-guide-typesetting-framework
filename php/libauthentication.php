@@ -146,8 +146,12 @@ function set_new_password($project, $user, $pwd) {
     if (!isset($users->{$user})) {
         return 'User with name ' . $user . ' not found.';
     }
+    // set new password
     $users->{$user}->passwordhash =
         password_hash($pwd, PASSWORD_DEFAULT);
+    // remove any password change links
+    $users->{$user}->newpwdlinks = array();
+    // save changes
     return save_users($project, $users);
 }
 
