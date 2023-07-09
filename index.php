@@ -47,6 +47,16 @@ if ($cookie_login) {
     grant_oge_access($project);
 }
 
+$newpwdmode = false;
+$newpasswordlink = false;
+if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
+    if (verify_newpwd_link($project, $_GET["user"], $_GET["newpwd"])) {
+        $newpwdmode = true;
+        $username = $_GET["user"];
+        $newpasswordlink = $_GET["newpwd"];
+    }
+}
+
 ?><!DOCTYPE html>
 <html lang="en">
     <head>
@@ -140,11 +150,15 @@ if ($cookie_login) {
         </style>
         <script>
             // starting globals
-            window.isloggedin = <?php echo json_encode(($username != '')); ?>;
+            window.isloggedin = <?php echo json_encode(
+                ($username != '' && !$newpwdmode)
+            ); ?>;
             window.username = '<?php echo $username; ?>';
             window.loginaccesskey = '<?php echo $accesskey; ?>';
             window.projectname = '<?php echo $project; ?>';
             window.projects = <?php echo json_encode($projects); ?>;
+            <?php if ($newpwdmode) { echo "window.newpwdlink = '" .
+                $newpasswordlink . "';" ?>
         </script>
         <script type="module">
             import ogst from './js/ogst.mjs';
