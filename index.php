@@ -156,6 +156,10 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             body > main.container {
                 padding-top: 0;
             }
+            .mainnav a {
+                margin-right: 1rem;
+                margin-top: 1rem;
+            }
         </style>
         <script>
             // starting globals
