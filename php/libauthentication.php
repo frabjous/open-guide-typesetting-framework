@@ -26,6 +26,25 @@ function load_users($project) {
     if (!$json) { return (new StdClass()); }
     $users = json_decode($json);
     if (!$users) { return (new StdClass()); }
+    // clear old pwd links
+    $changed = false;
+    foreach($users as $username => $userdata) {
+        $userchanged = false;
+        if (!isset($userdata->newpwdlinks)) { continue; }
+        $newlinkarray = array();
+        foreach($userdata->newpwdlinks as $linkobj) {
+            if (time() > $linkobj->expires) {
+                $userchanged = true;
+            } else {
+                array_push($newlinkarray, $linkobj);
+            }
+        }
+        if ($userchanged) {
+            $users->{$user}->newpwdlinks = $newlinkarray;
+            $changed = true;
+        }
+    }
+    if ($changed) { save_users($project, $users); }
     return $users;
 }
 
@@ -44,6 +63,24 @@ function new_access_key($project, $user) {
     );
     save_users($project, $users);
     return $accesskey;
+}
+
+function new_set_pwd_link($project, $user) {
+    $users = load_users($project);
+    // fails if user does not exist
+    if (!isset($users->{$user})) {
+        return false;
+    }
+    if (!isset($users->{$user}->newpwdlinks)) {
+        $users->{$user}->newpwdlinks = array();
+    }
+    $newpwdlink = random_string(48);
+    $pwdobject = new StdClass();
+    $pwdobject->hash = password_hash($newpwdlink, PASSWORD_DEFAULT);
+    $pwdobject->expires = (time() + 2678400);
+    array_push( $users->{$user}->newpwdlinks, $pwdobject );
+    save_users($project, $users);
+    return $newpwdlink;
 }
 
 function random_string($length = 32) {

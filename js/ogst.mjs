@@ -197,7 +197,7 @@ ogst.resetpwd = async function() {
     const respObj = response.respObj;
     if (!respObj.success) {
         msg.innerHTML = 'Error with password request. ' +
-            (response?.resetErrMsg ?? '');
+            (respObj?.resetErrMsg ?? '');
         byid('forgotpwd').getElementsByTagName('h2')[0].scrollIntoView();
         return;
     }

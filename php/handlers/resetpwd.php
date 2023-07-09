@@ -3,76 +3,48 @@
 // Public License along with this program. If not, see
 // https://www.gnu.org/licenses/.
 
-////////////////// login.php /////////////////////////////////
+////////////////// resetpwd.php //////////////////////////////
 // handler that processes requests to reset password        //
 //////////////////////////////////////////////////////////////
 
 $rv->error = false;
 
-// verify name given
-if (!isset($ogstname)) {
+if (!isset($email)) {
     $rv->success = false;
-    $rv->nosuchuser = true;
-    $rv->loginErrMsg = 'Login name not provided.';
+    $rv->resetErrMsg = 'Email address not provided.';
     jsend();
 }
-// remove rest of email address if full thing given
-$ogstname = mb_ereg_replace('@.*','',$ogstname);
 
-// make all lowercase
-$ogstname = strtolower($ogstname);
-
-// verify that a password was given
-if (!isset($ogstpwd)) {
-    $rv->success = false;
-    $rv->wrongpassword = true;
-    $rv->loginErrMsg('No password provided.');
-    jsend();
-}
+//email addresses are case insensitive
+$email = strtolower($email);
 
 // load authentication and setting libraries
 require_once(dirname(__FILE__) . '/../readsettings.php');
 require_once(dirname(__FILE__) . '/../libauthentication.php');
 
-// verify password
-$pwd_result = verify_by_password($project, $ogstname, $ogstpwd);
+// look for user with that email
+$users = load_users($project);
 
-if ($pwd_result === 'nosuchuser') {
+$user = '';
+foreach($users as $username => $userdata) {
+    if ($userdata->email == $email) {
+        $user = $username;
+        break;
+    }
+}
+
+// if not found, complain
+if ($user == '') {
     $rv->success = false;
-    $rv->nosuchuser = true;
-    $rv->loginErrMsg = 'User with name ' . $ogstname . ' does not exist';
+    $rv->resetErrMsg = 'No user found with that email address. ' .
+        'Contact your project leader about (re)gaining access.';
     jsend();
 }
 
-if (!$pwd_result) {
-    $rv->success = false;
-    $rv->wrongpassword = true;
-    $rv->loginErrMsg = 'Incorrect password provided.';
-    jsend();
-}
+$newpwdlink = new_set_pwd_link($project, $user);
 
-// login was a success
+require_once(dirname(__FILE__) . '/../libemail.php');
+
+
+
 $rv->success = true;
-$rv->wrongpassword = false;
-$rv->nosuchuser = false;
-$rv->loginErrMsg = '';
-$rv->loggedinuser = $ogstname;
-
-grant_oge_access($project);
-
-// generate a new access key
-$rv->loginaccesskey = new_access_key($project, $ogstname);
-
-// create cookie if want to remember
-if (isset($ogstremember) && $ogstremember) {
-    setcookie(
-        'open-guide-typesetting-framework-saved-login',
-        $project . '|' . $ogstname . '|' . $rv->loginaccesskey,
-        array(
-            'expires' => time() + 34473600,
-            'path' => '/',
-            'SameSite' => 'Strict'
-        )
-    );
-}
-
