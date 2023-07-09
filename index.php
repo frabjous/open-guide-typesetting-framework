@@ -102,6 +102,10 @@ if ($cookie_login) {
                 position: relative;
                 top: 0.2rem;
             }
+            nav li#projecttitle {
+                user-select: none;
+                cursor: pointer;
+            }
             nav li#projecttitle span:first-child {
                 font-size: 200%;
                 font-weight: bold;
@@ -168,7 +172,7 @@ if ($cookie_login) {
                     id="logoutbutton"
                     role="button"
                     tabindex="-1"
-                    href="javascript:ogst.logout()"
+                    href="javascript:ogst.logout();"
                 >log out</a></li>
             </ul>
         </nav></header>
@@ -224,13 +228,14 @@ if ($cookie_login) {
                             > remember me on this device
                         </label>
                     </fieldset>
-                    <button type="button" onclick="ogst.login()">log in</button>
+                    <button type="button" onclick="ogst.login();">log in</button>
                     <p><a href="#forgotpwd">Forgot your password?</a></p>
                 </form>
             </div>
 
             <div class="ogstview" id="forgotpwd">
                 <h2>Password reset</h2>
+                <p id="loginmsg" style="display: none;"></p>
                 <form onsubmit="event.preventDefault();">
                     <label for="ogstpwdreset">
                         <input
@@ -240,7 +245,7 @@ if ($cookie_login) {
                             placeholder="email address"
                         >
                     </label>
-                    <button type="button" onclick="ogst.resetpwd()">
+                    <button type="button" onclick="ogst.resetpwd();">
                         email a password reset link
                     </button>
                 </form>

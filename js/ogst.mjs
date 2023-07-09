@@ -192,6 +192,15 @@ window.onhashchange = function(e) {
     ogst.loadhash(window?.location?.hash ?? '');
 }
 
+// make project title go to main project page or login, etc.
+byid("projecttitle").onclick = function(e) {
+    if (window.location.hash != '') {
+        window.location.hash = '';
+        return;
+    }
+    ogst.loadhash('');
+}
+
 // determine which color theme to start in
 const wantsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 ogst.changetheme((wantsDark) ? 'dark' : 'light');
