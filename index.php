@@ -164,7 +164,7 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             window.projectname = '<?php echo $project; ?>';
             window.projects = <?php echo json_encode($projects); ?>;
             <?php if ($newpwdmode) { echo "window.newpwdlink = '" .
-                $newpasswordlink . "';" ?>
+                $newpasswordlink . "';"; } ?>
         </script>
         <script type="module">
             import ogst from './js/ogst.mjs';

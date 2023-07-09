@@ -166,7 +166,7 @@ function verify_newpwd_link($project, $user, $pwdlink) {
     // checked again
     $users = load_users($project);
     if (!isset($users->{$user}->newpwdlinks)) { return false; }
-    foreach($newpwdlinks as $pwdobj) {
+    foreach($users->{$user}->newpwdlinks as $pwdobj) {
         if (password_verify($pwdlink, $pwdobj->hash)) {
             return true;
         }

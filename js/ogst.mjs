@@ -222,10 +222,11 @@ ogst.setnewpwd = async function() {
         const msg = byid("newpwdmsg");
         msg.style.display = "block";
         msg.innerHTML = "Passwords do not match.";
+        console.log('dnm',(new Date()).getTime());
         return;
     }
     // mark as processing
-    const btn = byd('newpwdbutton');
+    const btn = byid('newpwdbutton');
     btn.innerHTML = 'setting new password';
     btn.setAttribute('aria-busy', 'true');
     document.body.cursor = 'wait';
@@ -237,7 +238,7 @@ ogst.setnewpwd = async function() {
     forminfo.username = window.username;
     forminfo.wasloggedin = window.isloggedin;
     //  make request
-    const response = postData('php/jsonhandler.php', forminfo);
+    const response = await postData('php/jsonhandler.php', forminfo);
     // mark no longer waiting
     document.body.cursor = 'default';
     btn.innerHTML = 'set new password';
@@ -264,6 +265,19 @@ ogst.setnewpwd = async function() {
     form.innerHTML = '';
     msg.classList.add('okmsg');
     msg.innerHTML = 'Password changed. You should get an email confirmation.';
+    // in four seconds, redirect back to login form and reset form
+    if (!window.isloggedin) {
+        setTimeout(function() {
+            ogst.showview('login');
+            byid('ogstname').removeAttribute("aria-invalid");
+            byid('ogstname').value='';
+            byid('ogstpwd').removeAttribute("aria-invalid");
+            byid('ogstpwd').value='';
+            byid('ogstremember').checked = false;
+            byid('loginmsg').style.display = "none";
+        },
+        4000);
+    }
 }
 
 ogst.showview = function(id) {
