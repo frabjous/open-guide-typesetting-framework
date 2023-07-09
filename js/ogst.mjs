@@ -258,7 +258,7 @@ ogst.setnewpwd = async function() {
     const respObj = response.respObj;
     if (!respObj?.success) {
         msg.innerHTML = 'Error setting new password. ' +
-            (respObj?.pwdChangeErr ?? '');
+            (respObj?.pwdChangeErrMsg ?? '');
         return;
     }
     // success; destroy form
