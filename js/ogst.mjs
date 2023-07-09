@@ -220,7 +220,7 @@ ogst.updatenav = function() {
         if (!spsp) { return; }
         spsp[0].innerHTML = window.projects[window.projectname].title;
         spsp[1].style.display = 'inline';
-        document.title = window.projectname + ' Typesetting Framework';
+        document.title = window.projects[window.projectname].title + ' Typesetting Framework';
     }
 }
 

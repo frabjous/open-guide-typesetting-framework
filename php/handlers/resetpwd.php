@@ -49,24 +49,25 @@ $project_title = $projects->{$project}->title ??
     'Open Guide';
 $project_contact = $projects->{$project}->contactname ?? 'Unknown';
 $project_email = $projects->{$project}->contactemail ?? 'unknown';
-$request_url = $_SERVER["REQUEST_URI"];
-error_log($request_url, $_SERVER["HTTP_REFERER"]);
-$request_url = mb_ereg_replace('php\/jsonhandler.*','',$request_url);
 
-$fulllink =  $request_url . "?newpwd=" . rawurlencode($newpwdlink) .
+$fullpath = mb_ereg_replace('/php/jsonhandler.php', '/', full_path());
+
+$fulllink =  $fullpath . "?newpwd=" . rawurlencode($newpwdlink) .
     "&user=" . rawurlencode($user) . "&project=" . rawurlencode($project);
-/*
-send_email($email, 'Reset password for the ' . $project_title .
-    ' typesetting framework', "\r\n" .
-    "<p>A password reset request was made for you on the typesetting\r\n" .
+
+$mailcontents =
+    "\r\n<p>A password reset request was made for you on the typesetting\r\n" .
     "framework for the " . $project_title . ". To reset your password,\r\n" .
     "click the link below:</p>\r\n" .
     "<p><a href=\"" . $fulllink . "\">" .
     mb_ereg_replace('&','&amp;', $fulllink) . "</a></p>\r\n" .
     "<p>If this password reset request was made in error, please \r\n" .
-    "inform the project contact person: \r\n" . $project_contact .
+    "inform the project contact person, \r\n" . $project_contact .
     " (<a href=\"mailto:" . $project_email . "\">" . $project_email .
-    "</a>)\r\nto let them know.</p>\r\n");
- */
+    "</a>),\r\n to let them know.</p>\r\n";
+
+send_email($email, 'Reset password for the ' . $project_title .
+    ' typesetting framework', $mailcontents);
+
 $rv->success = true;
 jsend();

@@ -16,6 +16,9 @@
 // the caller; and expects global $project and get_projectdir() to
 // be available
 
+// usually with this you also want your own url
+require_once(dirname(__FILE__) . '/../open-guide-editor/open-guide-misc/hostinfo.php');
+
 function send_email($to, $subject, $htmlcontents) {
     global $project, $libemail_loc;
     $projectdir = get_projectdir($project);
