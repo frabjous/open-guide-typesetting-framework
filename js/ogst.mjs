@@ -58,6 +58,7 @@ ogst.chooseproject = function(projectname) {
 }
 
 ogst.clearmain = function() {
+    if (!window.isloggedin) { return; }
     const main = byid('projectmain');
     if (!main?.hasbuttons) {
         main.innerHTML = '';
@@ -98,20 +99,53 @@ ogst.clearmain = function() {
             b.setAttribute('role','button');
             b.classList.add('secondary');
         }
+        main.msgdiv = addelem({
+            tag: 'div',
+            id: 'mainmsg',
+            parent: main
+        });
+        main.msgdiv.style.display = 'none';
+        main.loadingcard = addelem({
+            tag: 'article',
+            innerHTML: 'loading',
+            parent: main
+        });
+        main.loadingcard.setAttribute('aria-busy', true);
         main.contents = addelem({
             parent: main,
             tag: 'section',
             id: 'projectcontents'
         });
+        main.loading = function(l) {
+            if (l) {
+                main.loadingcard.style.display = 'block';
+            } else {
+                main.loadingcard.style.display = 'none';
+            }
+        }
         main.hasbuttons = true;
     }
-    const crd = addelem({
-        tag: 'article',
-        innerHTML: 'loading',
-        parent: main
-    });
-    crd.setAttribute('aria-busy', true);
+    main.loading(true);
+    main.contents.innerHTML = '';
     byid('projecttitle').scrollIntoView();
+}
+
+ogst.editorquery = async function(req) {
+    // always set postcmd in req
+    if (!("postcmd" in req)) {
+        console.error("Editor query made without postcmd.");
+        return false;
+    }
+    req.username = window.username;
+    req.accesskey = window.loginaccesskey;
+    req.project = window.projectname;
+    let resp = await postData('php/jsonhandler.php', req);
+    if (resp?.error || (!("respObj" in resp)) ||
+        resp?.respObj?.error) {
+        ogst.reporterror('Error getting data from server. ' +
+        (resp?.errMsg ?? '') + ' ' + (resp?.respObj?.errMsg ?? ''));
+    }
+    return resp;
 }
 
 ogst.establishuser = function(respObj) {
@@ -158,7 +192,7 @@ ogst.loadhash = function(hash) {
     // everything else requires adding to the main element
     ogst.loadprojectmain();
     if (hash == '#mydetails') {
-        ogst.show
+        ogst.showmydetails();
     }
 }
 
@@ -296,6 +330,11 @@ ogst.resetpwd = async function() {
     msg.classList.add('okmsg');
     msg.innerHTML = 'Check your email in a minute or two ' +
         'for the reset link. You should close this tab now.';
+}
+
+ogst.showmydetails = async function() {
+    if (!window.isloggedin) { return; }
+
 }
 
 ogst.setnewpwd = async function() {
