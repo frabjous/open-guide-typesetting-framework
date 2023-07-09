@@ -7,16 +7,44 @@
 // serves the main page of the open guide typesetting framework //
 //////////////////////////////////////////////////////////////////
 
+session_start();
 
-//TODO: fix this
-$projects = new StdClass();
+// read settings
+require_once('php/readsettings.php');
 
-$projects->jhap = new StdClass();
-$projects->jhap->title = 'Journal for the History of Analytical Philosophy';
-$projects->russellguide = new StdClass();
-$projects->russellguide->title = 'Open Guide to Bertrand Russell’s Philosophy';
+if ($settings_error != '') {
+    header('Content-Type: text/plain; charset=UTF-8');
+    echo 'The Open Guide Typesetting Framework is not properly configured: '
+        . $settings_error;
+    exit();
+}
 
-$projectname = '';
+// read project from url parameter if given
+$project = '';
+$username = '';
+$accesskey = '';
+if (isset($_GET["project"])) { $project = $_GET["project"];}
+
+// load authentication library
+require_once('php/libauthentication.php');
+
+// check if cookie login is successful if matches requested project
+$cookie_login = false;
+if (($cookie_projectname != '') &&
+    ($project == '' || $project == $cookie_project)) {
+    $cookie_login = verify_by_accesskey(
+        $cookie_projectname,
+        $cookie_username,
+        $cookie_loginaccesskey
+    );
+}
+
+// if cookie login successful, set the variables
+if ($cookie_login) {
+    $username = $cookie_username;
+    $project = $cookie_projectname;
+    $accesskey = $cookie_loginaccesskey;
+}
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -25,16 +53,11 @@ $projectname = '';
         <meta charset="utf-8">
         <meta name="description" content="Open Guide Typesetting Framework">
         <meta name="author" content="Kevin C. Klement">
-        <meta name="copyright" content="© Your name">
-        <meta name="keywords" content="this,that,someotherthing">
-        <meta name="dcterms.date" content="TODAYSDATE">
+        <meta name="copyright" content="Copyright 2023 © Kevin C. Klement">
+        <meta name="keywords" content="academic,typesetting,journal,anthology, guide">
+        <meta name="dcterms.date" content="2023-07-08">
 
-        <!-- facebook opengraph stuff -->
-        <meta property="og:title" content="title">
-        <meta property="og:image" content="image_url">
-        <meta property="og:description" content="A description of my site">
-
-        <!-- if you want to disable search indexing -->
+        <!--to disable search indexing -->
         <meta name="robots" content="noindex,nofollow">
 
         <!-- if mobile ready -->
@@ -96,16 +119,23 @@ $projectname = '';
             #themetoggleicon {
                 position: absolute;
                 top: 0.6rem;
-                left: 0.6rem;
+                left: 0.45rem;
             }
             #themetogglefakecontents {
                 visibility: hidden;
             }
+            #loginmsg {
+                border: 3px solid var(--form-element-invalid-border-color);
+                border-radius: 5px;
+                padding: 0.5rem;
+            }
         </style>
         <script>
             // starting globals
-            window.isloggedin = false;
-            window.projectname = '<?php echo $projectname; ?>';
+            window.isloggedin = <?php echo json_encode(($username != '')); ?>;
+            window.username = '<?php echo $username; ?>';
+            window.loginaccesskey = '<?php echo $accesskey; ?>';
+            window.projectname = '<?php echo $project; ?>';
             window.projects = <?php echo json_encode($projects); ?>;
         </script>
         <script type="module">
@@ -163,6 +193,7 @@ $projectname = '';
 
             <div class="ogstview" id="login">
                 <h2>Please log in</h2>
+                <p id="loginmsg" style="display: none;"></p>
                 <form onsubmit="event.preventDefault();">
                     <label for="ogstname">
                         <input
@@ -170,6 +201,7 @@ $projectname = '';
                             type="text"
                             id="ogstname"
                             placeholder="Username"
+                            required
                         >
                     </label>
                     <label for="ogstpwd">
@@ -178,6 +210,7 @@ $projectname = '';
                             type="password"
                             id="ogstpwd"
                             placeholder="Password"
+                            required
                         >
                     </label>
                     <fieldset>
@@ -210,6 +243,10 @@ $projectname = '';
                         email a password reset link
                     </button>
                 </form>
+            </div>
+
+            <div class="ogstview" id="projectmain">
+                The main project stuff goes here
             </div>
 
         </main>

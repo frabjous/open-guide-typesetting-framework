@@ -8,6 +8,9 @@
 
 const ogst = {};
 
+import getformfields from '../open-guide-editor/open-guide-misc/formreader.mjs';
+import postData from '../open-guide-editor/open-guide-misc/fetch.mjs';
+
 function byid(id) { 
     return document.getElementById(id);
 }
@@ -28,7 +31,7 @@ ogst.changetheme = function(mode = 'toggle') {
 // function to choose a project
 ogst.chooseproject = function(projectname) {
     if (projectname != '') {
-        window.projectname = projects[projectname].title;
+        window.projectname = projectname;
         ogst.updatenav();
     }
     if (window.isloggedin) {
@@ -38,9 +41,77 @@ ogst.chooseproject = function(projectname) {
     // TODO: got to either project or login
 }
 
-ogst.login = function() {
-    let form = byid('login').getElementsByTagName('form')[0];
+ogst.establishuser = function(respObj) {
+    // reset login fields
+    byid('ogstname').removeAttribute("aria-invalid");
+    byid('ogstname').value='';
+    byid('ogstpwd').removeAttribute("aria-invalid");
+    byid('ogstpwd').value='';
+    byid('ogstremember').checked = false;
+    byid('loginmsg').style.display = "none";
+    window.isloggedin = true;
+    window.username = respObj.loggedinuser;
+    window.loginaccesskey = respObj.loginaccesskey;
+    ogst.updatenav();
+    // TODO: save if remember
+    ogst.loadprojectmain();
+}
 
+ogst.loadprojectmain = function() {
+    ogst.showview("projectmain");
+}
+
+ogst.login = async function() {
+    // get the important elements
+    const form = byid('login').getElementsByTagName('form')[0];
+    const btn = byid('login').getElementsByTagName('button')[0];
+    // get the info from the login form
+    const forminfo =getformfields(form);
+    if (forminfo.anyinvalid) { return; }
+    forminfo.project = window.projectname;
+    forminfo.postcmd = 'login';
+    // mark as processing
+    btn.innerHTML = 'logging in';
+    btn.setAttribute('aria-busy','true');
+    document.body.style.cursor = 'wait';
+    // wait for result
+    const loginresult = await postData('php/jsonhandler.php', forminfo);
+    // change button back to normal
+    btn.innerHTML = 'log in';
+    btn.setAttribute('aria-busy','false');
+    document.body.style.cursor = 'default';
+    // report fetch errors
+    if (loginresult?.error || !loginresult?.respObj ||
+        loginresult?.respObj?.error) {
+        byid("loginmsg").style.display = "block";
+        byid("loginmsg").innerHTML = 'Login error. ' +
+            (loginresult?.errMsg ?? '') +
+            (loginresult?.respObj?.errMsg ?? '');
+        byid("login").getElementsByTagName("h2")[0].scrollIntoView();
+        return;
+    }
+    // report login errors
+    const respObj = loginresult.respObj;
+    if (!respObj?.success) {
+        byid("loginmsg").style.display = "block";
+        byid("loginmsg").innerHTML = 'Login error. ' +
+            (respObj?.loginErrMsg ?? '');
+        if (respObj?.nosuchuser) {
+            byid('ogstname').setAttribute("aria-invalid", "true");
+            byid('ogstname').addEventListener('change', function() {
+                this.removeAttribute("aria-invalid");
+            });
+        }
+        if (respObj?.wrongpassword) {
+            byid('ogstpwd').setAttribute("aria-invalid", "true");
+            byid('ogstpwd').addEventListener('change', function() {
+                this.removeAttribute("aria-invalid");
+            });
+        }
+        byid("login").getElementsByTagName("h2")[0].scrollIntoView();
+        return;
+    }
+    ogst.establishuser(respObj);
 }
 
 // function to update the top navigation
@@ -53,8 +124,9 @@ ogst.updatenav = function() {
     if (window.projectname != '') {
         const spsp = byid('projecttitle').getElementsByTagName("span");
         if (!spsp) { return; }
-        spsp[0].innerHTML = window.projectname;
+        spsp[0].innerHTML = window.projects[window.projectname].title;
         spsp[1].style.display = 'inline';
+        document.title = window.projectname + ' Typesetting Framework';
     }
 }
 
@@ -64,6 +136,7 @@ ogst.showview = function(id) {
         v.style.display='none';
     };
     byid(id).style.display = 'block';
+    byid('projecttitle').scrollIntoView();
 }
 
 //
