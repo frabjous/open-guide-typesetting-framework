@@ -65,6 +65,7 @@ $rv->loginaccesskey = new_access_key($project, $ogstname);
 
 // create cookie if want to remember
 if (isset($ogstremember) && $ogstremember) {
+    error_log("setting cookie");
     setcookie(
         'open-guide-typesetting-framework-saved-login',
         $project . '|' . $ogstname . '|' . $rv->loginaccesskey,
