@@ -54,6 +54,12 @@ ogst.establishuser = function(respObj) {
 }
 
 ogst.loadhash = function(hash) {
+    // absolute top preference is to load newpwd if set by
+    // url parameters
+    if (("newpwdlink" in window) && window.newpwdlink != '') {
+        ogst.showview('newpwd');
+        return;
+    }
     // choosing a project and logging in always
     // takes precedent
     if (window.projectname == '') {
@@ -208,6 +214,67 @@ ogst.resetpwd = async function() {
         'for the reset link. You should close this tab now.';
 }
 
+ogst.setnewpwd = async function() {
+    const form = byid('newpwd').getElementsByTagName('form')[0];
+    const forminfo = getformfields(form);
+    if (forminfo.anyinvalid) { return; }
+    if (forminfo.ogstnewpwd1 != forminfo.ogstnewpwd2) {
+        const msg = byid("newpwdmsg");
+        msg.style.display = "block";
+        msg.innerHTML = "Passwords do not match.";
+        return;
+    }
+    // mark as processing
+    const btn = byd('newpwdbutton');
+    btn.innerHTML = 'setting new password';
+    btn.setAttribute('aria-busy', 'true');
+    document.body.cursor = 'wait';
+    // add to request
+    forminfo.postcmd = 'newpwd';
+    forminfo.newpwdlink = (window.newpwdlink ?? '');
+    forminfo.accesskey = (window.loginaccesskey ?? '');
+    forminfo.project = window.projectname;
+    forminfo.username = window.username;
+    forminfo.wasloggedin = window.isloggedin;
+    //  make request
+    const response = postData('php/jsonhandler.php', forminfo);
+    // mark no longer waiting
+    document.body.cursor = 'default';
+    btn.innerHTML = 'set new password';
+    btn.setAttribute('aria-busy', 'false');
+    // always show message afterwards
+    const msg = byid("newpwdmsg");
+    msg.style.display = "block";
+    // check for errors
+    if (response?.error || !("respObj" in response) ||
+        response?.respObj?.error) {
+        msg.innerHTML = "Error requesting new password. " +
+            (response?.errMsg ?? '') +
+            (response?.respObj?.errMsg ?? '');
+        return;
+    }
+    // check for problems with request
+    const respObj = response.respObj;
+    if (!respObj?.success) {
+        msg.innerHTML = 'Error setting new password. ' +
+            (respObj?.pwdChangeErr ?? '');
+        return;
+    }
+    // success; destroy form
+    form.innerHTML = '';
+    msg.classList.add('okmsg');
+    msg.innerHTML = 'Password changed. You should get an email confirmation.';
+}
+
+ogst.showview = function(id) {
+    const vv = document.getElementsByClassName("ogstview");
+    for (const v of vv) {
+        v.style.display='none';
+    };
+    byid(id).style.display = 'block';
+    byid('projecttitle').scrollIntoView();
+}
+
 // function to update the top navigation
 ogst.updatenav = function() {
     if (window.isloggedin) {
@@ -222,15 +289,6 @@ ogst.updatenav = function() {
         spsp[1].style.display = 'inline';
         document.title = window.projects[window.projectname].title + ' Typesetting Framework';
     }
-}
-
-ogst.showview = function(id) {
-    const vv = document.getElementsByClassName("ogstview");
-    for (const v of vv) {
-        v.style.display='none';
-    };
-    byid(id).style.display = 'block';
-    byid('projecttitle').scrollIntoView();
 }
 
 //
