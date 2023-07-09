@@ -153,6 +153,9 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             #newpwdmsg.okmsg, #resetmsg.okmsg {
                 border: 3px solid var(--primary);
             }
+            body > main.container {
+                padding-top: 0;
+            }
         </style>
         <script>
             // starting globals

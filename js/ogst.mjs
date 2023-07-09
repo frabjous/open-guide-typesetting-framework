@@ -58,7 +58,6 @@ ogst.chooseproject = function(projectname) {
 }
 
 ogst.clearmain = function() {
-    ogst.showview("projectmain");
     const main = byid('projectmain');
     main.innerHTML = '';
     const crd = addelem({
@@ -67,6 +66,7 @@ ogst.clearmain = function() {
         parent: main
     });
     crd.setAttribute('aria-busy', true);
+    byid('projecttitle').scrollIntoView();
 }
 
 ogst.establishuser = function(respObj) {
@@ -96,23 +96,22 @@ ogst.loadhash = function(hash) {
     if (window.projectname == '') {
         ogst.showview('chooseproject');
         return;
-    } else {
-        if (!window.isloggedin) {
-            if (hash == "#forgotpwd") {
-                ogst.showview("forgotpwd");
-                return;
-            }
-            ogst.showview('login');
+    } 
+    if (!window.isloggedin) {
+        if (hash == "#forgotpwd") {
+            ogst.showview("forgotpwd");
             return;
         }
+        ogst.showview('login');
+        return;
     }
-    if (hash == '') {
-        ogst.loadprojectmain();
-    }
+    if (hash == 
+    ogst.loadprojectmain();
 }
 
 ogst.loadprojectmain = function() {
     ogst.clearmain();
+    ogst.showview("projectmain");
 }
 
 ogst.login = async function() {
