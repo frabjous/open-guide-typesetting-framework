@@ -145,12 +145,12 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             #themetogglefakecontents {
                 visibility: hidden;
             }
-            #newpwdmsg, #resetmsg, #loginmsg {
+            #newpwdmsg, #resetmsg, #loginmsg, #mainmsg {
                 border: 3px solid var(--form-element-invalid-border-color);
                 border-radius: 5px;
                 padding: 0.5rem;
             }
-            #newpwdmsg.okmsg, #resetmsg.okmsg {
+            #newpwdmsg.okmsg, #resetmsg.okmsg, #mainmsg.okmsg {
                 border: 3px solid var(--primary);
             }
             body > main.container {

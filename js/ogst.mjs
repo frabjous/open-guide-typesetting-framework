@@ -130,6 +130,15 @@ ogst.clearmain = function() {
     byid('projecttitle').scrollIntoView();
 }
 
+ogst.clearmessage = function() {
+    const main = byid('projectmain');
+    if (main?.msgdiv) {
+        main.msgdiv.style.display = 'none';
+        main.msgdiv.innerHTML = '';
+        main.msgdiv.classList.remove('okmsg');
+    }
+}
+
 ogst.editorquery = async function(req) {
     // always set postcmd in req
     if (!("postcmd" in req)) {
@@ -139,13 +148,14 @@ ogst.editorquery = async function(req) {
     req.username = window.username;
     req.accesskey = window.loginaccesskey;
     req.project = window.projectname;
-    let resp = await postData('php/jsonhandler.php', req);
+    const resp = await postData('php/jsonhandler.php', req);
     if (resp?.error || (!("respObj" in resp)) ||
         resp?.respObj?.error) {
         ogst.reporterror('Error getting data from server. ' +
         (resp?.errMsg ?? '') + ' ' + (resp?.respObj?.errMsg ?? ''));
+        return false;
     }
-    return resp;
+    return resp.respObj;
 }
 
 ogst.establishuser = function(respObj) {
@@ -283,6 +293,30 @@ ogst.logout = async function() {
     byid("loginmsg").innerHTML = "You have been logged out."
 }
 
+ogst.okmessage = function(okmsg) {
+    const main = byid('projectmain');
+    if (main?.msgdiv) {
+        main.msgdiv.style.display = 'block';
+        main.msgdiv.innerHTML = okmsg;
+        main.msgdiv.classList.add('okmsg');
+        byid('projecttitle').scrollIntoView();
+    } else {
+        console.log('Message without main message: ' + okmsg);
+    }
+}
+
+ogst.reporterror = function(errMsg) {
+    const main = byid('projectmain');
+    if (main?.msgdiv) {
+        main.msgdiv.style.display = 'block';
+        main.msgdiv.innerHTML = errMsg;
+        main.msgdiv.classList.remove('okmsg');
+        byid('projecttitle').scrollIntoView();
+    } else {
+        console.error(errMsg);
+    }
+}
+
 ogst.resetpwd = async function() {
     // read form
     const form = byid('forgotpwd').getElementsByTagName('form')[0];
@@ -334,6 +368,8 @@ ogst.resetpwd = async function() {
 
 ogst.showmydetails = async function() {
     if (!window.isloggedin) { return; }
+    const detresp = await ogst.editorquery({ postcmd: 'mydetails' });
+    if (!mydetails)
 
 }
 
