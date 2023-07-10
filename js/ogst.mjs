@@ -415,11 +415,38 @@ ogst.removeuser = function(usertodie) {
         href: '',
         mymdl: dialog,
         parent: ftr,
-        onclick: function(e) {
+        onclick: async function(e) {
             e.preventDefault();
             const usertodie = this.myusertodie;
+            const req = {
+                postcmd: 'killuser',
+                usertodie: usertodie
+            }
+            // set processing
+            this.innerHTML = 'removing';
+            this.setAttribute('aria-busy', 'true');
+            document.body.cursor = 'wait';
+            // send request to sever
+            const respObj = await ogst.editorquery(req);
+            // no longer processing
+            document.body.cursor = 'default';
+            // remove modal
             this.mymdl.parentNode.removeChild(this.mymdl);
-            console.log("killing " + this.myusertodie);
+            if (!respObj.success) { return; }
+            // remove user from table
+            const tbltbl = document.getElementsByClassName("userstable");
+            if (!tbltbl) { return; }
+            const tbl = tbltbl[0];
+            const trtr = tbl.getElementsByTagName("tr");
+            for (const trow of trtr) {
+                const tdtd = trow.getElementsByTagName("td");
+                if (!tdtd) { continue; }
+                if (tdtd[0].innerHTML == usertodie) {
+                    trow.parentNode.removeChild(trow);
+                    ogst.okmessage('user removed');
+                    break;
+                }
+            }
         }
     });
     cancelbtn.setAttribute('role','button');
@@ -672,6 +699,7 @@ ogst.showusers = async function(cm = true) {
         const killcell = addelem({
             tag: 'td',
             parent: trow,
+            title: 'remove user',
             innerHTML: '<span class="material-symbols-outlined">' +
                 'delete_forever</span>',
             myusername: usrname,

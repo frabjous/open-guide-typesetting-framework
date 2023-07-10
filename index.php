@@ -176,6 +176,9 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             .userstable .userinfocell span:last-child a {
                 font-family: monospace;
             }
+            .userstable td:last-child {
+                text-align: right;
+            }
             .userstable td:last-child .material-symbols-outlined {
                 cursor: pointer;
                 color: var(--form-element-invalid-border-color);
