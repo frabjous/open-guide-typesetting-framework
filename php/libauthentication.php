@@ -7,6 +7,15 @@
 // functions that verify logins, etc., for the typesetting framework  //
 ////////////////////////////////////////////////////////////////////////
 
+function create_new_user($project, $username, $name, $email) {
+    $users = load_users($project);
+    if (isset($users->{$username})) { return 'userexists'; }
+    $users->{$username} = new StdClass();
+    $users->{$username}->name = $name;
+    $users->{$username}->email = $email;
+    return save_users($project, $users);
+}
+
 function grant_oge_access($project) {
     $projectdir = get_projectdir($project);
     if (!isset($_SESSION["open-guide-editor-access"])) {
@@ -78,7 +87,7 @@ function new_set_pwd_link($project, $user) {
     $pwdobject = new StdClass();
     $pwdobject->hash = password_hash($newpwdlink, PASSWORD_DEFAULT);
     $pwdobject->expires = (time() + 2678400);
-    array_push( $users->{$user}->newpwdlinks, $pwdobject );
+    array_push($users->{$user}->newpwdlinks, $pwdobject);
     save_users($project, $users);
     return $newpwdlink;
 }
