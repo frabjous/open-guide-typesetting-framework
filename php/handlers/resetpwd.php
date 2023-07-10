@@ -61,6 +61,7 @@ $mailcontents =
     "click the link below:</p>\r\n" .
     "<p><a href=\"" . $fulllink . "\">" .
     mb_ereg_replace('&','&amp;', $fulllink) . "</a></p>\r\n" .
+    "<p>Your username is: " . $user . "</p>\r\n" .
     "<p>If this password reset request was made in error, please \r\n" .
     "inform the project contact person, \r\n" . $project_contact .
     " (<a href=\"mailto:" . $project_email . "\">" . $project_email .

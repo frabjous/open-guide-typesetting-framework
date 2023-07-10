@@ -621,8 +621,8 @@ ogst.showusers = async function(cm = true) {
         innerHTML: 'Email'
     });
     const emailinp = addelem({
-        id: 'newuseremail',
-        name: 'newuseremail',
+        id: 'newemail',
+        name: 'newemail',
         type: 'email',
         tag: 'input',
         required: 'true',

@@ -87,6 +87,7 @@ $mailcontents =
     "the typesetting framework for the " . $project_title . "</a>\r\n" .
     " has been changed. For security reasons, the new\r\n" .
     " password is not given here.</p>\r\n" .
+    "<p>Your username is: " . $username . "</p>\r\n" .
     "<p>If this password change was made in error, please \r\n" .
     "inform the project contact person, \r\n" . $project_contact .
     " (<a href=\"mailto:" . $project_email . "\">" . $project_email .
