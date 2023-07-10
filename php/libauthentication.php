@@ -140,6 +140,13 @@ function remove_oge_access($project) {
     }
 }
 
+function remove_user($project, $username) {
+    $users = load_users($project);
+    if (!isset($users->{$username})) { return false; }
+    unset($users->{$username});
+    return save_users($project, $users);
+}
+
 function save_users($project, $users) {
     $projectdir = get_projectdir($project);
     if (!$projectdir) { return false; }
