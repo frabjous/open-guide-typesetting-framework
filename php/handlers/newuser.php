@@ -19,13 +19,13 @@ if (!verify_by_accesskey($project, $username, $accesskey)) {
     jquit('Invalid access key provided.');
 }
 
-error_log('==== newname '. $newname);
-error_log('newemail '. $newemail);
-error_log('newusername ' . $newusername . '=====');
-
 if (!isset($newname) || !isset($newemail) || !isset($newusername)) {
     jquit('Insufficient information provided to create new user.');
 }
+
+// make username and email all lowercase
+$newusername = strtolower($newusername);
+$newemail = strtolower($newemail);
 
 // create the user
 $cnu = create_new_user($project, $newusername, $newname, $newemail);

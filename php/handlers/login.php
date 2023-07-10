@@ -22,6 +22,10 @@ $ogstname = mb_ereg_replace('@.*','',$ogstname);
 // make all lowercase
 $ogstname = strtolower($ogstname);
 
+
+// remove nonalphabetical characters
+$ogstname = mb_ereg_replace('[^a-z0-9]','',$ogstname);
+
 // verify that a password was given
 if (!isset($ogstpwd)) {
     $rv->success = false;

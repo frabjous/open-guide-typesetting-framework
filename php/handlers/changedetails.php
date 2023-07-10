@@ -15,6 +15,9 @@ if (!isset($detailsemail) || !isset($detailsname)) {
     jquit('No new email or name given.');
 }
 
+// make email all lowercase
+$detailsemail = strtolower($detailsemail);
+
 // load authentication and setting libraries
 require_once(dirname(__FILE__) . '/../readsettings.php');
 require_once(dirname(__FILE__) . '/../libauthentication.php');
