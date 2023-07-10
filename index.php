@@ -160,6 +160,10 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 margin-right: 1rem;
                 margin-top: 1rem;
             }
+            .ogstview > h2,
+            #projectmain #projectcontents {
+                padding-top: 3rem;
+            }
         </style>
         <script>
             // starting globals
