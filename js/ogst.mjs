@@ -226,14 +226,14 @@ ogst.invitenewuser = async function() {
     // set request to server
     const respObj = await ogst.editorquery(forminfo);
     // reload from scratch
+    // save bad info
+    const mainmsg = byid("mainmsg").innerHTML;
     ogst.clearmain();
     ogst.showusers(false);
     if (respObj?.success) {
-//        setTimeout(
-            //function(){ 
-                ogst.okmessage('Invitation sent.'); },
-           // 2000
-        //);
+        ogst.okmessage('Invitation sent.');
+    } else {
+        ogst.reporterror(mainmsg);
     }
 }
 
