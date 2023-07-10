@@ -31,24 +31,38 @@ function addelem(opts) {
     return elem;
 }
 
-function byid(id) { 
+function byid(id) {
     return document.getElementById(id);
+}
+
+ogst.activebutton = function(h) {
+    const mainnav = byid('projectmainnav');
+    const bb = mainnav.getElementsByTagName('a');
+    for (const b of bb) {
+        b.classList.remove('outline','contrast');
+    }
+    const btn = byid(h + 'button');
+    if (!btn) { return; }
+    btn.classList.add('outline','contrast');
 }
 
 ogst.changedetails = async function() {
     const f = byid('changedetailsform');
     const forminfo = getformfields(f);
     if (forminfo.anyinvalid) { return; }
+    forminfo.postcmd = 'changedetails';
     // mark processing
     const b = byid('changedetailsbutton');
     b.setAttribute('aria-busy', 'true');
     b.innerHTML = 'changing';
     document.body.cursor = 'wait';
     const respObj = await ogst.editorquery(forminfo);
-
-    b.setAttribute('aria-busy, 'false');
+    b.setAttribute('aria-busy', 'false');
     b.innerHTML = 'change';
     document.body.cursor = 'default';
+    if (respObj?.success) {
+        ogst.okmessage('New details saved.');
+    }
 }
 
 // function to switch between light/dark themes
@@ -81,6 +95,7 @@ ogst.clearmain = function() {
         const d = addelem({
             tag: 'div',
             parent: main,
+            id: 'projectmainnav',
             classes: ['mainnav']
         });
         const currentbutton = addelem({
@@ -93,7 +108,7 @@ ogst.clearmain = function() {
         const archivebutton = addelem({
             parent: d,
             tag: 'a',
-            id: 'archivebutton',
+            id: 'archivedbutton',
             href: '#archived',
             innerHTML: 'archived'
         });
@@ -143,6 +158,7 @@ ogst.clearmain = function() {
     }
     main.loading(true);
     main.contents.innerHTML = '';
+    ogst.clearmessage();
     byid('projecttitle').scrollIntoView();
 }
 
@@ -390,6 +406,7 @@ ogst.showmydetails = async function() {
     if (!detresp || !detresp?.mydetails) { return; }
     const mydetails = detresp.mydetails;
     ogst.clearmessage();
+    ogst.activebutton('mydetails');
     const hdr = addelem({
         tag: 'h2',
         parent: main.contents,
