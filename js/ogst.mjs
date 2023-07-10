@@ -50,6 +50,18 @@ ogst.activebutton = function(h) {
     btn.classList.add('outline','contrast');
 }
 
+ogst.assignmentcard = function(
+    assignmentType, assignmentTypeInfo, sect, isarchived) {
+    const card = addelem({
+        tag: 'article',
+        classes: [
+            'assignment',
+            'ogst-' + assignmentType,
+            ((isarchived) ? 'ogst-archive' : 'ogst-current')
+        ]
+    });
+}
+
 // function for user to change their email or name
 ogst.changedetails = async function() {
     const f = byid('changedetailsform');
@@ -648,23 +660,36 @@ ogst.showassignments(assignments, isarchived = false) {
     // read assignment types from project settings
     const projectSettings = window.projects[window.projectname];
     const assignmentTypes = projectSettings.assignmentTypes ?? {};
+    // loop over different types of assignments
     for (const assignmentType in assignmentTypes) {
-        // can skip those assignment types that have no entries
-        if (!(assignmentType in assignments)) {
-            continue;
-        }
         const assignmentTypeInfo = assignments[assignmentType];
-        // can also skip those that are empty
-        if (Object.keys(assignmentTypeInfo).length == 0) {
-            continue;
-        }
-        const plural = ((Object.keys(assignmentTypeInfo).length > 1) ?
+        const plural = ((Object.keys(assignmentTypeInfo).length !== 1) ?
             's': '');
+        const sect = addelem({
+            tag: 'section',
+            parent: main.contents,
+            mytype: assignmentType
+        });
         const hdr = addelem({
             tag: 'h3',
             innerHTML: assignmentType.charAt(0).toUpperCase +
                 assignmentType.substr(1) + plural,
-            parent: 
+            parent: sect
+        });
+        const newassignmentButton = ({
+            tag: 'button',
+            type: 'button',
+            innerHTML: 'add new ' + assignmentType,
+            parent: sect,
+            onclick: function(e) {
+                ogst.newassignment(this.parentNode.mytype, this);
+            }
+        });
+        for (const assignment in assignmentTypeInfo) {
+            const assignmentCard = ogst.assignmentcard(
+                assignmentType, assignmentTypeInfo, sect, isarchived
+            );
+        }
     }
 }
 
