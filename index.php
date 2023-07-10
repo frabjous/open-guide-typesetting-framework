@@ -167,6 +167,19 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             #projectmain #projectcontents {
                 padding-top: 3rem;
             }
+            .userstable .userinfocell span:first-child {
+                font-weight: bold;
+            }
+            .userstable .userinfocell span:last-child {
+                font-size: 90%;
+            }
+            .userstable .userinfocell span:last-child a {
+                font-family: monospace;
+            }
+            .userstable td:last-child .material-symbols-outlined {
+                cursor: pointer;
+                color: var(--form-element-invalid-border-color);
+            }
         </style>
         <script>
             // starting globals

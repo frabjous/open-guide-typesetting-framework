@@ -374,6 +374,10 @@ ogst.okmessage = function(okmsg) {
     }
 }
 
+ogst.removeuser = function(usertodie) {
+    
+}
+
 ogst.reporterror = function(errMsg) {
     const main = byid('projectmain');
     if (main?.msgdiv) {
@@ -588,8 +592,48 @@ ogst.showusers = async function(cm = true) {
         parent: main.contents,
         innerHTML: 'Site users'
     });
-    // todo: table
-    console.log(usersinfo);
+    // table of current users
+    const tbl = addelem({
+        tag: 'table',
+        classes: ['userstable'],
+        parent: main.contents
+    });
+    tbl.setAttribute("role","grid");
+    const tbody = addelem({
+        tag: 'tbody',
+        parent: tbl
+    });
+    for (const usrname in usersinfo) {
+        const trow = addelem({
+            tag: 'tr',
+            parent: tbody
+        });
+        const unamecell = addelem({
+            tag: 'td',
+            parent: trow,
+            innerHTML: usrname
+        });
+        const necell = addelem({
+            tag: 'td',
+            parent: trow,
+            innerHTML: '<span>' + usersinfo[usrname].name + '</span>' +
+                '<br><span>(<a href="mailto:' + usersinfo[usrname].email +
+                '">' + usersinfo[usrname].email + '</a>)</span>',
+            classes: ['userinfocell']
+        });
+        const killcell = addelem({
+            tag: 'td',
+            parent: trow,
+            innerHTML: '<span class="material-symbols-outlined">' +
+                'delete_forever</span>',
+            myusername: usrname,
+            onclick: function() {
+                ogst.removeuser(this.myusername);
+            }
+        });
+    }
+
+    // new user form
     const subhdr = addelem({
         tag: 'h3',
         parent: main.contents,
