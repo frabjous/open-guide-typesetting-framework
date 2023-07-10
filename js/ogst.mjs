@@ -51,15 +51,52 @@ ogst.activebutton = function(h) {
 }
 
 ogst.assignmentcard = function(
-    assignmentType, assignmentTypeInfo, sect, isarchived) {
+    assignmentType, assignmentId, assignmentInfo, sect, isarchived) {
     const card = addelem({
         tag: 'article',
+        parent: sect,
         classes: [
             'assignment',
             'ogst-' + assignmentType,
             ((isarchived) ? 'ogst-archive' : 'ogst-current')
         ]
     });
+    card.hdr = addelem({
+        tag: 'header',
+        parent: card,
+        classes: ['assignmenttitle']
+    });
+    card.contents = addelem({
+        tag: 'div',
+        parent: card,
+        innerHTML: JSON.stringify(assignmentInfo), // TODO: change this
+        classes: ['assignmentinner']
+    });
+    // card message areas and associated functions
+    card.msg = addelem({
+        tag: 'footer',
+        parent: card,
+        classes: ['cardmsg']
+    });
+    card.msg.style.display = 'none';
+    card.reporterror = function(errMsg) {
+        card.msg.style.display = 'block';
+        card.msg.classList.remove('okmsg');
+        card.msg.innerHTML = errMsg;
+        card.msg.scrollIntoView(false);
+    }
+    card.okmessage = function(okMsg) {
+        card.msg.style.display = 'block';
+        card.msg.classList.add('okmsg');
+        card.msg.innerHTML = okMsg;
+        card.msg.scrollIntoView(false);
+    }
+    card.clearmessage = function() {
+        card.msg.style.display = 'none';
+        card.msg.classList.remove('okmsg');
+        card.msg.innerHTML = '';
+    }
+    return card;
 }
 
 // function for user to change their email or name
@@ -569,7 +606,6 @@ ogst.setnewpwd = async function() {
         const msg = byid("newpwdmsg");
         msg.style.display = "block";
         msg.innerHTML = "Passwords do not match.";
-        console.log('dnm',(new Date()).getTime());
         return;
     }
     // mark as processing
@@ -655,7 +691,7 @@ ogst.showarchived = async function() {
 
 // generic function for showing a list assignments, either archived
 // or current
-ogst.showassignments(assignments, isarchived = false) {
+ogst.showassignments = function(assignments, isarchived = false) {
     const main = byid('projectmain');
     // read assignment types from project settings
     const projectSettings = window.projects[window.projectname];
@@ -687,7 +723,8 @@ ogst.showassignments(assignments, isarchived = false) {
         });
         for (const assignment in assignmentTypeInfo) {
             const assignmentCard = ogst.assignmentcard(
-                assignmentType, assignmentTypeInfo, sect, isarchived
+                assignmentType, assignment,
+                assignmentTypeInfo[assignment], sect, isarchived
             );
         }
     }
@@ -695,7 +732,7 @@ ogst.showassignments(assignments, isarchived = false) {
 
 // show the current typesetting tasks
 ogst.showcurrent = async function() {
-    if (!window.islogedin) { return; }
+    if (!window.isloggedin) { return; }
     // get information about current projects
     const resp = await ogst.editorquery({ postcmd: 'allcurrent' });
     // no longer loading
