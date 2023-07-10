@@ -48,15 +48,18 @@ ogst.activebutton = function(h) {
 
 ogst.changedetails = async function() {
     const f = byid('changedetailsform');
+    if (!f) { return; }
     const forminfo = getformfields(f);
     if (forminfo.anyinvalid) { return; }
     forminfo.postcmd = 'changedetails';
     // mark processing
     const b = byid('changedetailsbutton');
-    b.setAttribute('aria-busy', 'true');
     b.innerHTML = 'changing';
+    b.setAttribute('aria-busy', 'true');
     document.body.cursor = 'wait';
+    // get info from server
     const respObj = await ogst.editorquery(forminfo);
+    // mark no longer processing
     b.setAttribute('aria-busy', 'false');
     b.innerHTML = 'change';
     document.body.cursor = 'default';
@@ -207,6 +210,31 @@ ogst.establishuser = function(respObj) {
     window.loginaccesskey = respObj.loginaccesskey;
     ogst.updatenav();
     ogst.loadhash((window?.location?.hash ?? ''));
+}
+
+ogst.invitenewuser = async function() {
+    const f = byid('newuserform');
+    if (!f) { return; }
+    const forminfo = getformfields(f);
+    if (forminfo.anyinvalid) { return; }
+    forminfo.postcmd = 'newuser';
+    // mark processing
+    const b = byid('newuserbutton');
+    b.innerHTML = 'creating and inviting';
+    b.setAttribute('aria-busy', 'true');
+    document.body.cursor = 'wait';
+    // set request to server
+    const respObj = await ogst.editorquery(forminfo);
+    // reload from scratch
+    ogst.clearmain();
+    ogst.showusers(false);
+    if (respObj?.success) {
+//        setTimeout(
+            //function(){ 
+                ogst.okmessage('Invitation sent.'); },
+           // 2000
+        //);
+    }
 }
 
 ogst.loadhash = function(hash) {
@@ -544,7 +572,7 @@ ogst.showmydetails = async function() {
 }
 
 
-ogst.showusers = async function() {
+ogst.showusers = async function(cm = true) {
     if (!window.isloggedin) { return; }
     const usersresp = await ogst.editorquery({
         postcmd: 'allusers'
@@ -553,7 +581,7 @@ ogst.showusers = async function() {
     main.loading(false);
     if (!usersresp || !usersresp?.usersinfo) { return; }
     const usersinfo = usersresp.usersinfo;
-    ogst.clearmessage();
+    if (cm) { ogst.clearmessage(); }
     ogst.activebutton('users');
     const hdr = addelem({
         tag: 'h2',
@@ -569,7 +597,7 @@ ogst.showusers = async function() {
     });
     const form = addelem({
         tag: 'form',
-        id: 'newusersform',
+        id: 'newuserform',
         parent: main.contents
     });
     form.onsubmit = function(e) { e.preventDefault(); };
@@ -601,7 +629,8 @@ ogst.showusers = async function() {
         placeholder: 'email address',
         onchange: function() {
             this.myusernameinput.value =
-                this.value.replace(/@.*/,'');
+                this.value.replace(/@.*/,'')
+                .replace(/[^A-Za-z0-9]/g,'').toLowerCase();
         },
         parent: emaillbl
     });
