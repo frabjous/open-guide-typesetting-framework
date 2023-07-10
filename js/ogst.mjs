@@ -644,6 +644,28 @@ ogst.showarchived = async function() {
 // generic function for showing a list assignments, either archived
 // or current
 ogst.showassignments(assignments, isarchived = false) {
+    const main = byid('projectmain');
+    // read assignment types from project settings
+    const projectSettings = window.projects[window.projectname];
+    const assignmentTypes = projectSettings.assignmentTypes ?? {};
+    for (const assignmentType in assignmentTypes) {
+        // can skip those assignment types that have no entries
+        if (!(assignmentType in assignments)) {
+            continue;
+        }
+        const assignmentTypeInfo = assignments[assignmentType];
+        // can also skip those that are empty
+        if (Object.keys(assignmentTypeInfo).length == 0) {
+            continue;
+        }
+        const plural = ((Object.keys(assignmentTypeInfo).length > 1) ?
+            's': '');
+        const hdr = addelem({
+            tag: 'h3',
+            innerHTML: assignmentType.charAt(0).toUpperCase +
+                assignmentType.substr(1) + plural,
+            parent: 
+    }
 }
 
 // show the current typesetting tasks
