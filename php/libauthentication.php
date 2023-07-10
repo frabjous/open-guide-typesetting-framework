@@ -155,6 +155,14 @@ function set_new_password($project, $user, $pwd) {
     return save_users($project, $users);
 }
 
+function set_user_details($project, $user, $name, $email) {
+    $users = load_users($project);
+    if (!isset($users->{$user})) { return false; }
+    $users->{$user}->name = $name;
+    $users->{$user}->email = $email;
+    return save_users($project, $users);
+}
+
 function verify_by_accesskey($project, $user, $accesskey) {
     $users = load_users($project);
     if (!isset($users->{$user}->keylist)) { return false; }
