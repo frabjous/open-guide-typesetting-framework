@@ -19,6 +19,10 @@ if (!verify_by_accesskey($project, $username, $accesskey)) {
     jquit('Invalid access key provided.');
 }
 
+error_log('==== newname '. $newname);
+error_log('newemail '. $newemail);
+error_log('newusername ' . $newusername . '=====');
+
 if (!isset($newname) || !isset($newemail) || !isset($newusername)) {
     jquit('Insufficient information provided to create new user.');
 }
@@ -26,7 +30,7 @@ if (!isset($newname) || !isset($newemail) || !isset($newusername)) {
 // create the user
 $cnu = create_new_user($project, $newusername, $newname, $newemail);
 
-if ($cnu == 'userexists') {
+if ($cnu === 'userexists') {
     jquit('A user with that username already exists.');
 }
 
@@ -56,19 +60,21 @@ $fulllink =  $fullpath . "?newpwd=" . rawurlencode($nspl) .
     "&user=" . rawurlencode($newusername) . "&project=" . rawurlencode($project);
 
 $mailcontents =
-    "\r\n<p>An account has been created for you on \r\n" .
+    "\r\n<p>" . $newname . ",</p>\r\n" .
+    "<p>An account has been created for you on \r\n" .
     "<a href=\"" . $fullpath . "\">\r\n" .
     "the typesetting framework for the " . $project_title . "</a>.\r\n" .
     "To make use of it, you will need to set a password\r\n" .
     "by visiting this link:\r\n" .
     "<p><a href=\"" . $fulllink . "\">" .
     mb_ereg_replace('&','&amp;', $fulllink) . "</a></p>\r\n" .
+    "<p>Your username is: " . $newusername . "</p>\r\n" .
     "<p>If you believe this account was created in error, please \r\n" .
     "inform the project contact person, \r\n" . $project_contact .
     " (<a href=\"mailto:" . $project_email . "\">" . $project_email .
     "</a>),\r\n to let them know.</p>\r\n";
 
-send_email($email, 'Account created on the ' . $project_title .
+send_email($newemail, 'Account created on the ' . $project_title .
     ' typesetting framework', $mailcontents);
 
 $rv->success = true;
