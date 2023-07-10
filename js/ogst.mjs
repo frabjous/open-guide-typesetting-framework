@@ -375,7 +375,55 @@ ogst.okmessage = function(okmsg) {
 }
 
 ogst.removeuser = function(usertodie) {
-    
+    const main = byid('projectmain');
+    const dialog = addelem({
+        tag: 'dialog',
+        id: 'killuserdialog',
+        parent: main.contents
+    });
+    dialog.setAttribute('open','true');
+    const artcl = addelem({
+        tag: 'article',
+        parent: dialog
+    });
+    const hdr = addelem({
+        tag: 'h4',
+        innerHTML: 'Do you really want to remove the user ' +
+            usertodie + '?',
+        parent: artcl
+    });
+    const ftr = addelem({
+        tag: 'footer',
+        parent: artcl
+    });
+    const cancelbtn = addelem({
+        tag: 'a',
+        classes: ['secondary'],
+        innerHTML: 'cancel',
+        href: '',
+        parent: ftr,
+        mymdl: dialog,
+        onclick: function(e) {
+            e.preventDefault();
+            this.mymdl.parentNode.removeChild(this.mymdl);
+        }
+    });
+    const killbtn = addelem({
+        tag: 'a',
+        innerHTML: 'confirm',
+        myusertodie: usertodie,
+        href: '',
+        mymdl: dialog,
+        parent: ftr,
+        onclick: function(e) {
+            e.preventDefault();
+            const usertodie = this.myusertodie;
+            this.mymdl.parentNode.removeChild(this.mymdl);
+            console.log("killing " + this.myusertodie);
+        }
+    });
+    cancelbtn.setAttribute('role','button');
+    killbtn.setAttribute('role','button');
 }
 
 ogst.reporterror = function(errMsg) {
