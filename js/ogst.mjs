@@ -88,8 +88,12 @@ ogst.chooseproject = function(projectname) {
 }
 
 ogst.clearmain = function() {
-    if (!window.isloggedin) { return; }
     const main = byid('projectmain');
+    if (!window.isloggedin) {
+        main.innerHTML = 'You do not have access to this '.
+            'when not logged in.';
+        return;
+    }
     if (!main?.hasbuttons) {
         main.innerHTML = '';
         const d = addelem({
@@ -235,6 +239,11 @@ ogst.loadhash = function(hash) {
     ogst.loadprojectmain();
     if (hash == '#mydetails') {
         ogst.showmydetails();
+        return;
+    }
+    if (hash == '#users') {
+        ogst.showusers();
+        return;
     }
 }
 
@@ -398,6 +407,75 @@ ogst.resetpwd = async function() {
         'for the reset link. You should close this tab now.';
 }
 
+ogst.setnewpwd = async function() {
+    const form = byid('newpwd').getElementsByTagName('form')[0];
+    const forminfo = getformfields(form);
+    if (forminfo.anyinvalid) { return; }
+    if (forminfo.ogstnewpwd1 != forminfo.ogstnewpwd2) {
+        const msg = byid("newpwdmsg");
+        msg.style.display = "block";
+        msg.innerHTML = "Passwords do not match.";
+        console.log('dnm',(new Date()).getTime());
+        return;
+    }
+    // mark as processing
+    const btn = byid('newpwdbutton');
+    btn.innerHTML = 'setting new password';
+    btn.setAttribute('aria-busy', 'true');
+    document.body.cursor = 'wait';
+    // add to request
+    forminfo.postcmd = 'newpwd';
+    forminfo.newpwdlink = (window.newpwdlink ?? '');
+    forminfo.accesskey = (window.loginaccesskey ?? '');
+    forminfo.project = window.projectname;
+    forminfo.username = window.username;
+    forminfo.wasloggedin = window.isloggedin;
+    //  make request
+    const response = await postData('php/jsonhandler.php', forminfo);
+    // mark no longer waiting
+    document.body.cursor = 'default';
+    btn.innerHTML = 'set new password';
+    btn.setAttribute('aria-busy', 'false');
+    // always show message afterwards
+    const msg = byid("newpwdmsg");
+    msg.style.display = "block";
+    // check for errors
+    if (response?.error || !("respObj" in response) ||
+        response?.respObj?.error) {
+        msg.innerHTML = "Error requesting new password. " +
+            (response?.errMsg ?? '') +
+            (response?.respObj?.errMsg ?? '');
+        return;
+    }
+    // check for problems with request
+    const respObj = response.respObj;
+    if (!respObj?.success) {
+        msg.innerHTML = 'Error setting new password. ' +
+            (respObj?.pwdChangeErrMsg ?? '');
+        return;
+    }
+    // success; destroy form
+    form.innerHTML = '';
+    msg.classList.add('okmsg');
+    msg.innerHTML = 'Password changed. You should get an email confirmation.';
+    window.newpwdlink = '';
+    history.pushState('',document.title,'./');
+    // in four seconds, redirect back to login form and reset form
+    if (!window.isloggedin) {
+        setTimeout(function() {
+            ogst.showview('login');
+            byid('ogstname').removeAttribute("aria-invalid");
+            byid('ogstname').value='';
+            byid('ogstpwd').removeAttribute("aria-invalid");
+            byid('ogstpwd').value='';
+            byid('ogstremember').checked = false;
+            byid('loginmsg').style.display = "none";
+        },
+        4000);
+    }
+}
+
+
 ogst.showmydetails = async function() {
     if (!window.isloggedin) { return; }
     const detresp = await ogst.editorquery({ postcmd: 'mydetails' });
@@ -465,72 +543,72 @@ ogst.showmydetails = async function() {
     });
 }
 
-ogst.setnewpwd = async function() {
-    const form = byid('newpwd').getElementsByTagName('form')[0];
-    const forminfo = getformfields(form);
-    if (forminfo.anyinvalid) { return; }
-    if (forminfo.ogstnewpwd1 != forminfo.ogstnewpwd2) {
-        const msg = byid("newpwdmsg");
-        msg.style.display = "block";
-        msg.innerHTML = "Passwords do not match.";
-        console.log('dnm',(new Date()).getTime());
-        return;
-    }
-    // mark as processing
-    const btn = byid('newpwdbutton');
-    btn.innerHTML = 'setting new password';
-    btn.setAttribute('aria-busy', 'true');
-    document.body.cursor = 'wait';
-    // add to request
-    forminfo.postcmd = 'newpwd';
-    forminfo.newpwdlink = (window.newpwdlink ?? '');
-    forminfo.accesskey = (window.loginaccesskey ?? '');
-    forminfo.project = window.projectname;
-    forminfo.username = window.username;
-    forminfo.wasloggedin = window.isloggedin;
-    //  make request
-    const response = await postData('php/jsonhandler.php', forminfo);
-    // mark no longer waiting
-    document.body.cursor = 'default';
-    btn.innerHTML = 'set new password';
-    btn.setAttribute('aria-busy', 'false');
-    // always show message afterwards
-    const msg = byid("newpwdmsg");
-    msg.style.display = "block";
-    // check for errors
-    if (response?.error || !("respObj" in response) ||
-        response?.respObj?.error) {
-        msg.innerHTML = "Error requesting new password. " +
-            (response?.errMsg ?? '') +
-            (response?.respObj?.errMsg ?? '');
-        return;
-    }
-    // check for problems with request
-    const respObj = response.respObj;
-    if (!respObj?.success) {
-        msg.innerHTML = 'Error setting new password. ' +
-            (respObj?.pwdChangeErrMsg ?? '');
-        return;
-    }
-    // success; destroy form
-    form.innerHTML = '';
-    msg.classList.add('okmsg');
-    msg.innerHTML = 'Password changed. You should get an email confirmation.';
-    window.newpwdlink = '';
-    history.pushState('',document.title,'./');
-    // in four seconds, redirect back to login form and reset form
-    if (!window.isloggedin) {
-        setTimeout(function() {
-            ogst.showview('login');
-            byid('ogstname').removeAttribute("aria-invalid");
-            byid('ogstname').value='';
-            byid('ogstpwd').removeAttribute("aria-invalid");
-            byid('ogstpwd').value='';
-            byid('ogstremember').checked = false;
-            byid('loginmsg').style.display = "none";
-        },
-        4000);
-    }
+
+ogst.showusers = async function() {
+    if (!window.isloggedin) { return; }
+    const detresp = await ogst.editorquery({ postcmd: 'mydetails' });
+    const main = byid('projectmain');
+    main.loading(false);
+    if (!detresp || !detresp?.mydetails) { return; }
+    const mydetails = detresp.mydetails;
+    ogst.clearmessage();
+    ogst.activebutton('mydetails');
+    const hdr = addelem({
+        tag: 'h2',
+        parent: main.contents,
+        innerHTML: 'Editor details'
+    });
+    const form = addelem({
+        tag: 'form',
+        id: 'changedetailsform',
+        parent: main.contents
+    });
+    form.onsubmit = function(e) { e.preventDefault(); };
+    const namelbl = addelem({
+        tag: 'label',
+        parent: form,
+        innerHTML: 'Name'
+    });
+    const nameinp = addelem({
+        id: 'detailsname',
+        name: 'detailsname',
+        type: 'text',
+        tag: 'input',
+        required: 'true',
+        value: mydetails.name,
+        parent: namelbl
+    });
+    const emaillbl = addelem({
+        tag: 'label',
+        parent: form,
+        innerHTML: 'Email'
+    });
+    const emailinp = addelem({
+        id: 'detailsemail',
+        name: 'detailsemail',
+        type: 'email',
+        tag: 'input',
+        required: 'true',
+        value: mydetails.email,
+        parent: emaillbl
+    });
+    const changeButton = addelem({
+        id: 'changedetailsbutton',
+        tag: 'button',
+        type: 'button',
+        innerHTML: 'change',
+        parent: form,
+        onclick: function(e) {
+            ogst.changedetails();
+        }
+    });
+    const pwdchangelink = addelem({
+        id: 'changepwdlink',
+        innerHTML: 'change password',
+        tag: 'a',
+        parent: form,
+        href: '#newpwd'
+    });
 }
 
 ogst.showview = function(id) {
