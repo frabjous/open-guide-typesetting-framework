@@ -11,6 +11,7 @@ const ogst = {};
 import getformfields from '../open-guide-editor/open-guide-misc/formreader.mjs';
 import postData from '../open-guide-editor/open-guide-misc/fetch.mjs';
 
+// generic function for adding elements
 function addelem(opts) {
     if (!("tag" in opts)) { return false; }
     const elem = document.createElement(opts.tag);
@@ -31,10 +32,13 @@ function addelem(opts) {
     return elem;
 }
 
+// to save some typing
 function byid(id) {
     return document.getElementById(id);
 }
 
+// makes one of the buttons near the top of the projects
+// page a different color
 ogst.activebutton = function(h) {
     const mainnav = byid('projectmainnav');
     const bb = mainnav.getElementsByTagName('a');
@@ -46,6 +50,7 @@ ogst.activebutton = function(h) {
     btn.classList.add('outline','contrast');
 }
 
+// function for user to change their email or name
 ogst.changedetails = async function() {
     const f = byid('changedetailsform');
     if (!f) { return; }
@@ -90,6 +95,8 @@ ogst.chooseproject = function(projectname) {
     ogst.loadhash((window?.location?.hash ?? ''));
 }
 
+// clear the project main and set it up for something new;
+// also marks it as loading
 ogst.clearmain = function() {
     const main = byid('projectmain');
     if (!window.isloggedin) {
@@ -97,6 +104,7 @@ ogst.clearmain = function() {
             'when not logged in.';
         return;
     }
+    // create buttons if they haven't been already
     if (!main?.hasbuttons) {
         main.innerHTML = '';
         const d = addelem({
@@ -166,9 +174,11 @@ ogst.clearmain = function() {
     main.loading(true);
     main.contents.innerHTML = '';
     ogst.clearmessage();
+    // scroll to top
     byid('projecttitle').scrollIntoView();
 }
 
+// clear the message at the top of the main project area
 ogst.clearmessage = function() {
     const main = byid('projectmain');
     if (main?.msgdiv) {
@@ -178,6 +188,8 @@ ogst.clearmessage = function() {
     }
 }
 
+// generic function to make json requests, but only for logged in
+// editors
 ogst.editorquery = async function(req) {
     // always set postcmd in req
     if (!("postcmd" in req)) {
@@ -197,6 +209,7 @@ ogst.editorquery = async function(req) {
     return resp.respObj;
 }
 
+// clears login form and sets someone as the active user
 ogst.establishuser = function(respObj) {
     // reset login fields
     byid('ogstname').removeAttribute("aria-invalid");
@@ -212,6 +225,7 @@ ogst.establishuser = function(respObj) {
     ogst.loadhash((window?.location?.hash ?? ''));
 }
 
+// create a new user and invites them to set a password
 ogst.invitenewuser = async function() {
     const f = byid('newuserform');
     if (!f) { return; }
@@ -237,6 +251,7 @@ ogst.invitenewuser = async function() {
     }
 }
 
+// loads a given part of the framework depending on the #hash part of url
 ogst.loadhash = function(hash) {
     // absolute top preference is to load newpwd if set by
     // url parameters
@@ -273,14 +288,26 @@ ogst.loadhash = function(hash) {
         ogst.showusers();
         return;
     }
+    if (hash == '#current') {
+        ogst.showcurrent();
+        return;
+    }
+    if (hash == '#archived') {
+        ogst.showarchived();
+        return;
+    }
+    // default to current project page
+    ogst.showcurrent();
 }
 
+// clears the main area and shows it
 ogst.loadprojectmain = function() {
     ogst.clearmain();
     ogst.showview("projectmain");
     const main = byid("projectmain");
 }
 
+// sends a login request
 ogst.login = async function() {
     // get the important elements
     const form = byid('login').getElementsByTagName('form')[0];
@@ -334,6 +361,7 @@ ogst.login = async function() {
     ogst.establishuser(respObj);
 }
 
+// processes and sends a logout request
 ogst.logout = async function() {
     // mark button as processing
     const logoutbtn = byid("logoutbutton");
@@ -351,6 +379,8 @@ ogst.logout = async function() {
     window.username = '';
     window.isloggedin = false;
     window.loginaccesskey = '';
+    // should delete everything in main so it can't be seen when
+    // logged out
     ogst.clearmain();
     // unmark button as processing
     logoutbtn.innerHTML = 'log out';
@@ -362,6 +392,7 @@ ogst.logout = async function() {
     byid("loginmsg").innerHTML = "You have been logged out."
 }
 
+// puts a message which is not an error at top of projects page
 ogst.okmessage = function(okmsg) {
     const main = byid('projectmain');
     if (main?.msgdiv) {
@@ -374,6 +405,7 @@ ogst.okmessage = function(okmsg) {
     }
 }
 
+// create a dialog to confirm whether or not to remove a user
 ogst.removeuser = function(usertodie) {
     const main = byid('projectmain');
     const dialog = addelem({
@@ -453,6 +485,7 @@ ogst.removeuser = function(usertodie) {
     killbtn.setAttribute('role','button');
 }
 
+// puts an error message at top of projects section
 ogst.reporterror = function(errMsg) {
     const main = byid('projectmain');
     if (main?.msgdiv) {
@@ -465,6 +498,7 @@ ogst.reporterror = function(errMsg) {
     }
 }
 
+// sends a request to have password reset
 ogst.resetpwd = async function() {
     // read form
     const form = byid('forgotpwd').getElementsByTagName('form')[0];
@@ -514,6 +548,7 @@ ogst.resetpwd = async function() {
         'for the reset link. You should close this tab now.';
 }
 
+// sends a request to change or set user password
 ogst.setnewpwd = async function() {
     const form = byid('newpwd').getElementsByTagName('form')[0];
     const forminfo = getformfields(form);
@@ -582,7 +617,59 @@ ogst.setnewpwd = async function() {
     }
 }
 
+// show the current typesetting tasks
+ogst.showarchived = async function() {
+    if (!window.islogedin) { return; }
+    // get information about current projects
+    const resp = await ogst.editorquery({ postcmd: 'allarchived' });
+    // no longer loading
+    const main = byid('projectmain');
+    main.loading(false);
+    // if fetching failed, there's nothing to do; the editor query
+    // should be showing an error
+    if (!resp) { return; }
+    // start with fresh screen, make "current" button the active one
+    ogst.clearmessage();
+    ogst.activebutton('archived');
+    // header
+    const hdr = addelem({
+        tag: 'h2',
+        innerHTML: 'Archived Typesetting Assignments',
+        parent: main.contents
+    });
+    ogst.showassignments(resp, true);
+}
 
+
+// generic function for showing a list assignments, either archived
+// or current
+ogst.showassignments(assignments, isarchived = false) {
+}
+
+// show the current typesetting tasks
+ogst.showcurrent = async function() {
+    if (!window.islogedin) { return; }
+    // get information about current projects
+    const resp = await ogst.editorquery({ postcmd: 'allcurrent' });
+    // no longer loading
+    const main = byid('projectmain');
+    main.loading(false);
+    // if fetching failed, there's nothing to do; the editor query
+    // should be showing an error
+    if (!resp) { return; }
+    // start with fresh screen, make "current" button the active one
+    ogst.clearmessage();
+    ogst.activebutton('current');
+    // header
+    const hdr = addelem({
+        tag: 'h2',
+        innerHTML: 'Current Typesetting Assignments',
+        parent: main.contents
+    });
+    ogst.showassignments(resp, false);
+}
+
+// shows "my details" section under main
 ogst.showmydetails = async function() {
     if (!window.isloggedin) { return; }
     const detresp = await ogst.editorquery({ postcmd: 'mydetails' });
@@ -651,6 +738,7 @@ ogst.showmydetails = async function() {
 }
 
 
+// shows the "user" section under main
 ogst.showusers = async function(cm = true) {
     if (!window.isloggedin) { return; }
     const usersresp = await ogst.editorquery({
@@ -782,6 +870,7 @@ ogst.showusers = async function(cm = true) {
     });
 }
 
+// show a current part of the page and hides the others
 ogst.showview = function(id) {
     const vv = document.getElementsByClassName("ogstview");
     for (const v of vv) {
@@ -810,7 +899,8 @@ ogst.updatenav = function() {
 //
 // Things to do at load
 //
-// attach load change listener
+
+// attach hash change listener; lets hashes work with back button
 window.onhashchange = function(e) {
     ogst.loadhash(window?.location?.hash ?? '');
 }
@@ -828,9 +918,12 @@ byid("projecttitle").onclick = function(e) {
 const wantsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 ogst.changetheme((wantsDark) ? 'dark' : 'light');
 
+// start by loading the appropriate part of the document, or force
+// choice of project and login
 ogst.loadhash(window?.location?.hash ?? '');
 
 // set the nav and title appropriately
 ogst.updatenav();
 
+// export the ogst object with all its functions
 export default ogst;
