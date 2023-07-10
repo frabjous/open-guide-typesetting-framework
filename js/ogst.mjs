@@ -35,6 +35,22 @@ function byid(id) {
     return document.getElementById(id);
 }
 
+ogst.changedetails = async function() {
+    const f = byid('changedetailsform');
+    const forminfo = getformfields(f);
+    if (forminfo.anyinvalid) { return; }
+    // mark processing
+    const b = byid('changedetailsbutton');
+    b.setAttribute('aria-busy', 'true');
+    b.innerHTML = 'changing';
+    document.body.cursor = 'wait';
+    const respObj = await ogst.editorquery(forminfo);
+
+    b.setAttribute('aria-busy, 'false');
+    b.innerHTML = 'change';
+    document.body.cursor = 'default';
+}
+
 // function to switch between light/dark themes
 ogst.changetheme = function(mode = 'toggle') {
     const themetoggle = byid('themetoggle');
@@ -369,8 +385,67 @@ ogst.resetpwd = async function() {
 ogst.showmydetails = async function() {
     if (!window.isloggedin) { return; }
     const detresp = await ogst.editorquery({ postcmd: 'mydetails' });
-    if (!mydetails)
-
+    const main = byid('projectmain');
+    main.loading(false);
+    if (!detresp || !detresp?.mydetails) { return; }
+    const mydetails = detresp.mydetails;
+    ogst.clearmessage();
+    const hdr = addelem({
+        tag: 'h2',
+        parent: main.contents,
+        innerHTML: 'Editor details'
+    });
+    const form = addelem({
+        tag: 'form',
+        id: 'changedetailsform',
+        parent: main.contents
+    });
+    form.onsubmit = function(e) { e.preventDefault(); };
+    const namelbl = addelem({
+        tag: 'label',
+        parent: form,
+        innerHTML: 'Name'
+    });
+    const nameinp = addelem({
+        id: 'detailsname',
+        name: 'detailsname',
+        type: 'text',
+        tag: 'input',
+        required: 'true',
+        value: mydetails.name,
+        parent: namelbl
+    });
+    const emaillbl = addelem({
+        tag: 'label',
+        parent: form,
+        innerHTML: 'Email'
+    });
+    const emailinp = addelem({
+        id: 'detailsemail',
+        name: 'detailsemail',
+        type: 'email',
+        tag: 'input',
+        required: 'true',
+        value: mydetails.email,
+        parent: emaillbl
+    });
+    const changeButton = addelem({
+        id: 'changedetailsbutton',
+        tag: 'button',
+        type: 'button',
+        innerHTML: 'change',
+        parent: form,
+        onclick: function(e) {
+            ogst.changedetails();
+        }
+    });
+    const pwdchangelink = addelem({
+        id: 'changepwdlink',
+        innerHTML: 'change password',
+        tag: 'a',
+        parent: form,
+        href: '#newpwd'
+    });
 }
 
 ogst.setnewpwd = async function() {
