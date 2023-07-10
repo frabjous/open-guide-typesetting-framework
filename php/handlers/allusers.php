@@ -3,9 +3,9 @@
 // Public License along with this program. If not, see
 // https://www.gnu.org/licenses/.
 
-//////////// mydetails.php /////////////////////////////////////////////
-// handler that responds to request to see details for user           //
-////////////////////////////////////////////////////////////////////////
+/////////////////////////// allusers.php /////////////////////////////////
+// handler that responds to request to see names and addresses of users //
+//////////////////////////////////////////////////////////////////////////
 
 if (!isset($username) || !isset($accesskey)) {
     jquit('No username or access key provided.');
@@ -21,9 +21,15 @@ if (!verify_by_accesskey($project, $username, $accesskey)) {
 
 $users = load_users($project);
 
-if (!isset($users->{$username})) {
-    jquit('User whose details were requested does not exist.');
+// remove certain details not needed in browser
+foreach($users as $user => $userdetails) {
+    foreach(['passwordhash', 'keylist', 'newpwdlinks'] as $k) {
+        if (isset($users->{$user}->{$k})) {
+            unset($users->{$user}->{$k});
+        }
+    }
 }
 
-$rv->mydetails = $users->{$username};
+$rv->usersinfo = $users;
 jsend();
+

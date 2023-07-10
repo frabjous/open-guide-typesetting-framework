@@ -90,7 +90,7 @@ ogst.chooseproject = function(projectname) {
 ogst.clearmain = function() {
     const main = byid('projectmain');
     if (!window.isloggedin) {
-        main.innerHTML = 'You do not have access to this '.
+        main.innerHTML = 'You do not have access to this ' +
             'when not logged in.';
         return;
     }
@@ -546,21 +546,30 @@ ogst.showmydetails = async function() {
 
 ogst.showusers = async function() {
     if (!window.isloggedin) { return; }
-    const detresp = await ogst.editorquery({ postcmd: 'mydetails' });
+    const usersresp = await ogst.editorquery({
+        postcmd: 'allusers'
+    });
     const main = byid('projectmain');
     main.loading(false);
-    if (!detresp || !detresp?.mydetails) { return; }
-    const mydetails = detresp.mydetails;
+    if (!usersresp || !usersresp?.usersinfo) { return; }
+    const usersinfo = usersresp.usersinfo;
     ogst.clearmessage();
-    ogst.activebutton('mydetails');
+    ogst.activebutton('users');
     const hdr = addelem({
         tag: 'h2',
         parent: main.contents,
-        innerHTML: 'Editor details'
+        innerHTML: 'Site users'
+    });
+    // todo: table
+    console.log(usersinfo);
+    const subhdr = addelem({
+        tag: 'h3',
+        parent: main.contents,
+        innerHTML: 'Invite a new user'
     });
     const form = addelem({
         tag: 'form',
-        id: 'changedetailsform',
+        id: 'newusersform',
         parent: main.contents
     });
     form.onsubmit = function(e) { e.preventDefault(); };
@@ -570,12 +579,12 @@ ogst.showusers = async function() {
         innerHTML: 'Name'
     });
     const nameinp = addelem({
-        id: 'detailsname',
-        name: 'detailsname',
+        id: 'newname',
+        name: 'newname',
         type: 'text',
         tag: 'input',
         required: 'true',
-        value: mydetails.name,
+        placeholder: 'full name',
         parent: namelbl
     });
     const emaillbl = addelem({
@@ -584,30 +593,43 @@ ogst.showusers = async function() {
         innerHTML: 'Email'
     });
     const emailinp = addelem({
-        id: 'detailsemail',
-        name: 'detailsemail',
+        id: 'newuseremail',
+        name: 'newuseremail',
         type: 'email',
         tag: 'input',
         required: 'true',
-        value: mydetails.email,
+        placeholder: 'email address',
+        onchange: function() {
+            this.myusernameinput.value =
+                this.value.replace(/@.*/,'');
+        },
         parent: emaillbl
     });
-    const changeButton = addelem({
-        id: 'changedetailsbutton',
+    const usernamelbl = addelem({
+        tag: 'label',
+        parent: form,
+        innerHTML: 'Username (short log in name)'
+    });
+    const usernameinp = addelem({
+        id: 'newusername',
+        name: 'newusername',
+        type: 'text',
+        tag: 'input',
+        required: 'true',
+        placeholder: 'username',
+        parent: usernamelbl
+    });
+    emailinp.myusernameinput = usernameinp;
+    usernameinp.setAttribute('pattern','^[a-zA-Z0-9]*$');
+    const newuserButton = addelem({
+        id: 'newuserbutton',
         tag: 'button',
         type: 'button',
-        innerHTML: 'change',
+        innerHTML: 'invite new user',
         parent: form,
         onclick: function(e) {
-            ogst.changedetails();
+            ogst.invitenewuser();
         }
-    });
-    const pwdchangelink = addelem({
-        id: 'changepwdlink',
-        innerHTML: 'change password',
-        tag: 'a',
-        parent: form,
-        href: '#newpwd'
     });
 }
 
