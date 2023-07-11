@@ -8,5 +8,9 @@
 /////////////////////////////////////////////////////////////////////////
 
 // note: assumes 'readsettings.php' already sourced
+// and $project already set by caller
 
+// we'll make this global for the sake of this script
+$projectdir = get_projectdir($project);
+$project_settings = get_project_settings($project);
 
