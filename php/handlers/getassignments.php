@@ -27,7 +27,7 @@ if (!verify_by_accesskey($project, $username, $accesskey)) {
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
     // maybe put archive button on right of title?
-    // (metadata): custom for type; jhap has title, dauthor name, email, affiliation
+    // (metadata): custom for type; jhap has title, author name, email, affiliation
     // volume, number, special volume title, special volume editors
     // for reviews, also, title of reviewed work, author of reviewed work,
     // editor of reviewed work, publication details, = place, publisher,year,
