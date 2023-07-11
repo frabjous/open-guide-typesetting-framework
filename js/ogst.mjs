@@ -72,6 +72,31 @@ ogst.assignmentcard = function(
         parent: card,
         classes: ['assignmentinner']
     });
+
+    // should have: title (header), metadata, files/upload, bibl, proofs, publication
+    // (title): identify the work, and its id
+    // maybe put archive button on right of title?
+    // (metadata): custom for type; jhap has title, dauthor name, email, affiliation
+    // volume, number, special volume title, special volume editors
+    // for reviews, also, title of reviewed work, author of reviewed work,
+    // editor of reviewed work, publication details, = place, publisher,year,
+    // pages, cost, hardcover/soft. ISBN
+    // (files): main upload: download, replace
+    // supplementary
+    // edit LaTeX (now markdown
+    // (bibliography):edit/complete
+    // (proofs): list, each with editor link, author link
+    // create new proofs button
+    // (publication): optimized pdf creation/download,
+    // extract abstract, extract references
+    // (maybe put abstract in metadata)
+
+    // Files: uploaded, random supplementary, bibliography.json,
+    // main.md (better name), metadata.json, status.json, abstract?
+    // + now, oge-setting.json
+    // subfolder: proofs
+    // subfolder: publication
+
     // card message areas and associated functions
     card.msg = addelem({
         tag: 'footer',
