@@ -8,5 +8,13 @@
 
 
 function createMetaElement(key, projspec, saved) {
-    
+    // two types of arrays: those with multiple fields
+    // and those with a separator
+    if (Array.isArray(projspec)) {
+        // data actually in first element of array
+        const subspec = projspec[0];
+        if ("separator" in subspec) {
+            
+        }
+    }
 }
