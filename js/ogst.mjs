@@ -50,6 +50,7 @@ ogst.activebutton = function(h) {
     btn.classList.add('outline','contrast');
 }
 
+// creates an entry for a given article, review or contribution
 ogst.assignmentcard = function(
     assignmentType, assignmentId, assignmentInfo, sect, isarchived) {
     const card = addelem({
@@ -69,7 +70,6 @@ ogst.assignmentcard = function(
     card.contents = addelem({
         tag: 'div',
         parent: card,
-        innerHTML: JSON.stringify(assignmentInfo), // TODO: change this
         classes: ['assignmentinner']
     });
     // card message areas and associated functions
@@ -685,6 +685,7 @@ ogst.showarchived = async function() {
         innerHTML: 'Archived Typesetting Assignments',
         parent: main.contents
     });
+    delete(resp.error);
     ogst.showassignments(resp, true);
 }
 
@@ -708,11 +709,11 @@ ogst.showassignments = function(assignments, isarchived = false) {
         });
         const hdr = addelem({
             tag: 'h3',
-            innerHTML: assignmentType.charAt(0).toUpperCase +
+            innerHTML: assignmentType.charAt(0).toUpperCase() +
                 assignmentType.substr(1) + plural,
             parent: sect
         });
-        const newassignmentButton = ({
+        const newassignmentButton = addelem({
             tag: 'button',
             type: 'button',
             innerHTML: 'add new ' + assignmentType,
@@ -750,6 +751,7 @@ ogst.showcurrent = async function() {
         innerHTML: 'Current Typesetting Assignments',
         parent: main.contents
     });
+    delete(resp.error);
     ogst.showassignments(resp, false);
 }
 
