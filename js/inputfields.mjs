@@ -65,8 +65,7 @@ function labelWithInput(key, labeltxt, itype, req, seloptions = [],
         lblelem.inputfield.type = itype;
     }
     lblelem.inputfield.required = req;
-    if (placeholder !== '') {
-        lblelem.inputfield.placeholder = placeholder;
+    if (placeholder != '') { lblelem.inputfield.placeholder = placeholder;
     }
     lblelem.getInputValue = getInputValue;
     lblelem.setInputValue = setInputValue;
@@ -109,6 +108,10 @@ function setInputValue = function(v) {
 function simpleFieldList(key, lbltxt = '', inputtype = 'text',
     required = false, placeholder = '') {
         const d = document.createElement("div");
+        // create top label
+        d.mainlabel = document.createElement("label");
+        d.appendChild(d.mainlabel);
+        d.mainlabel.innerHTML = lbltxt;
         // buttons for adding, removing fields
         d.buttondiv = document.createElement("div");
         d.buttondiv.classList.add("fieldlistbuttondiv");
@@ -139,7 +142,8 @@ function simpleFieldList(key, lbltxt = '', inputtype = 'text',
                 this.getElementsByTagName("label").length == 0 &&
                 this.required
             );
-            // never give them labels?
+            // never give them labels? because we already have the main
+            // one?
             const newl = labelWithInput(this.mykey, '',
                 this.inputtype, shouldberequired, [], this.placeholder);
             this.insertBefore(newl, this.buttondiv);
