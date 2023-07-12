@@ -2,9 +2,10 @@
 // Public License along with this program. If not, see
 // https://www.gnu.org/licenses/.
 
-////////////////////// metadata.mjs ////////////////////////////////////
-// Various functions having to do with metafields in assignment cards //
-////////////////////////////////////////////////////////////////////////
+////////////////////// inputfields.mjs //////////////////////////////////
+// Various functions having to do with creating input fields, used for //
+// both metadata
+/////////////////////////////////////////////////////////////////////////
 
 function createMetaElement(key, projspec, saved) {
     // two types of arrays: those with multiple fields
@@ -22,6 +23,10 @@ function createMetaElement(key, projspec, saved) {
                 subspec.required,
                 subspec.label
             );
+            lbl.getDisplay = function() {
+                const currval = this.getValue();
+                return currval.join(this.separator);
+            }
             if ((saved != '') && (saved.length > 0)) {
                 lbl.setValue(saved);
             }
@@ -34,6 +39,13 @@ function createMetaElement(key, projspec, saved) {
         const placeholder = subspec?.placeholder ?? '';
         const d = simpleFieldList(key, labeltext, inputtype, required,
             placeholder);
+        d.getDisplay = function() {
+            const currval = this.getValue();
+            if (currval.length == 0) { return ''; }
+            if (currval.length == 1) { return currval[0]; };
+            return currval.slice(0,-1).join(', ') + ' and ' +
+                currval[ currval.length - 1];
+        }
         d.setValue(saved);
         return d;
     }
