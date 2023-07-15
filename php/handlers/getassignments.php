@@ -36,15 +36,26 @@ foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_s
     if (!$type_dir) { continue; }
     $contents = scandir($type_dir);
     if (!$contents || (count($contents) == 0)) { continue; }
-    foreach ($content as $assignment_id) {
+    foreach ($contents as $assignment_id) {
+        if ($assignment_id == '.' || $assignment_id == '..') {
+            continue;
+        };
         $assignment_dir = $type_dir . '/' . $assignment_id;
         if (!is_dir($assignment_dir)) {
             continue;
         }
+        // include archive file if archive, not otherwise
+        $archive_file = $assignment_dir . '/archived';
+        if (file_exists($archive_file) != $archive) {
+            continue;
+        }
+        // create a return value
         $rv->{$assignment_type}->{$assignment_id} = new StdClass();
         $metadata_file = $assignment_dir . '/metadata.json';
         if (file_exists($metadata_file)) {
-            
+            $rv->{$assignment_type}->{$assignment_id}->metadata =
+                json_decode(file_get_contents($metadata_file)) ??
+                (new StdClass());
         }
     }
 }
