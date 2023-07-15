@@ -95,6 +95,7 @@ ogst.assignmentcard = function(
         tag: 'div',
         parent: card.metablock
     });
+    card.currnumgrid = false;
     for (let i=0; i<Object.keys(metaSpec).length; i++) {
         const metakey=Object.keys(metaSpec)[i];
         const metakeyspec = metaSpec[metakey];
@@ -105,6 +106,20 @@ ogst.assignmentcard = function(
         const metafield = createMetaElement(metakey,
             metakeyspec, restoreinfo);
         card.metafields.appendChild(metafield);
+        if (!card.currnumgrid && (metakeyspec?.inputtype == 'number')) {
+            card.currnumgrid = addelem({
+                tag: 'div',
+                classes: ['grid'],
+                parent: card.metafield
+            });
+            card.currnumgrid.appendChild(metafield);
+        }
+        if (card.currnumgrid && (metakeyspec?.inputtype == 'number')) {
+            card.currnumgrid.appendChild(metafield);
+        }
+        if (!(metakeyspec?.inputtype == 'number')) {
+            card.currnumgrid = false;
+        }
     }
 
 
