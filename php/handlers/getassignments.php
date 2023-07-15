@@ -22,6 +22,11 @@ if (!verify_by_accesskey($project, $username, $accesskey)) {
     jquit('Invalid access key provided.');
 }
 
+require_once(dirname(__FILE__) . '/../libassignments.php');
+
+if (!(isset($project_settings->assignmentTypes))) {
+    
+}
 
 
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
@@ -48,8 +53,6 @@ if (!verify_by_accesskey($project, $username, $accesskey)) {
     // subfolder: proofs
     // subfolder: publication
 
-$rv->article = new StdClass();
-$rv->review = new StdClass();
 
 $rv->error = false;
 jsend();
