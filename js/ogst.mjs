@@ -64,7 +64,7 @@ ogst.assignmentcard = function(
         ]
     });
     // put at start
-    sect.insertBefore(card, sect.firstChild);
+    sect.insertBefore(card, sect.hdr.nextSibling);
     card.hdrw = addelem({
         tag: 'header',
         parent: card,
@@ -122,6 +122,7 @@ ogst.assignmentcard = function(
         tag: 'button',
         type: 'button',
         role: 'button',
+        classes: ['outlined'],
         isarchived: isarchived,
         parent: card.hdrright,
         innerHTML: ((isarchived) ? 'un' : '') + 'archive',
@@ -634,6 +635,7 @@ ogst.newassignment = function(assignmentType, btn) {
     const newcard = ogst.assignmentcard(
         assignmentType, assignmentId, assignmentInfo, sect, isarchived
     );
+    if (sect?.hdr) { sect.hdr.scrollIntoView(); }
 }
 
 // puts a message which is not an error at top of projects page
@@ -903,7 +905,7 @@ ogst.showassignments = function(assignments, isarchived = false) {
             isarchived: isarchived,
             mytype: assignmentType
         });
-        const hdr = addelem({
+        sect.hdr = addelem({
             tag: 'h3',
             innerHTML: assignmentType.charAt(0).toUpperCase() +
                 assignmentType.substr(1) + plural,

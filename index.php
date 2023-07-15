@@ -196,18 +196,17 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             section article.assignment details textarea {
                 height: 12rem;
             }
-            section article.assignment header.assignmenttop > div > div {
-                display: inline-block;
+            section article.assignment header.assignmenttop > div {
+                display: flex;
+                flex-direction: row;
+            }
+            section article.assignment header.assignmenttop > div > div:nth-child(2) {
+                flex-grow: 1;
+                padding-left: 1rem;
+                padding-right: 1rem;
             }
             section article.assignment header.assignmenttop > div > div:first-child {
                 font-weight: bold;
-                width: 14rem;
-                float: left;
-            }
-            section article.assignment header.assignmenttop > div > div:last-child {
-                text-align: right;
-                width:10rem;
-                float: right;
             }
             section article.assignment header.assignmenttop button {
                 float: right;
