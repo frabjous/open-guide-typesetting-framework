@@ -10,6 +10,7 @@ const ogst = {};
 
 import getformfields from '../open-guide-editor/open-guide-misc/formreader.mjs';
 import postData from '../open-guide-editor/open-guide-misc/fetch.mjs';
+import { createMetaElement } from './inputfields.mjs';
 
 // generic function for adding elements
 function addelem(opts) {
@@ -81,8 +82,30 @@ ogst.assignmentcard = function(
     const metaSpec = assignTypeSpec.metadata;
     // metadata bloc
     card.metablock = addelem({
-
+        tag: 'details',
+        parent: card.contents,
+        classes: ['ogst-assignmentblock']
     });
+    card.metalabel = addelem({
+        tag: 'summary',
+        parent: card.metablock,
+        innerHTML: 'Metadata'
+    });
+    card.metafields = addelem({
+        tag: 'div',
+        parent: card.metablock
+    });
+    for (let i=0; i<Object.keys(metaSpec).length; i++) {
+        const metakey=Object.keys(metaSpec)[i];
+        const metakeyspec = metaSpec[metakey];
+        let restoreinfo = '';
+        if (assignmentInfo?.metadata?.[metakey]) {
+            restoreinfo = assignmentInfo.metadata[metakey];
+        }
+        const metafield = createMetaElement(metakey,
+            metakeyspec, restoreinfo);
+        card.metafields.appendChild(metafield);
+    }
 
 
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
