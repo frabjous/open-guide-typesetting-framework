@@ -39,16 +39,73 @@ $json_save = file_put_contents($metadata_file,
 if (!$json_save || $json_save == 0) {
     jquit('Unable to save metadata. Contact your site administrator.');
 }
-
-// create yaml file with metadata for pandoc
-
+//
+////// create yaml file with metadata for pandoc
+//
+// get info on spec from project settings
 if (!isset($project_settings->assignmentTypes->{$assignmentType})) {
     jquit('Metadata saved, but server cannot find information about ' .
         'assignment type to create yaml metadata file for ' .
         'inclusion in output documents. Check your site settings.');
 }
 $assign_type_info = $project_settings->assignmentTypes->{$assignmentType};
-$metadata_spec = $assign_type_info->metadata ?? (new StdClass());
+// default to blank spec if nothing set
+$metadata_spec = new StdClass();
+if (isset($assign_type_info->metadata)) {
+    $metadata_spec = $assign_type_info->metadata;
+}
+$yaml = '';
+foreach($metadata as $mkey => $mval) {
+    // subelement, yaml, yamlarray, yamllist, yamlblock
+    if (!isset($metadata_spec->{$mkey})) { continue; }
+    $mspec = $metadata_spec->{$mkey};
+    $spec = $mspec;
+    if (is_array($mspec)) {
+        $spec = $mspec[0];
+    }
+    // metadata elements with subelements
+    if (isset($spec->subcategories) && ($spec->subcategories)) {
+        $subyaml = $mkey . ':' . PHP_EOL;
+        $usesubyaml = false;
+        foreach($mval as $subval) {
+            $hashyphen = false;
+            foreach ($subval as $subkey => $subval) {
+                if (!isset($spec->{$subkey}->pandoc)) {
+                    continue;
+                }
+                if ($spec->{$subkey}->pandoc != 'subelement') {
+                    continue;
+                }
+                if ($hashyphen) {
+                    $subyaml .= ' ';
+                } else {
+                    $subyaml .= '- ';
+                    $hashyphen = true;
+                    $usesubyaml = true;
+                }
+                $subyaml .= $subkey + ': ' + $subval + PHP_EOL;
+            }
+        }
+        if ($usesubyaml) { $yaml .= $subyaml; }
+        continue;
+    }
+    // if no pandoc setting, skip
+    if (!isset($spec->pandoc)) {
+        continue;
+    }
+    // yaml arrays as for keywords
+    if ($spec->pandoc == 'yamlarray') {
+        // skip empty arrays
+        if (!is_array($mval) || (count($mval) == 0)) { continue; }
+        $yaml .= $mkey . ': [' . implode(', ', $mkey) . ']' . PHP_EOL;
+        continue;
+    }
+    if ($spec->pandoc == 'yamllist') {
+        // skip empty arrays
+        if (!is_array($mval) || (count($mval) == 0) { continue; }
+        
+    }
+}
 
 $rv->success = true;
 $rv->error = false;
