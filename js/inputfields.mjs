@@ -70,7 +70,8 @@ function complexFieldList(key, lbltxt, subspecs) {
                     if (!i?.mysubkey) { continue; }
                     rv[i.mysubkey] = i.value;
                     if (i.type == "number") {
-                        rv[i.mysubkey] == parseInt(i.value);
+                        rv[i.mysubkey] == ((i.value == '') ? '' :
+                            parseInt(i.value));
                     }
                 }
                 return rv;
@@ -110,7 +111,7 @@ function complexFieldList(key, lbltxt, subspecs) {
         }
         // value is array of all the inputs' values
         d.getValue = function() {
-            const ss = this.getElementsClassName("complexfieldsubentry");
+            const ss = this.getElementsByClassName("complexfieldsubentry");
             const rv = [];
             if (!ss) { return rv; }
             for (const s of ss) {
@@ -241,6 +242,7 @@ export function createMetaElement(key, projspec, saved = '') {
 function getInputValue() {
     const v = this?.inputfield?.value ?? '';
     if (this?.inputfield?.type == 'number') {
+        if (v == '') { return ''; }
         return parseInt(v);
     }
     return v;

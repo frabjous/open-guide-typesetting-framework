@@ -196,6 +196,15 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             section article.assignment details textarea {
                 height: 12rem;
             }
+            section article.assignment header.assignmenttop div.grid div:last-child{
+                text-align: right;
+            }
+            section article.assignment header.assignmenttop button {
+                width: 8rem;
+            }
+            section article.assignment header.assignmenttop input {
+                width: 12rem;
+            }
         </style>
         <script>
             // starting globals
