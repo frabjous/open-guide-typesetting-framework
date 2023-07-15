@@ -68,7 +68,7 @@ function complexFieldList(key, lbltxt, subspecs) {
                 const rv = {};
                 for (const i of ii) {
                     if (!i?.mysubkey) { continue; }
-                    rv[i.mysubkey] = i.value;
+                    rv[i.mysubkey] = i.value.trim();
                     if (i.type == "number") {
                         rv[i.mysubkey] == ((i.value == '') ? '' :
                             parseInt(i.value));
@@ -85,7 +85,7 @@ function complexFieldList(key, lbltxt, subspecs) {
                     for (const i of ii) {
                         if (i.mysubkey == vkey) {
                             if (i.type == "number") {
-                                i.value == v[vkey].toString();
+                                i.value = v[vkey].toString();
                                 break;
                             }
                             i.value = v[vkey];
@@ -240,7 +240,8 @@ export function createMetaElement(key, projspec, saved = '') {
 // (usually a label with an input inside), gets its value
 // the label will be "this" in actual use
 function getInputValue() {
-    const v = this?.inputfield?.value ?? '';
+    let v = this?.inputfield?.value ?? '';
+    v = v.trim();
     if (this?.inputfield?.type == 'number') {
         if (v == '') { return ''; }
         return parseInt(v);
@@ -274,7 +275,7 @@ function labelWithInput(key, labeltxt, itype, req, seloptions = [],
     lblelem.mykey = key;
     // populate options for select fields
     if (itype == 'select') {
-        for (const opt in seloptions) {
+        for (const opt of seloptions) {
             const optelem = document.createElement("option");
             optelem.innerHTML = opt;
             optelem.value = opt;
@@ -328,8 +329,8 @@ function simpleFieldList(key, lbltxt = '', inputtype = 'text',
         d.appendChild(d.buttondiv);
         d.addButton = document.createElement("a");
         d.addButton.iconname = 'add';
-        d.remButton.iconname = 'remove'; 
         d.remButton = document.createElement("a");
+        d.remButton.iconname = 'remove'; 
         d.addButton.title = 'add';
         d.remButton.title = 'remove';
         for (const b of [d.remButton, d.addButton]) {
