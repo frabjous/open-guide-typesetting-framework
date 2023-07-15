@@ -72,8 +72,7 @@ ogst.assignmentcard = function(
     });
     card.hdr = addelem({
         tag: 'div',
-        parent: card.hdrw,
-        classes: ['grid']
+        parent: card.hdrw
     });
     card.hdrleft = addelem({
         tag: 'div',
@@ -95,7 +94,9 @@ ogst.assignmentcard = function(
                 return;
             }
             this.mycard.assignmentId = this.value;
+            this.mycard.idlabel.innerHTML = '(' + this.value + ')';
             this.mycard.updateTitle();
+            this.mycard.metablock.setAttribute("open","open");
         }
     });
     card.assignmentId = '';
@@ -128,14 +129,14 @@ ogst.assignmentcard = function(
     });
     card.updateTitle = function() {
         if (this.assignmentId == '') {
-            this.idinput.display = 'inline';
-            this.idlabel.display = 'none';
+            this.idinput.style.display = 'inline';
+            this.idlabel.style.display = 'none';
             this.archiveButton.display = 'none';
             this.hdrcentral.innerHTML = '';
             return;
         }
-        this.idinput.display = 'none';
-        this.idlabel.display = 'inline';
+        this.idinput.style.display = 'none';
+        this.idlabel.style.display = 'inline';
         this.archiveButton.display = 'inline-block';
         const mtemte = this.getElementsByClassName("metaelement");
         let display = this?.mydisplay ?? '';
