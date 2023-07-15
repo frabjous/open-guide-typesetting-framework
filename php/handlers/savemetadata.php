@@ -77,13 +77,13 @@ foreach($metadata as $mkey => $mval) {
                     continue;
                 }
                 if ($hashyphen) {
-                    $subyaml .= ' ';
+                    $subyaml .= '  ';
                 } else {
                     $subyaml .= '- ';
                     $hashyphen = true;
                     $usesubyaml = true;
                 }
-                $subyaml .= $subkey + ': ' + $subval + PHP_EOL;
+                $subyaml .= $subkey . ': ' . $subval . PHP_EOL;
             }
         }
         if ($usesubyaml) { $yaml .= $subyaml; }
@@ -97,16 +97,46 @@ foreach($metadata as $mkey => $mval) {
     if ($spec->pandoc == 'yamlarray') {
         // skip empty arrays
         if (!is_array($mval) || (count($mval) == 0)) { continue; }
-        $yaml .= $mkey . ': [' . implode(', ', $mkey) . ']' . PHP_EOL;
+        $yaml .= $mkey . ': [' . implode(', ', $mval) . ']' . PHP_EOL;
         continue;
     }
+    // lists of names separated by commas with "and" before the last one
     if ($spec->pandoc == 'yamllist') {
         // skip empty arrays
-        if (!is_array($mval) || (count($mval) == 0) { continue; }
-        
+        if (!is_array($mval) || (count($mval) == 0)) { continue; }
+        $yaml .= $mkey . ': ';
+        if (count($mval) == 1) {
+            $yaml .= $mval[0] . PHP_EOL;
+            continue;
+        }
+        $yaml .= implode(', ', array_slice($mval, 0, -1)) . ' and ' .
+            $mval[count($mval)-1] . PHP_EOL;
+        continue;
+    }
+    // a block of text set off separately, as for abstracts
+    if ($spec->pandoc == 'yamlblock') {
+        $yaml .= $mkey . ': |' . PHP_EOL;
+        $yaml .= '  ' . implode(PHP_EOL . '  ', explode(PHP_EOL, $mval)) .
+            PHP_EOL;
+        continue;
+    }
+    // a regular yaml entry, quoted to allow for semicolons, etc.
+    // with single quotes escaped
+    if ($spec->pandoc == 'yaml') {
+        $yaml .= $mkey . ': \'' . mb_ereg_replace("'","''",$mval) . '\'' .
+            PHP_EOL;
+    }
+}
+// save yaml
+if ($yaml != '') {
+    $yaml_file = "$assigndir/metadata.yaml";
+    $yaml_save = file_put_contents($yaml_file, $yaml);
+    if (!$yaml_save || $yaml_save == 0) {
+        jquit('Unable to save metadata yaml file. Contact your site administrator.');
     }
 }
 
+// if we made it here, all was well
 $rv->success = true;
 $rv->error = false;
 
