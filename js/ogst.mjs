@@ -62,6 +62,8 @@ ogst.assignmentcard = function(
             ((isarchived) ? 'ogst-archive' : 'ogst-current')
         ]
     });
+    // put at start
+    sect.insertBefore(card, sect.firstChild);
     card.hdr = addelem({
         tag: 'header',
         parent: card,
@@ -72,6 +74,16 @@ ogst.assignmentcard = function(
         parent: card,
         classes: ['assignmentinner']
     });
+    // get information about the assignment type from project settings
+    const projectSettings = window.projects[window.projectname];
+    const assignmentTypes = projectSettings.assignmentTypes ?? {};
+    const assignTypeSpec = assignmentTypes[assignmentType];
+    const metaSpec = assignTypeSpec.metadata;
+    // metadata bloc
+    card.metablock = addelem({
+
+    });
+
 
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
@@ -466,6 +478,16 @@ ogst.logout = async function() {
     byid("loginmsg").innerHTML = "You have been logged out."
 }
 
+ogst.newassignment = function(assignmentType, btn) {
+    const sect = btn.parentNode;
+    const isarchived = sect.isarchived;
+    const assignmentInfo = {};
+    const assignmentId = false;
+    const newcard = ogst.assignmentcard(
+        assignmentType, assignmentId, assignmentInfo, sect, isarchived
+    );
+}
+
 // puts a message which is not an error at top of projects page
 ogst.okmessage = function(okmsg) {
     const main = byid('projectmain');
@@ -730,6 +752,7 @@ ogst.showassignments = function(assignments, isarchived = false) {
         const sect = addelem({
             tag: 'section',
             parent: main.contents,
+            isarchived: isarchived,
             mytype: assignmentType
         });
         const hdr = addelem({
