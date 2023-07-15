@@ -211,9 +211,11 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             section article.assignment header.assignmenttop button {
                 float: right;
                 width: 8rem;
+                margin-bottom: 0;
             }
             section article.assignment header.assignmenttop input {
                 width: 12rem;
+                margin-bottom: 0;
             }
         </style>
         <script>
