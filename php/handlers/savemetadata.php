@@ -23,10 +23,25 @@ require_once(dirname(__FILE__) . '/../libauthentication.php');
 if (!verify_by_accesskey($project, $username, $accesskey)) {
     jquit('Invalid accesskey provided.');
 }
+require_once(dirname(__FILE__) . '/../libassignments.php');
 
-$rv->metadata = $metadata;
-$rv->assignmentType = $assignmentType;
-$rv->assignmentId = $assignmentId;
+$assigndir = get_assignment_dir($assignmentType, $assignmentId);
+
+if (!$assigndir) {
+    jquit('Unable to find or create directory for document.' .
+    ' Contact your site administrator.');
+}
+
+// create json file with metadata
+$metadata_file = "$assigndir/metadata.json";
+$json_save = file_put_contents($metadata_file,
+    json_encode($metadata, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
+if (!$json_save || $json_save == 0) {
+    jquit('Unable to save metadata. Contact your site administrator.');
+}
+
+// TODO: create yaml file with metadata for pandoc
+
 $rv->success = true;
 $rv->error = false;
 
