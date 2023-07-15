@@ -122,7 +122,7 @@ ogst.assignmentcard = function(
         tag: 'button',
         type: 'button',
         role: 'button',
-        classes: ['outlined'],
+        classes: ['outline','contrast'],
         isarchived: isarchived,
         parent: card.hdrright,
         innerHTML: ((isarchived) ? 'un' : '') + 'archive',
