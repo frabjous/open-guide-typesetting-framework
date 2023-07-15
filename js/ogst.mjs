@@ -64,7 +64,7 @@ ogst.assignmentcard = function(
         ]
     });
     // put at start
-    sect.insertBefore(card, sect.hdr.nextSibling);
+    sect.insertBefore(card, sect.newassignmentButton.nextSibling);
     card.hdrw = addelem({
         tag: 'header',
         parent: card,
@@ -96,7 +96,11 @@ ogst.assignmentcard = function(
             this.mycard.assignmentId = this.value;
             this.mycard.idlabel.innerHTML = '(' + this.value + ')';
             this.mycard.updateTitle();
-            this.mycard.metablock.setAttribute("open","open");
+            setTimeout(
+                function() {
+                    this.mycard.metablock.setAttribute("open","open");
+                }, 100
+            );
         }
     });
     card.assignmentId = '';
@@ -178,7 +182,7 @@ ogst.assignmentcard = function(
     card.metalabel = addelem({
         tag: 'summary',
         parent: card.metablock,
-        innerHTML: '<strong>Metadata</strong>'
+        innerHTML: 'Metadata'
     });
     card.metafields = addelem({
         tag: 'div',
@@ -909,7 +913,7 @@ ogst.showassignments = function(assignments, isarchived = false) {
                 assignmentType.substr(1) + 's',
             parent: sect
         });
-        const newassignmentButton = addelem({
+        sect.newassignmentButton = addelem({
             tag: 'button',
             type: 'button',
             innerHTML: 'add new ' + assignmentType,
