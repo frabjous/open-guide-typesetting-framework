@@ -115,6 +115,9 @@ foreach($metadata as $mkey => $mval) {
     }
     // should be a string, let's correct it
     $mval = trim(strval($mval));
+    if (mb_ereg_match('.*\.[0-9]$',$mval)) {
+        $mval .= '0';
+    }
     // a block of text set off separately, as for abstracts
     if ($spec->pandoc == 'yamlblock') {
         $yaml .= $mkey . ': |' . PHP_EOL;

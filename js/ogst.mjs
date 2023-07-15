@@ -285,6 +285,7 @@ ogst.assignmentcard = function(
     for (const elem of [...inpinp, ...txtatxta, ...selsel]) {
         elem.addEventListener("input", () => {
             card.metadataButton.disabled = false;
+            card.clearmessage();
         });
         elem.addEventListener("change", () => {
             card.updateTitle();
