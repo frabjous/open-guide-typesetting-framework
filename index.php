@@ -222,6 +222,10 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 width: 12rem;
                 margin-bottom: 0;
             }
+            section article.assignment div.assignmentinner summary {
+                font-weight: bold;
+                color: var(--primary);
+            }
         </style>
         <script>
             // starting globals
