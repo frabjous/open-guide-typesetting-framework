@@ -68,8 +68,54 @@ ogst.assignmentcard = function(
     card.hdr = addelem({
         tag: 'header',
         parent: card,
-        classes: ['assignmenttitle']
+        classes: ['assignmenttitle', 'grid']
     });
+    card.hdrleft = addelem({
+        tag: 'div',
+        parent: card.hdr
+    });
+    card.idinput = addelem({
+        tag: 'input',
+        type: 'text',
+        classes: ['assignmentidinput'],
+        placeholder: 'document id',
+        mycard: card,
+        oninput: function() {
+            this.removeAttribute('aria-invalid');
+        }
+        onchange: function() {
+            if (!(/^[A-Za-z0-9]+$/.test(this.value))) {
+            }
+            this.setAttribute('aria-invalid', 'true');
+            this.mycard.updateTitle();
+        }
+    });
+    if (assignmentId) {
+        card.assignmentId = assignmentId;
+        card.idinput.value = assignmentId;
+    }
+    card.idlabel = addelem({
+        tag: 'span',
+        classes: ['assingmentid']
+    });
+    card.hdrcentral = addelem({
+        tag: 'div',
+        classes: ['assignmentheader'],
+        parent: card.hdr
+    });
+    card.hdrright = addelem({
+        tag: div,
+        parent: card.hdr
+    });
+    card.archiveButton = addelem({
+        tag: 'button',
+        type: 'button',
+        role: 'button',
+        isarchived: isarchived,
+        innerHTML: ((isarchived) ? 'un' : '') + 'archive',
+
+    });
+
     card.contents = addelem({
         tag: 'div',
         parent: card,
