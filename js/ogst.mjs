@@ -89,7 +89,7 @@ ogst.assignmentcard = function(
     card.metalabel = addelem({
         tag: 'summary',
         parent: card.metablock,
-        innerHTML: 'Metadata'
+        innerHTML: '<strong>Metadata</strong>'
     });
     card.metafields = addelem({
         tag: 'div',
@@ -109,8 +109,8 @@ ogst.assignmentcard = function(
         if (!card.currnumgrid && (metakeyspec?.inputtype == 'number')) {
             card.currnumgrid = addelem({
                 tag: 'div',
-                classes: ['grid'],
-                parent: card.metafield
+                classes: ['grid','numberfieldgrid'],
+                parent: card.metafields
             });
             card.currnumgrid.appendChild(metafield);
         }
@@ -121,8 +121,27 @@ ogst.assignmentcard = function(
             card.currnumgrid = false;
         }
     }
-
-
+    card.metadataButton = addelem({
+        tag: 'button',
+        type: 'button',
+        innerHTML: 'save metadata',
+        mycard: card,
+        parent: card.metafields,
+        disabled: true,
+        onclick: function() {
+            console.log("got clicked");
+        }
+    });
+    // changing metadata enables save button
+    const inpinp = card.metafields.getElementsByTagName("input");
+    const txtatxta = card.metafields.getElementsByTagName("textarea");
+    const selsel = card.metafields.getElementsByTagName("select");
+    for (const elem of [...inpinp, ...txtatxta, ...selsel]) {
+        elem.addEventListener("input", () => {
+            card.metadataButton.disabled = false;
+        }
+    );
+            }
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
     // maybe put archive button on right of title?
