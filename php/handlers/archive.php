@@ -13,6 +13,10 @@ if (!isset($username) || !isset($accesskey)) {
     jquit('No username or access key provided.');
 }
 
+if (!isset($makearchived) || !isset($assignmentType) ||
+    !isset($assignmentId)) {
+    jquit('Inadequate information supplied to handle archiving request.');
+}
 // load authentication and setting libraries
 require_once(dirname(__FILE__) . '/../readsettings.php');
 require_once(dirname(__FILE__) . '/../libauthentication.php');
@@ -23,7 +27,7 @@ if (!verify_by_accesskey($project, $username, $accesskey)) {
 
 require_once(dirname(__FILE__) . '/../libassignments.php');
 
-
+function get_assignment_dir($assignment_type, $assignment_id, $ensure = true)
 
 if (!(isset($project_settings->assignmentTypes))) {
     jquit('Project settings do not have any document/assignment types. ' +
