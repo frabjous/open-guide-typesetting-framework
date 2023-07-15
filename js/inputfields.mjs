@@ -26,8 +26,8 @@ function complexFieldList(key, lbltxt, subspecs) {
         d.appendChild(d.buttondiv);
         d.addButton = document.createElement("a");
         d.addButton.iconname = 'add';
-        d.remButton.iconname = 'remove'; 
         d.remButton = document.createElement("a");
+        d.remButton.iconname = 'remove';
         for (const b of [d.remButton, d.addButton]) {
             b.setAttribute("role","button");
             b.innerHTML = '<span class="material-symbols-outlined">' +
@@ -39,7 +39,7 @@ function complexFieldList(key, lbltxt, subspecs) {
         }
         // attach values from spec so they can be read by methods
         d.mykey = key;
-        d.subspecs = subpecs;
+        d.subspecs = subspecs;
         // add a field
         d.addField = function() {
             const subdiv = document.createElement("div");
@@ -102,7 +102,7 @@ function complexFieldList(key, lbltxt, subspecs) {
             e.preventDefault();
             const ss = this.mydiv.getElementsByClassName("complexfieldsubentry");
             if (!ss) { return; }
-            const rems = ss[ss.length -1]];
+            const rems = ss[ss.length -1];
             rems.parentNode.removeChild(rems);
         }
         // value is array of all the inputs' values
@@ -132,7 +132,7 @@ function complexFieldList(key, lbltxt, subspecs) {
 
 // creates a given metadata element based on the specification
 // in the project settings, and restores a saved value, if any
-function createMetaElement(key, projspec, saved = '') {
+export function createMetaElement(key, projspec, saved = '') {
     // two types of arrays: those with multiple fields
     // and those with a separator
     if (Array.isArray(projspec)) {
@@ -146,7 +146,8 @@ function createMetaElement(key, projspec, saved = '') {
                 subspec.label,
                 subspec.inputtype,
                 subspec.required,
-                subspec.label
+                subspec.label,
+                subspec.separator
             );
             lbl.getDisplay = function() {
                 const currval = this.getValue();
@@ -185,7 +186,7 @@ function createMetaElement(key, projspec, saved = '') {
             if (subspec == 'subcategories' || subspec == 'label') {
                 continue;
             }
-            subspecs[subpec] = projspec[subspec];
+            subspecs[subspec] = projspec[subspec];
         }
         const d = complexFieldList(key, labeltext, subspecs);
         // the display will just be the "first" subvalues joined
@@ -231,7 +232,7 @@ function createMetaElement(key, projspec, saved = '') {
 // (usually a label with an input inside), gets its value
 // the label will be "this" in actual use
 function getInputValue() {
-    const v = this?.inputfield?.value; ?? '';
+    const v = this?.inputfield?.value ?? '';
     if (this?.inputfield?.type == 'number') {
         return parseInt(v);
     }
@@ -247,7 +248,7 @@ function labelWithInput(key, labeltxt, itype, req, seloptions = [],
         tt = itype;
     }
     // create label
-    const lblelem = document.createElement(label);
+    const lblelem = document.createElement('label');
     if (labeltxt !== '') {
         lblelem.innerHTML = labeltxt;
     }
@@ -276,7 +277,8 @@ function labelWithInput(key, labeltxt, itype, req, seloptions = [],
 
 // a single input field that really returns an array of values which
 // are the contents of the field split by a certain separator
-function separatorInpLbl(key, labeltxt, inputtype, required, placeholder) {
+function separatorInpLbl(key, labeltxt, inputtype, required,
+    placeholder, separator) {
     const lbl = labelWithInput(key, labeltxt, inputtype, required,
         [], placeholder);
     lbl.separator = separator;
@@ -296,7 +298,7 @@ function separatorInpLbl(key, labeltxt, inputtype, required, placeholder) {
 // method applied to something like a label with an input inside
 // (something with an inputfield attribute) to get the value of
 // the internal input
-function setInputValue = function(v) {
+function setInputValue(v) {
     if (!this?.inputfield) { return; }
     this.inputfield.value = v.toString();
 }
@@ -356,7 +358,7 @@ function simpleFieldList(key, lbltxt = '', inputtype = 'text',
             e.preventDefault();
             const ll = this.mydiv.getElementsByTagName("label");
             if (!ll) { return; }
-            const reml = ll[ll.length -1]];
+            const reml = ll[ll.length -1];
             reml.parentNode.removeChild(reml);
         }
         // value is array of all the inputs' values
