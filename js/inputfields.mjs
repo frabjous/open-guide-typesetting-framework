@@ -159,6 +159,7 @@ export function createMetaElement(key, projspec, saved = '') {
             if ((saved != '') && (saved.length > 0)) {
                 lbl.setValue(saved);
             }
+            lbl.classList.add("metaelement");
             return lbl;
         }
         // no separator, so we have a simple field list
@@ -176,6 +177,7 @@ export function createMetaElement(key, projspec, saved = '') {
                 currval[ currval.length - 1];
         }
         d.setValue(saved);
+        d.classList.add("metaelement");
         return d;
     }
     // got here, then the projspec is some kind of object, not array
@@ -209,6 +211,7 @@ export function createMetaElement(key, projspec, saved = '') {
                 firstvals[ firstvals.length - 1];
         }
         d.setValue(saved);
+        d.classList.add("metaelement");
         return d;
     }
     // otherwise we are left with a relatively simple thingy
@@ -228,6 +231,7 @@ export function createMetaElement(key, projspec, saved = '') {
     }
     lbl.setValue = lbl.setInputValue;
     lbl.setValue(saved);
+    lbl.classList.add("metaelement");
     return lbl;
 }
 
@@ -295,6 +299,7 @@ function separatorInpLbl(key, labeltxt, inputtype, required,
         const j = arr.join(this.separator);
         lbl.setInputValue(j);
     }
+    lbl.mykey = key;
     return lbl;
 }
 
