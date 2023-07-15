@@ -82,14 +82,17 @@ ogst.assignmentcard = function(
         mycard: card,
         oninput: function() {
             this.removeAttribute('aria-invalid');
-        }
+        },
         onchange: function() {
             if (!(/^[A-Za-z0-9]+$/.test(this.value))) {
+                this.setAttribute('aria-invalid', 'true');
+                return;
             }
-            this.setAttribute('aria-invalid', 'true');
+            this.mycard.assignmentId = this.value;
             this.mycard.updateTitle();
         }
     });
+    card.assignmentId = '';
     if (assignmentId) {
         card.assignmentId = assignmentId;
         card.idinput.value = assignmentId;
@@ -104,7 +107,7 @@ ogst.assignmentcard = function(
         parent: card.hdr
     });
     card.hdrright = addelem({
-        tag: div,
+        tag: 'div',
         parent: card.hdr
     });
     card.archiveButton = addelem({
@@ -115,6 +118,33 @@ ogst.assignmentcard = function(
         innerHTML: ((isarchived) ? 'un' : '') + 'archive',
 
     });
+    card.updateTitle = function() {
+        if (this.assignmentId == '') {
+            this.idinput.display = 'inline';
+            this.idlabel.display = 'none';
+            this.archiveButton.display = 'none';
+            this.hdrcentral.innerHTML = '';
+            return;
+        }
+        this.idinput.display = 'none';
+        this.idlabel.display = 'inline';
+        this.archiveButton.display = 'inline-block';
+        const mtemte = this.getElementsByClassName("metaelement");
+        let display = this?.mydisplay ?? '';
+        const origdisplay = display;
+        for (const mte of mtemte) {
+            if (!mte?.mykey) { continue; }
+            const u = (mte.mykey.toUpperCase());
+            if (display.indexOf(u) !== -1) {
+                display = display.replaceAll(u, mte.getDisplay());
+            }
+        }
+        if (display != origdisplay) {
+            this.hdrcentral.innerHTML = display;
+        } else {
+            this.hdrcentral.innerHTML = '';
+        }
+    }
 
     card.contents = addelem({
         tag: 'div',
@@ -125,6 +155,7 @@ ogst.assignmentcard = function(
     const projectSettings = window.projects[window.projectname];
     const assignmentTypes = projectSettings.assignmentTypes ?? {};
     const assignTypeSpec = assignmentTypes[assignmentType];
+    card.mydisplay = assignTypeSpec.display ?? '';
     const metaSpec = assignTypeSpec.metadata;
     // metadata bloc
     card.metablock = addelem({
@@ -236,6 +267,7 @@ ogst.assignmentcard = function(
         card.msg.classList.remove('okmsg');
         card.msg.innerHTML = '';
     }
+    card.updateTitle();
     return card;
 }
 
