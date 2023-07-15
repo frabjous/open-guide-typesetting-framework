@@ -151,7 +151,8 @@ ogst.assignmentcard = function(
             this.removeAttribute('aria-busy');
             this.innerHTML = ((this.isarchived) ? 'un' : '') + 'archive';
             if (!resp) { return; }
-            if (this.makearchived) {
+            if (req.makearchived) {
+                console.log("removing card");
                 this.mycard.parentNode.removeChild(this.mycard);
                 return;
             }
