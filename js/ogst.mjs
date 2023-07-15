@@ -57,6 +57,7 @@ ogst.assignmentcard = function(
     const card = addelem({
         tag: 'article',
         parent: sect,
+        assignmentType: assignmentType,
         classes: [
             'assignment',
             'ogst-' + assignmentType,
@@ -232,6 +233,39 @@ ogst.assignmentcard = function(
             this.innerHTML = 'saving metadata …';
             this.setAttribute('aria-busy','true');
             const metadata = card.getallmetadata();
+            // clean metadata of empty junk
+            for (const mfield in metadata) {
+                if (metadata[mfield] === '') {
+                    delete(metadata[mfield]);
+                    continue;
+                }
+                if (Array.isArray(metadata[mfield])) {
+                    let anything = false;
+                    for (const arrayelem of metadata[mfield]) {
+                        if (typeof arrayelem == "string" &&
+                            arrayelem != '') {
+                            anything = true;
+                            break;
+                        }
+                        if (typeof arrayelem == "object") {
+                            for (const mkey in arrayelem) {
+                                if (arrayelem[mkey] != '') {
+                                    anything = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (anything) { break; }
+                    }
+                    if (!anything) {
+                        delete(metadata[mfield]);
+                    }
+                }
+            }
+            const req = {};
+            req.assignmentId = assignmentId;
+            req.metadata = metadata;
+            req.postcmd = 'savemetadata';
             console.log('metadata=',metadata);
         }
     });
