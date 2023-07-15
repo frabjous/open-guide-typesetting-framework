@@ -100,7 +100,7 @@ ogst.assignmentcard = function(
             setTimeout(
                 () => {
                     this.mycard.metablock.setAttribute("open","open");
-                }, 100
+                }, 300
             );
         }
     });
@@ -222,12 +222,17 @@ ogst.assignmentcard = function(
         mycard: card,
         parent: card.metafields,
         disabled: true,
-        onclick: function() {
+        onclick: async function() {
             if (!this?.mycard?.assignmentId) {
                 card.reporterror('Cannot save metadata until a document id has been set.');
                 return;
             }
-            console.log("got clicked");
+            const assignmentId = this.mycard.assignmentId;
+            this.mycard.clearmessage();
+            this.innerHTML = 'saving metadata …';
+            this.setAttribute('aria-busy','true');
+            const metadata = card.getallmetadata();
+            console.log('metadata=',metadata);
         }
     });
     // changing metadata enables save button
@@ -241,6 +246,15 @@ ogst.assignmentcard = function(
         elem.addEventListener("change", () => {
             card.updateTitle();
         });
+    }
+    card.getallmetadata = function() {
+        const mdata = {};
+        const metaelements = card.getElementsByClassName("metaelement");
+        for (const metaelement of metaelements) {
+            if (!metaelement?.mykey) { continue; }
+            mdata[metaelement.mykey] = metaelement.getValue();
+        }
+        return mdata;
     }
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
