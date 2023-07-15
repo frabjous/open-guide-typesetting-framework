@@ -95,7 +95,6 @@ ogst.assignmentcard = function(
                 return;
             }
             this.mycard.assignmentId = this.value;
-            this.mycard.idlabel.innerHTML = '(' + this.value + ')';
             this.mycard.updateTitle();
             this.mycard.clearmessage();
             setTimeout(
@@ -105,16 +104,17 @@ ogst.assignmentcard = function(
             );
         }
     });
-    card.assignmentId = '';
-    if (assignmentId) {
-        card.assignmentId = assignmentId;
-        card.idinput.value = assignmentId;
-    }
     card.idlabel = addelem({
         tag: 'span',
         parent: card.hdrleft,
         classes: ['assingmentid']
     });
+    card.assignmentId = '';
+    if (assignmentId) {
+        card.assignmentId = assignmentId;
+        card.idinput.value = assignmentId;
+    }
+
     card.hdrcentral = addelem({
         tag: 'div',
         classes: ['assignmentheader'],
@@ -144,6 +144,7 @@ ogst.assignmentcard = function(
         }
         this.idinput.style.display = 'none';
         this.idlabel.style.display = 'inline';
+        this.idlabel.innerHTML = '(' + this.assignmentId + ')';
         this.archiveButton.display = 'inline-block';
         const mtemte = this.getElementsByClassName("metaelement");
         let display = this?.mydisplay ?? '';
@@ -976,15 +977,17 @@ ogst.showassignments = function(assignments, isarchived = false) {
                 assignmentType.substr(1) + 's',
             parent: sect
         });
-        sect.newassignmentButton = addelem({
-            tag: 'button',
-            type: 'button',
-            innerHTML: 'add new ' + assignmentType,
-            parent: sect,
-            onclick: function(e) {
-                ogst.newassignment(this.parentNode.mytype, this);
-            }
-        });
+        if (!isarchived) {
+            sect.newassignmentButton = addelem({
+                tag: 'button',
+                type: 'button',
+                innerHTML: 'add new ' + assignmentType,
+                parent: sect,
+                onclick: function(e) {
+                    ogst.newassignment(this.parentNode.mytype, this);
+                }
+            });
+        }
         for (const assignment in assignmentTypeInfo) {
             const assignmentCard = ogst.assignmentcard(
                 assignmentType, assignment,
