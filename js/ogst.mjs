@@ -264,6 +264,7 @@ ogst.assignmentcard = function(
             }
             const req = {};
             req.assignmentId = assignmentId;
+            req.assingmentType = this.mycard.assignmentType;
             req.metadata = metadata;
             req.postcmd = 'savemetadata';
             console.log('metadata=',metadata);
