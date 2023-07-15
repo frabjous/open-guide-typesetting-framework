@@ -195,6 +195,11 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             }
             section article.assignment details textarea {
                 height: 12rem;
+                resize: none;
+            }
+            section article.assignment header.assignmenttop {
+                padding-top: 1.2rem;
+                padding-bottom: 1.2rem;
             }
             section article.assignment header.assignmenttop > div {
                 display: flex;
