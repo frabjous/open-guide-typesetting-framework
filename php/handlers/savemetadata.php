@@ -40,7 +40,15 @@ if (!$json_save || $json_save == 0) {
     jquit('Unable to save metadata. Contact your site administrator.');
 }
 
-// TODO: create yaml file with metadata for pandoc
+// create yaml file with metadata for pandoc
+
+if (!isset($project_settings->assignmentTypes->{$assignmentType})) {
+    jquit('Metadata saved, but server cannot find information about ' .
+        'assignment type to create yaml metadata file for ' .
+        'inclusion in output documents. Check your site settings.');
+}
+$assign_type_info = $project_settings->assignmentTypes->{$assignmentType};
+$metadata_spec = $assign_type_info->metadata ?? (new StdClass());
 
 $rv->success = true;
 $rv->error = false;
