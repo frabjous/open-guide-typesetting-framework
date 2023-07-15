@@ -25,9 +25,29 @@ if (!verify_by_accesskey($project, $username, $accesskey)) {
 require_once(dirname(__FILE__) . '/../libassignments.php');
 
 if (!(isset($project_settings->assignmentTypes))) {
-    
+    jquit('Project settings do not have any document/assignment types. ' +
+        'Please check your site configuration.');
 }
 
+foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_spec) {
+    $rv->{$assignment_type} = new StdClass();
+    // read type directory
+    $type_dir = get_assignment_type_dir($assignment_type);
+    if (!$type_dir) { continue; }
+    $contents = scandir($type_dir);
+    if (!$contents || (count($contents) == 0)) { continue; }
+    foreach ($content as $assignment_id) {
+        $assignment_dir = $type_dir . '/' . $assignment_id;
+        if (!is_dir($assignment_dir)) {
+            continue;
+        }
+        $rv->{$assignment_type}->{$assignment_id} = new StdClass();
+        $metadata_file = $assignment_dir . '/metadata.json';
+        if (file_exists($metadata_file)) {
+            
+        }
+    }
+}
 
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id

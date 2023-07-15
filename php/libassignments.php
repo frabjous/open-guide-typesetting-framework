@@ -15,10 +15,21 @@ $projectdir = get_projectdir($project);
 $project_settings = get_project_settings($project);
 
 function get_assignment_dir($assignment_type, $assignment_id, $ensure = true) {
-    global $projectdir;
-    $dir = $projectdir . '/' . $assignment_type . 's/' . $assignment_id;
+    $parent_dir = get_assignment_type_dir($assignment_type, $ensure);
+    if (!$parent_dir) { return false; }
+    $dir = $parent_dir . '/' . $assignment_id;
     if (!is_dir($dir)) {
         if (!$ensure) { return false; }
+        if (!mkdir($dir, 0755, true)) { return false; }
+    }
+    return $dir;
+}
+
+function get_assignment_type_dir($assignment_type, $ensure = true) {
+    global $projectdir;
+    $dir = $projectdir . '/' . $assignment_type . 's';
+    if (!is_dir($dir)) {
+        if (!$ensure) { return false; };
         if (!mkdir($dir, 0755, true)) { return false; }
     }
     return $dir;
