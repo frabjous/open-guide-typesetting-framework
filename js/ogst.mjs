@@ -10,6 +10,7 @@ const ogst = {};
 
 import getformfields from '../open-guide-editor/open-guide-misc/formreader.mjs';
 import postData from '../open-guide-editor/open-guide-misc/fetch.mjs';
+import uploadFiles from '../open-guide-editor/open-guide-misc/file-upload.mjs';
 import { createMetaElement } from './inputfields.mjs';
 
 // generic function for adding elements
