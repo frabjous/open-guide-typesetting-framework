@@ -48,5 +48,8 @@ if (!verify_by_accesskey($project, $username, $accesskey)) {
     // subfolder: proofs
     // subfolder: publication
 
+$rv->article = new StdClass();
+$rv->review = new StdClass();
+
 $rv->error = false;
 jsend();
