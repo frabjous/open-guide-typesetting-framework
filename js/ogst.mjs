@@ -267,7 +267,6 @@ ogst.assignmentcard = function(
             req.assignmentType = this.mycard.assignmentType;
             req.metadata = metadata;
             req.postcmd = 'savemetadata';
-            console.log(req);
             const resp = await ogst.editorquery(req);
             this.innerHTML = 'save metadata';
             this.removeAttribute('aria-busy');
