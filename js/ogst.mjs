@@ -65,10 +65,15 @@ ogst.assignmentcard = function(
     });
     // put at start
     sect.insertBefore(card, sect.firstChild);
-    card.hdr = addelem({
+    card.hdrw = addelem({
         tag: 'header',
         parent: card,
-        classes: ['assignmenttitle', 'grid']
+        classes: ['assignmenttop']
+    });
+    card.hdr = addelem({
+        tag: 'div',
+        parent: card.hdrw,
+        classes: ['grid']
     });
     card.hdrleft = addelem({
         tag: 'div',
@@ -78,7 +83,8 @@ ogst.assignmentcard = function(
         tag: 'input',
         type: 'text',
         classes: ['assignmentidinput'],
-        placeholder: 'document id',
+        placeholder: 'new document id',
+        parent: card.hdrleft,
         mycard: card,
         oninput: function() {
             this.removeAttribute('aria-invalid');
@@ -99,6 +105,7 @@ ogst.assignmentcard = function(
     }
     card.idlabel = addelem({
         tag: 'span',
+        parent: card.hdrleft,
         classes: ['assingmentid']
     });
     card.hdrcentral = addelem({
@@ -115,6 +122,7 @@ ogst.assignmentcard = function(
         type: 'button',
         role: 'button',
         isarchived: isarchived,
+        parent: card.hdrright,
         innerHTML: ((isarchived) ? 'un' : '') + 'archive',
 
     });
@@ -136,6 +144,8 @@ ogst.assignmentcard = function(
             if (!mte?.mykey) { continue; }
             const u = (mte.mykey.toUpperCase());
             if (display.indexOf(u) !== -1) {
+                const elemrep = mte.getDisplay();
+                if (elemrep == '') { continue; }
                 display = display.replaceAll(u, mte.getDisplay());
             }
         }
@@ -216,9 +226,11 @@ ogst.assignmentcard = function(
     for (const elem of [...inpinp, ...txtatxta, ...selsel]) {
         elem.addEventListener("input", () => {
             card.metadataButton.disabled = false;
-        }
-    );
-            }
+        });
+        elem.addEventListener("change", () => {
+            card.updateTitle();
+        });
+    }
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
     // maybe put archive button on right of title?
