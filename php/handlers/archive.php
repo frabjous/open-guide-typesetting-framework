@@ -27,7 +27,7 @@ if (!verify_by_accesskey($project, $username, $accesskey)) {
 
 require_once(dirname(__FILE__) . '/../libassignments.php');
 
-function get_assignment_dir($assignment_type, $assignment_id, $ensure = true)
+function get_assignment_dir($assignment_type, $assignment_id, $ensure = true);
 
 if (!(isset($project_settings->assignmentTypes))) {
     jquit('Project settings do not have any document/assignment types. ' +
