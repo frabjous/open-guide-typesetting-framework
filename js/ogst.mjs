@@ -96,8 +96,9 @@ ogst.assignmentcard = function(
             this.mycard.assignmentId = this.value;
             this.mycard.idlabel.innerHTML = '(' + this.value + ')';
             this.mycard.updateTitle();
+            this.mycard.clearmessage();
             setTimeout(
-                function() {
+                () => {
                     this.mycard.metablock.setAttribute("open","open");
                 }, 100
             );
@@ -222,6 +223,10 @@ ogst.assignmentcard = function(
         parent: card.metafields,
         disabled: true,
         onclick: function() {
+            if (!this?.mycard?.assignmentId) {
+                card.reporterror('Cannot save metadata until a document id has been set.');
+                return;
+            }
             console.log("got clicked");
         }
     });
