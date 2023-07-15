@@ -153,6 +153,13 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 border-radius: 5px;
                 padding: 0.5rem;
             }
+            .cardmsg {
+                color: var(--form-element-invalid-border-color);
+                font-weight: bold;
+            }
+            .cardmsg.okmsg {
+                color: inherit;
+            }
             #newpwdmsg.okmsg, #resetmsg.okmsg, #mainmsg.okmsg {
                 border: 3px solid var(--primary);
             }
