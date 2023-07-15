@@ -264,10 +264,19 @@ ogst.assignmentcard = function(
             }
             const req = {};
             req.assignmentId = assignmentId;
-            req.assingmentType = this.mycard.assignmentType;
+            req.assignmentType = this.mycard.assignmentType;
             req.metadata = metadata;
             req.postcmd = 'savemetadata';
-            console.log('metadata=',metadata);
+            console.log(req);
+            const resp = await ogst.editorquery(req);
+            this.innerHTML = 'save metadata';
+            this.removeAttribute('aria-busy');
+            this.mycard.updateTitle();
+            if (!resp) { return; }
+            if (!("success" in resp) || (!resp.success)) { return; }
+            this.mycard.okmessage("Metadata saved.");
+            this.mycard.metablock.removeAttribute("open");
+            this.disabled = true;
         }
     });
     // changing metadata enables save button
