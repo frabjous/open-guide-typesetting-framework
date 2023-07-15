@@ -84,10 +84,10 @@ function get_projectdir($project) {
 
 function get_project_settings($project) {
     $projectdir = get_projectdir($project);
-    if (!file_exists("$projectdir/project_settings.json")) {
+    if (!file_exists("$projectdir/project-settings.json")) {
         return (new StdClass());
     }
-    $json = file_get_contents("$projectdir/project_settings.json");
+    $json = file_get_contents("$projectdir/project-settings.json");
     if (!$json) { return (new StdClass()); }
     $project_settings = json_decode($json);
     if (!$project_settings) { return (new StdClass()); }
