@@ -128,11 +128,35 @@ ogst.assignmentcard = function(
         tag: 'button',
         type: 'button',
         role: 'button',
-        classes: ['outline','contrast'],
+        classes: ['outline'],
         isarchived: isarchived,
+        assignmentType: assignmentType,
+        assignmentId: assignmentId,
+        mycard: card,
         parent: card.hdrright,
         innerHTML: ((isarchived) ? 'un' : '') + 'archive',
-
+        onclick: async function() {
+            const req = {};
+            req.postcmd = 'archive';
+            req.makearchived = (!this.isarchived);
+            req.assignmentType = this.assignmentType;
+            req.assignmentId = this.assignmentId;
+            if (req.makearchived) {
+                this.innerHTML = 'archiving …';
+            } else {
+                this.innerHTML = 'unarchiving …';
+            }
+            this.setAttribute('aria-busy','true');
+            const resp = await ogst.editorquery(req);
+            this.removeAttribute('aria-busy');
+            this.innerHTML = ((this.isarchived) ? 'un' : '') + 'archive';
+            if (!resp) { return; }
+            if (this.makearchived) {
+                this.mycard.parentNode.removeChild(this.mycard);
+                return;
+            }
+            window.location.hash = '#current';
+        }
     });
     card.updateTitle = function() {
         if (this.assignmentId == '') {
@@ -932,18 +956,18 @@ ogst.setnewpwd = async function() {
 
 // show the current typesetting tasks
 ogst.showarchived = async function() {
-    if (!window.islogedin) { return; }
+    if (!window.isloggedin) { return; }
     // get information about current projects
     const resp = await ogst.editorquery({ postcmd: 'allarchived' });
     // no longer loading
     const main = byid('projectmain');
     main.loading(false);
-    // if fetching failed, there's nothing to do; the editor query
-    // should be showing an error
-    if (!resp) { return; }
     // start with fresh screen, make "current" button the active one
     ogst.clearmessage();
     ogst.activebutton('archived');
+    // if fetching failed, there's nothing to do; the editor query
+    // should be showing an error
+    if (!resp) { return; }
     // header
     const hdr = addelem({
         tag: 'h2',
@@ -977,16 +1001,18 @@ ogst.showassignments = function(assignments, isarchived = false) {
                 assignmentType.substr(1) + 's',
             parent: sect
         });
-        if (!isarchived) {
-            sect.newassignmentButton = addelem({
-                tag: 'button',
-                type: 'button',
-                innerHTML: 'add new ' + assignmentType,
-                parent: sect,
-                onclick: function(e) {
-                    ogst.newassignment(this.parentNode.mytype, this);
-                }
-            });
+        sect.newassignmentButton = addelem({
+            tag: 'button',
+            type: 'button',
+            innerHTML: 'add new ' + assignmentType,
+            parent: sect,
+            onclick: function(e) {
+                ogst.newassignment(this.parentNode.mytype, this);
+            }
+        });
+        // don't show buttons on archive page
+        if (isarchived) {
+            sect.newassignmentButton.style.display = 'none';
         }
         for (const assignment in assignmentTypeInfo) {
             const assignmentCard = ogst.assignmentcard(
