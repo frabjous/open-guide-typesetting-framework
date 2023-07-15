@@ -897,8 +897,6 @@ ogst.showassignments = function(assignments, isarchived = false) {
     // loop over different types of assignments
     for (const assignmentType in assignmentTypes) {
         const assignmentTypeInfo = assignments[assignmentType];
-        const plural = ((Object.keys(assignmentTypeInfo).length !== 1) ?
-            's': '');
         const sect = addelem({
             tag: 'section',
             parent: main.contents,
@@ -908,7 +906,7 @@ ogst.showassignments = function(assignments, isarchived = false) {
         sect.hdr = addelem({
             tag: 'h3',
             innerHTML: assignmentType.charAt(0).toUpperCase() +
-                assignmentType.substr(1) + plural,
+                assignmentType.substr(1) + 's',
             parent: sect
         });
         const newassignmentButton = addelem({
