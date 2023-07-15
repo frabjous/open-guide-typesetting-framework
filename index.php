@@ -183,6 +183,19 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 cursor: pointer;
                 color: var(--form-element-invalid-border-color);
             }
+            section article.assignment details div.fieldlistbuttondiv {
+                text-align: right;
+            }
+            section article.assignment details div.fieldlistbuttondiv a {
+                margin-left: 1rem;
+                padding-left: 0.4rem;
+                padding-right: 0.4rem;
+                padding-top: 0.4rem;
+                padding-bottom: 0rem;
+            }
+            section article.assignment details textarea {
+                height: 12rem;
+            }
         </style>
         <script>
             // starting globals

@@ -28,6 +28,8 @@ function complexFieldList(key, lbltxt, subspecs) {
         d.addButton.iconname = 'add';
         d.remButton = document.createElement("a");
         d.remButton.iconname = 'remove';
+        d.remButton.title = 'remove';
+        d.addButton.title = 'add';
         for (const b of [d.remButton, d.addButton]) {
             b.setAttribute("role","button");
             b.innerHTML = '<span class="material-symbols-outlined">' +
@@ -103,6 +105,7 @@ function complexFieldList(key, lbltxt, subspecs) {
             const ss = this.mydiv.getElementsByClassName("complexfieldsubentry");
             if (!ss) { return; }
             const rems = ss[ss.length -1];
+            if (!rems) { return; }
             rems.parentNode.removeChild(rems);
         }
         // value is array of all the inputs' values
@@ -320,6 +323,8 @@ function simpleFieldList(key, lbltxt = '', inputtype = 'text',
         d.addButton.iconname = 'add';
         d.remButton.iconname = 'remove'; 
         d.remButton = document.createElement("a");
+        d.addButton.title = 'add';
+        d.remButton.title = 'remove';
         for (const b of [d.remButton, d.addButton]) {
             b.setAttribute("role","button");
             b.innerHTML = '<span class="material-symbols-outlined">' +
