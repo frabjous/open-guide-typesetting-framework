@@ -113,6 +113,8 @@ foreach($metadata as $mkey => $mval) {
             $mval[count($mval)-1] . PHP_EOL;
         continue;
     }
+    // should be a string, let's correct it
+    $mval = trim(strval($mval));
     // a block of text set off separately, as for abstracts
     if ($spec->pandoc == 'yamlblock') {
         $yaml .= $mkey . ': |' . PHP_EOL;
@@ -123,7 +125,7 @@ foreach($metadata as $mkey => $mval) {
     // a regular yaml entry, quoted to allow for semicolons, etc.
     // with single quotes escaped
     if ($spec->pandoc == 'yaml') {
-        $yaml .= $mkey . ': \'' . mb_ereg_replace("'","''",$mval) . '\'' .
+        $yaml .= $mkey . ': \'' . mb_ereg_replace("'","''", $mval) . '\'' .
             PHP_EOL;
     }
 }

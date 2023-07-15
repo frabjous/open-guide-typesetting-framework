@@ -71,7 +71,7 @@ function complexFieldList(key, lbltxt, subspecs) {
                     rv[i.mysubkey] = i.value.trim();
                     if (i.type == "number") {
                         rv[i.mysubkey] == ((i.value == '') ? '' :
-                            parseInt(i.value));
+                            parseFloat(i.value));
                     }
                 }
                 return rv;
@@ -244,7 +244,7 @@ function getInputValue() {
     v = v.trim();
     if (this?.inputfield?.type == 'number') {
         if (v == '') { return ''; }
-        return parseInt(v);
+        return parseFloat(v);
     }
     return v;
 }
@@ -380,6 +380,7 @@ function simpleFieldList(key, lbltxt = '', inputtype = 'text',
             const rv = [];
             if (!ll) { return rv; }
             for (const l of ll) {
+                if (!l.getInputValue) { continue; }
                 rv.push(l.getInputValue());
             }
             return rv;
