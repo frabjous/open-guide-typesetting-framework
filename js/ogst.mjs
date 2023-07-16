@@ -467,14 +467,14 @@ ogst.assignmentcard = function(
         classes: ['auxuploadtable']
     });
     card.uploadauxtable.setAttribute('role','grid');
-    const auxtbdy = addelem({
+    card.auxtbdy = addelem({
         tag: 'tbody',
         parent: card.uploadauxtable
     });
-    for (const auxfile of auxfiles) {
+    card.addtoauxfilelist = function(auxfile) {
         const trow = addelem({
             tag: 'tr',
-            parent: auxtbdy});
+            parent: this.auxtbdy});
         const nametd = addelem({
             tag: 'td',
             innerHTML: auxfile,
@@ -486,7 +486,7 @@ ogst.assignmentcard = function(
             tag: 'span',
             parent: btntd,
             classes: ['material-symbols-outlined'],
-            mycard: card,
+            mycard: this,
             myfilename: auxfile,
             innerHTML: 'download',
             title: 'download',
@@ -499,7 +499,7 @@ ogst.assignmentcard = function(
         const delbtn = addelem({
             tag: 'span',
             parent: btntd,
-            mycard: card,
+            mycard: this,
             myrow: trow,
             myfilename: auxfile,
             classes: ['material-symbols-outlined'],
@@ -509,7 +509,7 @@ ogst.assignmentcard = function(
                 const req = {};
                 req.postcmd = 'deletefile';
                 req.assignmentId = this.mycard.assignmentId;
-                req.assignmentType = this.mycard.assignmentId;
+                req.assignmentType = this.mycard.assignmentType;
                 req.filetodelete = this.myfilename;
                 this.classList.remove('material-symbols-outlined');
                 this.innerHTML = 'deleting';
@@ -522,8 +522,39 @@ ogst.assignmentcard = function(
                 this.myrow.parentNode.removeChild(this.myrow);
             }
         });
-
     }
+    for (const auxfile of auxfiles) {
+        card.addtoauxfilelist(auxfile);
+    }
+    card.uploadauxgrid = addelem({
+        tag: 'div',
+        role: 'grid'
+        parent: card.uploadinner
+    });
+    card.uploadauxfilelabel = addelem({
+        tag: 'div',
+        parent: card.uploadauxgrid,
+        innerHTML: 'Upload auxiliary file(s):'
+    });
+    card.uploadauxgridright = addelem({
+        tag: 'div',
+        parent: card.uploadauxgrid
+    });
+    card.uploadauxgridwaiting = addelem({
+        tag: 'div',
+        parent: card.uploadauxgridright,
+        innerHTML: 'uploading …'
+    });
+    card.uploadauxgridwaiting.setAttribute('aria-busy',true);
+    card.uploadauxgridwaiting.style.display = 'none';
+    card.uploadauxfileinput = addelem({
+        tag: 'input',
+        type: 'file',
+        parent: card.uploadauxgridright,
+        mycard: card,
+        multiple: true,
+        onchange:
+    });
 
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
