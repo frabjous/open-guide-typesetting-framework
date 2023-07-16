@@ -249,10 +249,12 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             section article.assignment div.fakegrid > label,
             section article.assignment div.fakegrid > input[type="file"],
             section article.assignment div.fakegrid > input {
-                width: 15rem;
                 display: inline;
+                width: 18rem;
             }
-
+            section article.assignment div.fakegrid > input[type="file"] {
+                margin-left: 1rem;
+            }
         </style>
         <script>
             // starting globals
