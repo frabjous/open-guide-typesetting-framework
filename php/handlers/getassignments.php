@@ -51,11 +51,23 @@ foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_s
         }
         // create a return value
         $rv->{$assignment_type}->{$assignment_id} = new StdClass();
+        // read metadata
         $metadata_file = $assignment_dir . '/metadata.json';
         if (file_exists($metadata_file)) {
             $rv->{$assignment_type}->{$assignment_id}->metadata =
                 json_decode(file_get_contents($metadata_file)) ??
                 (new StdClass());
+        }
+        // get file list
+        $filenames = scandir($assignment_dir);
+        $filenames = array_values(array_filter($filenames, function($fn) {
+            if (in_array($fn, array(
+                '.','..','archived','proofs'
+            ))) { return false; }
+            return true;
+        }));
+        if (count($filenames) > 0) {
+            $rv->{$assignment_type}->{$assignment_id}->filenames = $filenames;
         }
     }
 }
