@@ -372,10 +372,20 @@ ogst.assignmentcard = function(
         parent: card.uploadinner,
         classes: ['grid']
     });
+    card.uploadmaingridleft = addelem({
+        tag: 'div',
+        parent: card.uploadmaingrid
+    });
+    card.uploadmaininputloading = addelem({
+        tag: 'div',
+        parent: card.uploadmaingridleft,
+        innerHTML: 'uploading'
+    });
+    card.uploadmaininputloading.style.display = 'none';
     card.uploadmaininput = addelem({
         tag: 'input',
         type: 'file',
-        parent: card.uploadmaingrid,
+        parent: card.uploadmaingridleft,
         mycard: card,
         accept: '.docx, .tex, .md, .markdown, .htm, .html, .xhtml, .epub, .latex, .rtf, .odt',
         onchange: async function() {
@@ -388,9 +398,17 @@ ogst.assignmentcard = function(
             }
             this.mycard.clearmessage();
             const req = {};
+            req.uploadtype = 'mainfile';
             req.assignmentType = this.mycard.assignmentType;
             req.assignmentId = this.mycard.assignmentId;
-            this.setAttribute('aria-busy','true');
+            this.mycard.uploadmaininputloading.style.display = 'inline-block';
+            this.mycard.uploadmaininputloading.setAttribute('aria-busy','true');
+            this.style.display = 'none';
+            const resp = await ogst.editorupload(this, req);
+            this.style.display = 'inline';
+            this.mycard.uploadmaininputloading.style.display = 'none';
+            this.mycard.uploadmaininputloading.removeAttribute('aria-busy');
+            if (!resp) { return; }
         }
     });
     card.uploadmaindownload = addelem({
