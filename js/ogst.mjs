@@ -14,6 +14,14 @@ import downloadFile from '../open-guide-editor/open-guide-misc/download.mjs';
 import uploadFiles from '../open-guide-editor/open-guide-misc/file-upload.mjs';
 import { createMetaElement } from './inputfields.mjs';
 
+const nonauxfiles =[
+    /^archived$/,
+    /^oge-settings\.json$/,
+    /^mainupload\.[a-z]*$/,
+    /^metadata\.json$/,
+    /^metadata\.yaml$/
+];
+
 // generic function for adding elements
 function addelem(opts) {
     if (!("tag" in opts)) { return false; }
@@ -438,6 +446,58 @@ ogst.assignmentcard = function(
         this.uploadmaindownload.style.visibility = 'hidden';
     }
     card.updateuploadmain(card.mainuploadext);
+    card.uploadsep = addelem({
+        tag: 'p',
+        parent: card.uploadinner
+    });
+    card.uploadauxlabel = addelem({
+        tag: 'label',
+        parent: card.uploadinner,
+        innerHTML: 'Auxiliary files'
+    });
+    const auxfiles = filenames.filter((f) => {
+        for (const regex of nonauxfiles) {
+            if (regex.test(f)) { return false; }
+        }
+        return true;
+    });
+    card.uploadauxtable = addelem({
+        tag: 'table',
+        parent: card.uploadinner,
+        classes: ['auxuploadtable']
+    });
+    card.uploadauxtable.setAttribute('role','grid');
+    const auxtbdy = addelem({
+        tag: 'tbody',
+        parent: card.uploadauxtable
+    });
+    for (const auxfile of auxfiles) {
+        const trow = addelem({
+            tag: 'tr',
+            parent: auxtbdy});
+        const nametd = addelem({
+            tag: 'td',
+            innerHTML: auxfile,
+            parent: trow});
+        const btntd = addelem({
+            tag: 'td',
+            parent: trow});
+        const dlbtn = addelem({
+            tag: 'span',
+            parent: btntd,
+            classes: ['material-symbols-outlined'],
+            innerHTML: 'download',
+            title: 'download'
+        });
+        const delbtn = addelem({
+            tag: 'span',
+            parent: btntd,
+            classes: ['material-symbols-outlined'],
+            innerHTML: 'delete_forever',
+            title: 'delete'
+        });
+
+    }
 
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
