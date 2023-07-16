@@ -10,6 +10,7 @@ const ogst = {};
 
 import getformfields from '../open-guide-editor/open-guide-misc/formreader.mjs';
 import postData from '../open-guide-editor/open-guide-misc/fetch.mjs';
+import downloadFile from '../open-guide-editor/open-guide-misc/download.mjs';
 import uploadFiles from '../open-guide-editor/open-guide-misc/file-upload.mjs';
 import { createMetaElement } from './inputfields.mjs';
 
@@ -67,7 +68,6 @@ ogst.assignmentcard = function(
     });
     // put at start
     sect.insertBefore(card, sect.newassignmentButton.nextSibling);
-    let cardOpenBlock = false;
     card.hdrw = addelem({
         tag: 'header',
         parent: card,
@@ -101,7 +101,7 @@ ogst.assignmentcard = function(
             this.mycard.clearmessage();
             setTimeout(
                 () => {
-                    this.mycard.metablock.setAttribute("open","open");
+                    this.mycard.openNext();
                 }, 300
             );
         }
@@ -115,8 +115,6 @@ ogst.assignmentcard = function(
     if (assignmentId) {
         card.assignmentId = assignmentId;
         card.idinput.value = assignmentId;
-    } else {
-        cardOpenBlock = true;
     }
     card.hdrcentral = addelem({
         tag: 'div',
@@ -204,7 +202,7 @@ ogst.assignmentcard = function(
     const assignTypeSpec = assignmentTypes[assignmentType];
     card.mydisplay = assignTypeSpec.display ?? '';
     const metaSpec = assignTypeSpec.metadata;
-    let hadMetaData = false;
+    card.hasMetaData = false;
     // metadata bloc
     card.metablock = addelem({
         tag: 'details',
@@ -227,7 +225,7 @@ ogst.assignmentcard = function(
         let restoreinfo = '';
         if (assignmentInfo?.metadata?.[metakey]) {
             restoreinfo = assignmentInfo.metadata[metakey];
-            hadMetaData = true;
+            card.hasMetaData = true;
         }
         const metafield = createMetaElement(metakey,
             metakeyspec, restoreinfo);
@@ -305,7 +303,8 @@ ogst.assignmentcard = function(
             if (!resp) { return; }
             if (!("success" in resp) || (!resp.success)) { return; }
             this.mycard.okmessage("Metadata saved.");
-            this.mycard.metablock.removeAttribute("open");
+            this.mycard.hasMetaData = true;
+            this.mycard.openNext();
             this.disabled = true;
         }
     });
@@ -331,10 +330,6 @@ ogst.assignmentcard = function(
         }
         return mdata;
     }
-    if (!hadMetaData && !cardOpenBlock) {
-        card.metablock.setAttribute("open", "open");
-        cardOpenBlock = true;
-    }
     //
     // Upload block
     //
@@ -356,10 +351,10 @@ ogst.assignmentcard = function(
     if ("filenames" in assignmentInfo) {
         filenames = assignmentInfo.filenames;
     }
-    const mainUploadFound = false;
+    card.mainuploadext = '';
     for (const filename of filenames) {
         if (filename.substr(0,11) == 'mainupload.') {
-            mainUploadFound = true;
+            card.mainuploadext = filename.substr(11);
             break;
         }
     }
@@ -409,6 +404,8 @@ ogst.assignmentcard = function(
             this.mycard.uploadmaininputloading.style.display = 'none';
             this.mycard.uploadmaininputloading.removeAttribute('aria-busy');
             if (!resp) { return; }
+            this.mycard.updateuploadmain(resp.extension);
+            this.mycard.openNext();
         }
     });
     card.uploadmaindownload = addelem({
@@ -417,22 +414,30 @@ ogst.assignmentcard = function(
         role: 'button',
         mycard: card,
         parent: card.uploadmaingrid,
-        innerHTML: '<span class="material-symbols-outlined">download</span>'
+        innerHTML: '<span class="material-symbols-outlined">download</span> download main uploaded file',
+        onclick: function() {
+            if (!this?.mycard?.mainuploadext ||
+                !this?.mycard?.assignmentType ||
+                !this?.mycard?.assignmentId ||
+                this.mycard.mainuploadext == '') { return; }
+            const filename = 'mainupload.' + this.mycard.mainuploadext;
+            ogst.editordownload(this.mycard.assignmentType,
+                this.mycard.assignmentId,
+                filename);
+        }
     });
-    card.updateuploadmain = function(hasupload) {
-        if (hasupload) {
-            this.uploadmainlabel.innerHTML = 'Replace main document';
+    card.updateuploadmain = function(ext) {
+        this.mainuploadext = ext;
+        if (ext != '') {
+            this.uploadmainlabel.innerHTML = 'Replace main document ' +
+                '(current one: ' + ext + ' file)';
             this.uploadmaindownload.style.visibility = 'visible';
             return;
         }
         this.uploadmainlabel.innerHTML = 'Upload main document (.docx, .odt, .rtf, .tex, .md, .epub)';
         this.uploadmaindownload.style.visibility = 'hidden';
     }
-    card.updateuploadmain(mainUploadFound);
-    if (!mainUploadFound) {
-        card.uploadblock.setAttribute("open","open");
-        cardOpenBlock = true;
-    }
+    card.updateuploadmain(card.mainuploadext);
 
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
@@ -482,6 +487,28 @@ ogst.assignmentcard = function(
         card.msg.classList.remove('okmsg');
         card.msg.innerHTML = '';
     }
+
+    card.openNext = function() {
+        // close all accordians
+        let dd = this.getElementsByTagName('details');
+        for (const d of dd) {
+            d.removeAttribute("open");
+        }
+        // do not open any of no assignmentId
+        if (this.assignmentId == '') {
+            return;
+        }
+        if (!this.hasMetaData) {
+            this.metablock.setAttribute("open", "open");
+            return;
+        }
+        if (this.mainuploadext == '') {
+            this.uploadblock.setAttribute("open", "open");
+            return;
+        }
+    }
+
+    card.openNext();
     card.updateTitle();
     return card;
 }
@@ -624,6 +651,16 @@ ogst.clearmessage = function() {
     }
 }
 
+ogst.editordownload = function(assignmenttype, assignmentid, filename) {
+    downloadFile('php/servelet.php?filename=' +
+        encodeURIComponent(filename) + '&project=' +
+        encodeURIComponent(window.projectname) + '&username=' +
+        encodeURIComponent(window.username) + '&accesskey=' +
+        encodeURIComponent(window.loginaccesskey) + '&assignmenttype=' +
+        encodeURIComponent(assignmenttype) + '&assignmentid=' +
+        encodeURIComponent(assignmentid));
+}
+
 // generic function to make json requests, but only for logged in
 // editors
 ogst.editorquery = async function(req) {
@@ -651,7 +688,7 @@ ogst.editorupload = async function(inputelem, req) {
         return false;
     }
     req.username = window.username;
-    req.accesskey = window.accesskey;
+    req.accesskey = window.loginaccesskey;
     req.project = window.projectname;
     const resp = await uploadFiles(inputelem, 'php/filehandler.php', req);
     if (resp?.error || (!("respObj" in resp)) ||
