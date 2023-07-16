@@ -102,4 +102,30 @@ if ($uploadtype == 'mainfile') {
     jsend();
 }
 
+if ($uploadtype == 'auxfiles') {
+    $ctr = 0;
+    while (isset($_FILES["files" . strval($ctr)])) {
+        $fileinfo = $_FILES["files" . strval($ctr)];
+        if ($fileinfo["error"] !== 0) {
+            jquit("Error when uploading file.");
+        }
+        $basename = $fileinfo["name"];
+        $tmpname = $fileinfo["tmp_name"];
+        $fullfilename = $assignment_dir . '/' . $basename;
+        // back up existing file with that name
+        if (file_exists($fullfilename)) {
+            $to = $assignment_dir . '/' . 'previous-' .
+                strval(time()) . '-' . $basename;
+            rename($fullfilename, $to);
+        }
+        $moveresult = move_uploaded_file($tmpname, $fullfilename);
+        if (!$moveresult) {
+            jquit("Could not rename/move uploaded file.");
+        }
+        $ctr++;
+    }
+    $rv->error = false;
+    jsend();
+}
+
 jquit('Unrecognized upload type.');
