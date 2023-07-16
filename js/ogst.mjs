@@ -486,12 +486,16 @@ ogst.assignmentcard = function(
             tag: 'span',
             parent: btntd,
             classes: ['material-symbols-outlined'],
+            mycard: card,
+            myfilename: auxfile,
             innerHTML: 'download',
             title: 'download'
         });
         const delbtn = addelem({
             tag: 'span',
             parent: btntd,
+            mycard: card,
+            myfilename: auxfile,
             classes: ['material-symbols-outlined'],
             innerHTML: 'delete_forever',
             title: 'delete'
