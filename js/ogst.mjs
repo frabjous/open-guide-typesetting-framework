@@ -489,16 +489,38 @@ ogst.assignmentcard = function(
             mycard: card,
             myfilename: auxfile,
             innerHTML: 'download',
-            title: 'download'
+            title: 'download',
+            onclick: function() {
+                ogst.editordownload(this.mycard.assignmentType,
+                    this.mycard.assignmentId,
+                    this.myfilename);
+            }
         });
         const delbtn = addelem({
             tag: 'span',
             parent: btntd,
             mycard: card,
+            myrow: trow,
             myfilename: auxfile,
             classes: ['material-symbols-outlined'],
             innerHTML: 'delete_forever',
-            title: 'delete'
+            title: 'delete',
+            onclick: async function() {
+                const req = {};
+                req.postcmd = 'deletefile';
+                req.assignmentId = this.mycard.assignmentId;
+                req.assignmentType = this.mycard.assignmentId;
+                req.filetodelete = this.myfilename;
+                this.classList.remove('material-symbols-outlined');
+                this.innerHTML = 'deleting';
+                this.setAttribute('aria-busy','true');
+                let resp = await ogst.editorquery(req);
+                this.removeAttribute('aria-busy');
+                this.classList.add('material-symbols-outlined');
+                this.innerHTML = 'delete_forever';
+                if (!resp) { return; }
+                this.myrow.parentNode.removeChild(this.myrow);
+            }
         });
 
     }
