@@ -244,6 +244,15 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 cursor: pointer;
                 color: var(--form-element-invalid-border-color);
             }
+            section article.assignment div.fakegrid > div,
+            section article.assignment div.fakegrid > span,
+            section article.assignment div.fakegrid > label,
+            section article.assignment div.fakegrid > input[type="file"],
+            section article.assignment div.fakegrid > input {
+                width: 15rem;
+                display: inline;
+            }
+
         </style>
         <script>
             // starting globals
