@@ -528,21 +528,20 @@ ogst.assignmentcard = function(
     }
     card.uploadauxgrid = addelem({
         tag: 'div',
-        role: 'grid',
-        classes: ['grid'],
         parent: card.uploadinner
-    });
-    card.uploadauxfilelabel = addelem({
-        tag: 'div',
-        parent: card.uploadauxgrid,
-        innerHTML: 'Upload auxiliary file(s):'
     });
     card.uploadauxgridright = addelem({
         tag: 'div',
+        classes: ['fakegrid'],
         parent: card.uploadauxgrid
     });
+    card.uploadauxfilelabel = addelem({
+        tag: 'label',
+        parent: card.uploadauxgridright,
+        innerHTML: 'Upload auxiliary file(s):'
+    });
     card.uploadauxgridwaiting = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: card.uploadauxgridright,
         innerHTML: 'uploading …'
     });
