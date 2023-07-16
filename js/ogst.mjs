@@ -528,7 +528,8 @@ ogst.assignmentcard = function(
     }
     card.uploadauxgrid = addelem({
         tag: 'div',
-        role: 'grid'
+        role: 'grid',
+        classes: ['grid'],
         parent: card.uploadinner
     });
     card.uploadauxfilelabel = addelem({
@@ -553,7 +554,29 @@ ogst.assignmentcard = function(
         parent: card.uploadauxgridright,
         mycard: card,
         multiple: true,
-        onchange:
+        onchange: async function() {
+            if (this.value == '') { return; }
+            if (!this?.mycard?.assignmentId) {
+                this.mycard.reporterror('Cannot upload a file until a ' +
+                    'document id has been set.');
+                return;
+            }
+            this.mycard.clearmessage();
+            const req = {};
+            req.uploadtype = 'auxfiles';
+            req.assignmentType = this.mycard.assignmentType;
+            req.assignmentId = this.mycard.assignmentId;
+            this.mycard.uploadauxgridwaiting.style.display = 'inline-block';
+            this.style.display = 'none';
+            const resp = await ogst.editorupload(this, req);
+            this.mycard.uploadauxgridwaiting.style.display = 'none';
+            this.style.display = 'inline';
+            if (!resp) { return; }
+            const inpfiles = this.files;
+            for (const file of this.files) {
+                this.mycard.addtoauxfilelist(file.name);
+            }
+        }
     });
 
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
