@@ -67,6 +67,7 @@ ogst.assignmentcard = function(
     });
     // put at start
     sect.insertBefore(card, sect.newassignmentButton.nextSibling);
+    let cardOpenBlock = false;
     card.hdrw = addelem({
         tag: 'header',
         parent: card,
@@ -114,8 +115,9 @@ ogst.assignmentcard = function(
     if (assignmentId) {
         card.assignmentId = assignmentId;
         card.idinput.value = assignmentId;
+    } else {
+        cardOpenBlock = true;
     }
-
     card.hdrcentral = addelem({
         tag: 'div',
         classes: ['assignmentheader'],
@@ -202,6 +204,7 @@ ogst.assignmentcard = function(
     const assignTypeSpec = assignmentTypes[assignmentType];
     card.mydisplay = assignTypeSpec.display ?? '';
     const metaSpec = assignTypeSpec.metadata;
+    let hadMetaData = false;
     // metadata bloc
     card.metablock = addelem({
         tag: 'details',
@@ -224,6 +227,7 @@ ogst.assignmentcard = function(
         let restoreinfo = '';
         if (assignmentInfo?.metadata?.[metakey]) {
             restoreinfo = assignmentInfo.metadata[metakey];
+            hadMetaData = true;
         }
         const metafield = createMetaElement(metakey,
             metakeyspec, restoreinfo);
@@ -327,6 +331,29 @@ ogst.assignmentcard = function(
         }
         return mdata;
     }
+    if (!hadMetaData && !cardOpenBlock) {
+        card.metablock.setAttribute("open", "open");
+        cardOpenBlock = true;
+    }
+    //
+    // Upload block
+    //
+    card.uploadblock = addelem({
+        tag: 'details',
+        parent: card.contents,
+        classes: ['ogst-assignmentblock']
+    });
+    card.uploadlabel = addelem({
+        tag: 'summary',
+        parent: card.uploadblock,
+        innerHTML: 'Uploads'
+    });
+    card.uploadinner = addelem({
+        tag: 'div',
+        parent: card.uploadblock
+    });
+
+
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
     // maybe put archive button on right of title?
@@ -532,6 +559,24 @@ ogst.editorquery = async function(req) {
     if (resp?.error || (!("respObj" in resp)) ||
         resp?.respObj?.error) {
         ogst.reporterror('Error getting data from server. ' +
+        (resp?.errMsg ?? '') + ' ' + (resp?.respObj?.errMsg ?? ''));
+        return false;
+    }
+    return resp.respObj;
+}
+
+ogst.editorupload = async function(inputelem, req) {
+    if (!("uploadtype" in req)) {
+        console.error("Upload request made without specifying type.");
+        return false;
+    }
+    req.username = window.username;
+    req.accesskey = window.accesskey;
+    req.project = window.projectname;
+    const resp = await uploadFiles(inputelem, 'php/filehandler.php', req);
+    if (resp?.error || (!("respObj" in resp)) ||
+        resp?.respObj?.error) {
+        ogst.reporterror('Upload error. ' +
         (resp?.errMsg ?? '') + ' ' + (resp?.respObj?.errMsg ?? ''));
         return false;
     }
