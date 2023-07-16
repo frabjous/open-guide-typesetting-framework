@@ -43,7 +43,8 @@ if (!verify_by_accesskey($project, $username, $accesskey)) {
 
 require_once(dirname(__FILE__) . '/libassignments.php');
 
-$assignment_dir = get_assignment_dir($assignmenttype, $assignmentid, false);
+$assignment_dir = get_assignment_dir(
+    $assignmenttype, $assignmentid, false);
 
 if (!($assignment_dir)) {
     bad_request('Assignment/document directory not found.');
