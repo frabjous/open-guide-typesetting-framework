@@ -233,6 +233,17 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 font-weight: bold;
                 color: var(--primary);
             }
+            section article.assignment table.auxuploadtable td:last-child {
+                text-align: right;
+            }
+            section article.assignment table.auxuploadtable td:last-child span:first-child {
+                cursor: pointer;
+                color: var(--primary);
+            }
+            section article.assignment table.auxuploadtable td:last-child span:last-child {
+                cursor: pointer;
+                color: var(--form-element-invalid-border-color);
+            }
         </style>
         <script>
             // starting globals
