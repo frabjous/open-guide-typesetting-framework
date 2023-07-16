@@ -256,7 +256,7 @@ ogst.assignmentcard = function(
         disabled: true,
         onclick: async function() {
             if (!this?.mycard?.assignmentId) {
-                card.reporterror('Cannot save metadata until a document id has been set.');
+                this.mycard.reporterror('Cannot save metadata until a document id has been set.');
                 return;
             }
             const assignmentId = this.mycard.assignmentId;
@@ -352,7 +352,69 @@ ogst.assignmentcard = function(
         tag: 'div',
         parent: card.uploadblock
     });
-
+    let filenames = [];
+    if ("filenames" in assignmentInfo) {
+        filenames = assignmentInfo.filenames;
+    }
+    const mainUploadFound = false;
+    for (const filename of filenames) {
+        if (filename.substr(0,11) == 'mainupload.') {
+            mainUploadFound = true;
+            break;
+        }
+    }
+    card.uploadmainlabel = addelem({
+        tag: 'label',
+        parent: card.uploadinner
+    });
+    card.uploadmaingrid = addelem({
+        tag: 'div',
+        parent: card.uploadinner,
+        classes: ['grid']
+    });
+    card.uploadmaininput = addelem({
+        tag: 'input',
+        type: 'file',
+        parent: card.uploadmaingrid,
+        mycard: card,
+        accept: '.docx, .tex, .md, .markdown, .htm, .html, .xhtml, .epub, .latex, .rtf, .odt',
+        onchange: async function() {
+            if (this.value == '') {
+                return;
+            }
+            if (!this?.mycard?.assignmentId) {
+                this.mycard.reporterror('Cannot upload a file until a document id has been set.');
+                return;
+            }
+            this.mycard.clearmessage();
+            const req = {};
+            req.assignmentType = this.mycard.assignmentType;
+            req.assignmentId = this.mycard.assignmentId;
+            this.setAttribute('aria-busy','true');
+        }
+    });
+    card.uploadmaindownload = addelem({
+        tag: 'button',
+        type: 'button',
+        role: 'button',
+        mycard: card,
+        parent: card.uploadmaingrid,
+        innerHTML: '<span class="material-symbols-outlined">download</span>'
+    });
+    card.updateuploadmain = function(hasupload) {
+        if (hasupload) {
+            this.uploadmainlabel.innerHTML = 'Replace main document';
+            this.uploadmaindownload.style.visibility = 'visible';
+            return;
+        }
+        this.uploadmainlabel.innerHTML = 'Upload main document (.docx, .odt, .rtf, .tex, .md, .epub)';
+        this.uploadmaindownload.style.visibility = 'hidden';
+    }
+    card.updateuploadmain(mainUploadFound);
+    if (!mainUploadFound) {
+        card.uploadblock.setAttribute("open","open");
+        cardOpenBlock = true;
+    }
 
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
