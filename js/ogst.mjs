@@ -558,6 +558,16 @@ ogst.assignmentcard = function(
                 this.innerHTML = 'delete_forever';
                 if (!resp) { return; }
                 this.myrow.parentNode.removeChild(this.myrow);
+                if (this?.mycard?.editotherTbody) {
+                    const aa = this.mycard.editotherTbody
+                        .getElementsByTagName("a");
+                    for (const a of aa) {
+                        if (a.innerHTML == this.myfilename) {
+                            const trow = a.parentNode.parentNode;
+                            trow.parentNode.removeChild(trow);
+                        }
+                    }
+                }
             }
         });
     }
