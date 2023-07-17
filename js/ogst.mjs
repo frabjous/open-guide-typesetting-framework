@@ -675,7 +675,7 @@ ogst.assignmentcard = function(
         tag: 'table',
         parent: card.editinner
     });
-    card.editothertable.setAttribute('grid','true');
+    card.editothertable.setAttribute('role', 'grid');
     card.editotherTbody = addelem({
         tag: 'tbody',
         parent: card.editothertable
@@ -687,11 +687,11 @@ ogst.assignmentcard = function(
         let warningToUse = '';
         for (const [re, warning] of editwarnings) {
             if (re.test(fn)) {
-                if (warning === false) { continue; }
                 warningToUse = warning;
                 break;
             }
         }
+        if (warningToUse === false) { return; }
         const trow = addelem({
             tag: 'tr',
             parent: this.editotherTbody
@@ -701,28 +701,32 @@ ogst.assignmentcard = function(
             classes: ['warncell'],
             parent: trow
         });
-        if (warningToUse != '') {
-            trow.setAttribute('data-tooltip', warningToUse);
-            trow.classList.add('warningrow');
-            warntd.innerHTML = '<span class="material-symbols-outlined">' +
-                'warning</span>';
-        }
         const edittd = addelem({
             tag: 'td',
             parent: trow,
             classes: ['editcell'],
             innerHTML: '<a href="' + editUrl(this.assignmentType,
                 this.assignmentId, fn) + '" target="_blank" ' +
-            'class="material-symbols-outlined">edit_note</a>'
+                'title="edit this file" ' +
+                'class="material-symbols-outlined">edit_note</a>'
         });
         const fntd = addelem({
             tag: 'td',
             parent: trow,
             classes: ['fncell'],
             innerHTML: '<a href="' + editUrl(this.assignmentType,
-                this.assignmentId, fn) + '"target="_blank">' +
-                fn + '</a>'
+                this.assignmentId, fn) + '"target="_blank"' +
+                ' title="edit this file">' + fn + '</a>'
         });
+        if (warningToUse != '') {
+            warntd.setAttribute('data-tooltip', warningToUse);
+            edittd.setAttribute('data-tooltip', warningToUse);
+            fntd.setAttribute('data-tooltip', warningToUse);
+            trow.classList.add('warningrow');
+            warntd.innerHTML = '<span class="material-symbols-outlined">' +
+                'warning</span>';
+        }
+
     }
     const editnames = filenames.filter((f) => (iseditable(f)));
     for (const ename of editnames) {
