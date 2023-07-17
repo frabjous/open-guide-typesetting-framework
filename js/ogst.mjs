@@ -577,6 +577,23 @@ ogst.assignmentcard = function(
             }
         }
     });
+    //
+    // Bibliography block
+    //
+    card.bibblock = addelem({
+        tag: 'details',
+        parent: card.contents,
+        classes: ['ogst-assignmentblock']
+    });
+    card.biblabel = addelem({
+        tag: 'summary',
+        parent: card.bibblock,
+        innerHTML: 'Bibliography'
+    });
+    card.bibinner = addelem({
+        tag: 'div',
+        parent: card.bibblock
+    });
 
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
