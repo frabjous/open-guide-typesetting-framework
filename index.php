@@ -71,7 +71,7 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
         <meta name="description" content="Open Guide Typesetting Framework">
         <meta name="author" content="Kevin C. Klement">
         <meta name="copyright" content="Copyright 2023 © Kevin C. Klement">
-        <meta name="keywords" content="academic,typesetting,journal,anthology, guide">
+        <meta name="keywords" content="academic,typesetting,journal,anthology,guide">
         <meta name="dcterms.date" content="2023-07-08">
 
         <!--to disable search indexing -->
@@ -267,6 +267,7 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             window.projects = <?php echo json_encode($projects); ?>;
             <?php if ($newpwdmode) { echo "window.newpwdlink = '" .
                 $newpasswordlink . "';"; } ?>
+            window.datadir = '<?php echo $datadir; ?>';
         </script>
         <script type="module">
             import ogst from './js/ogst.mjs';
