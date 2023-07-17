@@ -594,6 +594,62 @@ ogst.assignmentcard = function(
         tag: 'div',
         parent: card.bibblock
     });
+    // TODO: change this
+    card.hasBibliography = true;
+
+    //
+    // Edit block
+    //
+    card.editblock = addelem({
+        tag: 'details',
+        parent: card.contents,
+        classes: ['ogst-assignmentblock']
+    });
+    card.editlabel = addelem({
+        tag: 'summary',
+        parent: card.editblock,
+        innerHTML: 'Edit document'
+    });
+    card.editinner = addelem({
+        tag: 'div',
+        parent: card.editblock
+    });
+
+    //
+    // Proofs block
+    //
+    card.proofsblock = addelem({
+        tag: 'details',
+        parent: card.contents,
+        classes: ['ogst-assignmentblock']
+    });
+    card.editlabel = addelem({
+        tag: 'summary',
+        parent: card.proofsblock,
+        innerHTML: 'Proofs'
+    });
+    card.proofsinner = addelem({
+        tag: 'div',
+        parent: card.proofsblock
+    });
+
+    //
+    // Publication block
+    //
+    card.pubblock = addelem({
+        tag: 'details',
+        parent: card.contents,
+        classes: ['ogst-assignmentblock']
+    });
+    card.publabel = addelem({
+        tag: 'summary',
+        parent: card.pubblock,
+        innerHTML: 'Publication'
+    });
+    card.pubinner = addelem({
+        tag: 'div',
+        parent: card.pubblock
+    });
 
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
