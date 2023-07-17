@@ -255,6 +255,23 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             section article.assignment div.fakegrid > input[type="file"] {
                 margin-left: 1rem;
             }
+            section article.assignment table tr.warningrow:hover {
+                background-color: hsl(330, 40%, 50%, 0.3);
+            }
+            section article.assignment table tr td.warncell {
+                width: 3rem;
+                color: var(--code-value-color);
+            }
+            section article.assignment table tr td.editcell {
+                width: 3rem;
+            }
+            section article.assignment table tr td.editcell a,
+            section article.assignment table tr td.editcell a:link,
+            section article.assignment table tr td.editcell a:hover {
+                text-decoration: none;
+                color: var(--color);
+            }
+
         </style>
         <script>
             // starting globals
