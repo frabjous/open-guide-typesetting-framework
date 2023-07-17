@@ -71,6 +71,16 @@ function byid(id) {
     return document.getElementById(id);
 }
 
+function editUrl(assignmentType, assignmentId, filename) {
+    return 'open-guide-editor/php/redirect.php?' +
+        'dirname=' + encodeURIComponent(
+            window.datadir + '/' +
+            window.projectname + '/' +
+            assignmentType + 's/' +
+            assignmentId) +
+        '&basename=' + encodeURIComponent(filename);
+}
+
 function iseditable(fn) {
     const ext = fn.replace(/^.*\.([^\.]*)$/,'$1');
     return (editableexts.indexOf(ext) != -1);
@@ -655,9 +665,53 @@ ogst.assignmentcard = function(
         parent: card.editinner
     });
     card.editotherlabel = addelem({
+        tag: 'label',
+        parent: card.editinner,
+        innerHTML: 'Edit other files'
     });
     card.editsep.display.style = 'none';
     card.editotherlabel.display.style = 'none';
+    card.editothertable = addelem({
+        tag: 'table',
+        parent: card.editinner,
+        role: 'grid'
+    });
+    card.editotherTbody = addelem({
+        tag: 'tbody',
+        parent: card.editothertable
+    });
+    card.addtoeditlist = function(fn) {
+        let warningToUse = '';
+        for (const [re, warning] of editwarnings) {
+            if (re.test(fn)) {
+                if (warning === false) { continue; }
+                warningToUse = warning;
+                break;
+            }
+        }
+        const trow = addelem({
+            tag: 'tr',
+            parent: this.editotherTbody
+        });
+        const warntd = addelem({
+            tag: 'td',
+            classes: ['warncell'],
+            parent: trow
+        });
+        if (warningToUse != '') {
+            trow.setAttribute('data-tooltip', warningToUse);
+            trow.classList.add('warningrow');
+            warntd.innerHTML = '<span class="material-symbols-outlined">' +
+                'warning</span>';
+        }
+        const edittd = addelem({
+            tag: 'td',
+            parent: trow,
+            classes: ['editcell'],
+            innerHTML: '<a href="' + 
+            '" class="material-symbols-outlined"></a>'
+        });
+    }
 
     //
     // Proofs block
@@ -667,7 +721,7 @@ ogst.assignmentcard = function(
         parent: card.contents,
         classes: ['ogst-assignmentblock']
     });
-    card.editlabel = addelem({
+    card.proofslabel = addelem({
         tag: 'summary',
         parent: card.proofsblock,
         innerHTML: 'Proofs'
@@ -676,7 +730,6 @@ ogst.assignmentcard = function(
         tag: 'div',
         parent: card.proofsblock
     });
-
     //
     // Publication block
     //
