@@ -98,6 +98,9 @@ if ($uploadtype == 'mainfile') {
     if (!$moveresult) {
         jquit('Could not rename/move uploaded file.');
     }
+    // create markdown file and extracted bibliography
+    //
+    
     $rv->error = false;
     jsend();
 }
