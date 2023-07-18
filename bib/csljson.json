@@ -1,66 +1,57 @@
 {
+    "types": [
+        "article",
+        "article-journal",
+        "article-magazine",
+        "article-newspaper",
+        "bill",
+        "book",
+        "broadcast",
+        "chapter",
+        "classic",
+        "collection",
+        "dataset",
+        "document",
+        "entry",
+        "entry-dictionary",
+        "entry-encyclopedia",
+        "event",
+        "figure",
+        "graphic",
+        "hearing",
+        "interview",
+        "legal_case",
+        "legislation",
+        "manuscript",
+        "map",
+        "motion_picture",
+        "musical_score",
+        "pamphlet",
+        "paper-conference",
+        "patent",
+        "performance",
+        "periodical",
+        "personal_communication",
+        "post",
+        "post-weblog",
+        "regulation",
+        "report",
+        "review",
+        "review-book",
+        "software",
+        "song",
+        "speech",
+        "standard",
+        "thesis",
+        "treaty",
+        "webpage"
+            ],
     "properties": {
-        "type": {
-            "type": "string",
-            "enum": [
-                "article",
-                "article-journal",
-                "article-magazine",
-                "article-newspaper",
-                "bill",
-                "book",
-                "broadcast",
-                "chapter",
-                "classic",
-                "collection",
-                "dataset",
-                "document",
-                "entry",
-                "entry-dictionary",
-                "entry-encyclopedia",
-                "event",
-                "figure",
-                "graphic",
-                "hearing",
-                "interview",
-                "legal_case",
-                "legislation",
-                "manuscript",
-                "map",
-                "motion_picture",
-                "musical_score",
-                "pamphlet",
-                "paper-conference",
-                "patent",
-                "performance",
-                "periodical",
-                "personal_communication",
-                "post",
-                "post-weblog",
-                "regulation",
-                "report",
-                "review",
-                "review-book",
-                "software",
-                "song",
-                "speech",
-                "standard",
-                "thesis",
-                "treaty",
-                "webpage"
-            ]
-        },
-        "id": {
-            "type": ["string", "number"]
-        },
         "citation-key": {
             "type": "string"
         },
         "categories": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
+            "type": "array"
         },
         "language": {
             "type": "string"
@@ -72,49 +63,28 @@
             "type": "string"
         },
         "author": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/name-variable"
-            }
+            "type": "names"
         },
         "chair": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/name-variable"
-            }
+            "type": "names"
         },
         "collection-editor": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/name-variable"
-            }
+            "type": "names"
         },
         "compiler": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/name-variable"
-            }
+            "type": "names"
         },
         "composer": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/name-variable"
-            }
+            "type": "names"
         },
         "container-author": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/name-variable"
-            }
+            "type": "names"
         },
         "contributor": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/name-variable"
-            }
+            "type": "names"
         },
         "curator": {
-            "type": "array",
+            "type": "names",
             "items": {
                 "$ref": "#/definitions/name-variable"
             }
@@ -228,13 +198,13 @@
             }
         },
         "accessed": {
-            "$ref": "#/definitions/date-variable"
+            "$ref": "dateparts"
         },
         "available-date": {
             "$ref": "#/definitions/date-variable"
         },
         "event-date": {
-            "$ref": "#/definitions/date-variable"
+            "$ref": "dateparts"
         },
         "issued": {
             "$ref": "#/definitions/date-variable"
@@ -243,7 +213,7 @@
             "$ref": "#/definitions/date-variable"
         },
         "submitted": {
-            "$ref": "#/definitions/date-variable"
+            "$ref": "dateparts"
         },
         "abstract": {
             "type": "string"
@@ -301,10 +271,6 @@
         },
         "edition": {
             "type": ["string", "number"]
-        },
-        "event": {
-            "description": "[Deprecated - use 'event-title' instead. Will be removed in 1.1]",
-            "type": "string"
         },
         "event-title": {
             "type": "string"
