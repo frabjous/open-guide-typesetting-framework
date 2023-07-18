@@ -79,7 +79,7 @@ function editUrl(assignmentType, assignmentId, filename) {
             assignmentType + 's/' +
             assignmentId) +
         '&basename=' + encodeURIComponent(filename);
-}
+gv"+y}
 
 function iseditable(fn) {
     const ext = fn.replace(/^.*\.([^\.]*)$/,'$1');
