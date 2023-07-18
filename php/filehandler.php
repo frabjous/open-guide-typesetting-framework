@@ -100,7 +100,28 @@ if ($uploadtype == 'mainfile') {
     }
     // create markdown file and extracted bibliography
     //
-    
+    require_once(dirname(__FILE__) . '/../open-guide-editor/open-guide-misc/pipe.php');
+    $conv_command = $project_settings->assignmentTypes->{$assignment_type}->convert;
+    $conv_command = str_replace('%upload%', '"' . $mainfilename . '"', $conv_command);
+    $conv_result = pipe_to_command($conv_command, '');
+    if ($conv_result->returnvalue != 0) {
+        jquit('Could not convert uploaded file to markdown. ' .
+            $conv_result->stderr);
+    }
+    require_once(dirname(__FILE__) . '/libdocument.php');
+    $markdown = $conv_result->stdout;
+    $markdown_file = $assignment_dir . '/main.md';
+    // back up old main
+    if (file_exists($markdown_file)) {
+        $newname = $assignment_dir . '/previous-' .
+            strval(filemtile($markdown_file)) . '-main.md';
+        rename($markdown_file, $newname);
+    }
+    $saveresult = file_put_contents($markdown_file, $markdown);
+    if (!$saveresult || $saveresult == 0) {
+        jquit('Could not save markdown file.');
+    }
+
     $rv->error = false;
     jsend();
 }
