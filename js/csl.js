@@ -1,4 +1,12 @@
-{
+// LICENSE: GNU GPL v3 You should have received a copy of the GNU General
+// Public License along with this program. If not, see
+// https://www.gnu.org/licenses/.
+
+///////////////// csl.js //////////////////////////////////////
+// a list of information about csl json properties and types //
+///////////////////////////////////////////////////////////////
+
+export default {
     "types": [
         "article",
         "article-magazine",
