@@ -11,6 +11,8 @@ export function addbibitems(itemarray, arenew = false) {
     // should be attached to card item
     const card = this;
     // sanity check
+    console.log(itemarray);
+    return;
     if (!card?.bibcontentsitems) { return false; }
     for (const item of itemarray) {
         const itemelem = addelem({
