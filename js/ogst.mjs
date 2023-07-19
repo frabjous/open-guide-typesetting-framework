@@ -455,7 +455,7 @@ ogst.assignmentcard = function(
             if (("extractedbib" in resp) && (resp.extractedbib)) {
                 this.mycard.extractbibmtime =
                     Math.floor((new Date()).getTime()/1000);
-                this.mycard.updatebib();
+                this.mycard.updatebibbuttons();
             }
             this.mycard.updateuploadmain(resp.extension);
             this.mycard.openNext();
@@ -665,10 +665,6 @@ ogst.assignmentcard = function(
         tag: 'div',
         parent: card.bibtop
     });
-    card.bibtopmiddle = addelem({
-        tag: 'div',
-        parent: card.bibtop
-    });
     card.bibtopright = addelem({
         tag: 'div',
         parent: card.bibtop
@@ -677,23 +673,32 @@ ogst.assignmentcard = function(
         tag: 'button',
         type: 'button',
         innerHTML: 'extract from main file',
-        parent: card.bibtopleft
+        parent: card.bibtopleft,
+        mycard: card,
+        onclick: function() {
+            if (!this?.mycard?.assignmentId) { return; }
+            this.innerHTML = 'extracting (this may take awhile) …';
+
+            this.innerHTML = 'extract from main file',
+            this.removeAttribute('aria-busy');
+        }
     });
     card.bibuploadlabel = addelem({
         tag: 'span',
         innerHTML: 'import .bib, .json, .ris, .xml, .yaml',
         parent: card.bibtopright
     });
+    card.bibuploadloading = addelem({
+        tag: 'div',
+        innerHMTL: 'uploading …'
+    });
+    card.bibuploadloading.setAttribute('aria-busy','true');
+    card.bibuploadloading.style.display = 'none';
     card.bibuploadinput = addelem({
         tag: 'input',
         type: 'file',
+        accept: '.bib, .json, .ris, .xml, .yaml',
         parent: card.bibtopright
-    });
-    card.bibapplybutton = addelem({
-        tag: 'button',
-        type: 'button',
-        parent: card.bibtopmiddle,
-        innerHTML: 'apply to document'
     });
     card.bibcontents = addelem({
         tag: 'div',
@@ -708,17 +713,29 @@ ogst.assignmentcard = function(
         tag: 'div',
         parent: card.bibcontents
     });
+    card.bibcontentbuttons = addelem({
+        tag: 'div',
+        classes: ['grid'],
+        parent: card.bibcontents
+    });
     card.bibsavebutton = addelem({
         tag: 'button',
         type: 'button',
+        parent: card.bibcontentbuttons,
         innerHTML: 'save bibiography'
+    });
+    card.bibapplybutton = addelem({
+        tag: 'button',
+        type: 'button',
+        parent: card.bibcontentbuttons,
+        innerHTML: 'apply to document'
     });
     card.bibsavebutton.disabled = true;
     card.biblastextracted = (assignmentInfo?.biblastextracted ?? -1);
     card.biblastapplied = (assignmentInfo?.biblastapplied ?? -1);
     card.biblastchanged = (assignmentInfo?.biblastchanged ?? -1);
     card.extractbibmtime = (assignmentInfo?.extractbibmtime ?? -1);
-    card.updatebib = function() {
+    card.updatebibbuttons = function() {
         const card = this;
         if (card.extractbibmtime > card.biblastextracted) {
             card.bibextractbutton.disabled = false;
@@ -729,10 +746,16 @@ ogst.assignmentcard = function(
             (card.biblastsaved > card.biblastapplid)) {
             card.bibapplybutton.disabled = false;
         } else {
-            card.bibapplybutton = true;
+            card.bibapplybutton.disabled = true;
+        }
+        const numitems = card.bibcontentsitems.getElementsByClassName("bibitem").length;
+        if (numitems == 0) {
+            card.bibcontentbuttons.style.display = 'none';
+        } else {
+            card.bibcontentbuttons.style.display = 'block';
         }
     }
-    card.updatebib();
+    card.updatebibbuttons();
 
     //
     // Edit block
