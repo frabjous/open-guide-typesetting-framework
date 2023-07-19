@@ -110,16 +110,26 @@ if ($uploadtype == 'mainfile') {
     }
     require_once(dirname(__FILE__) . '/libdocument.php');
     $markdown = $conv_result->stdout;
+    [$markdown, $bibcontents] = extract_bibliography($markdown);
     $markdown_file = $assignment_dir . '/main.md';
     // back up old main
     if (file_exists($markdown_file)) {
         $newname = $assignment_dir . '/previous-' .
-            strval(filemtile($markdown_file)) . '-main.md';
+            strval(filemtime($markdown_file)) . '-main.md';
         rename($markdown_file, $newname);
     }
     $saveresult = file_put_contents($markdown_file, $markdown);
     if (!$saveresult || $saveresult == 0) {
         jquit('Could not save markdown file.');
+    }
+    if ($bibcontents != '') {
+        $bibfile = $assignment_dir . '/extracted-bib.txt';
+        if (file_exists($bibfile)) {
+            $newbibfile = $assignment_dir . '/previous-' .
+                strval(filemtime($bibfile)) . '-extracted-bib.txt';
+            rename($bibfile, $newbibfile);
+        }
+        $saveresult = file_put_contents($bibfile, $bibcontents);
     }
 
     $rv->error = false;

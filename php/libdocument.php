@@ -21,15 +21,18 @@ function extract_bibliography($markdown) {
                 implode(PHP_EOL,
                     array_slice($lines, 0 , (($ln>0) ? ($ln-1) : 0))),
                 implode(PHP_EOL,
-                    array_map(array_values(array_filter(
-                        array_slice($lines, $ln+1),
-                        function ($l) {
-                            return mb_ereg_match('.*[A-Z]', $l); 
-                        }
-                    ))
-                , function($l) {
-                        return mb_ereg_replace('[^A-Za-z0-9 \.,–—-]','',$l);
-                }))
+                    array_map(
+                        function($l) {
+                            return mb_ereg_replace('[^A-Za-z0-9 \.,–—-]','',$l);
+                        },
+                        array_values(array_filter(
+                            array_slice($lines, $ln+1),
+                            function ($l) {
+                                return mb_ereg_match('.*[A-Z]', $l); 
+                            }
+                        ))
+                    )
+                )
             );
         }
     }
