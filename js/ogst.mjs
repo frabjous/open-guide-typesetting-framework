@@ -675,12 +675,25 @@ ogst.assignmentcard = function(
         innerHTML: 'extract from main file',
         parent: card.bibtopleft,
         mycard: card,
-        onclick: function() {
+        onclick: async function() {
             if (!this?.mycard?.assignmentId) { return; }
             this.innerHTML = 'extracting (this may take awhile) …';
-
-            this.innerHTML = 'extract from main file',
+            this.setAttribute('aria-busy','true');
+            const req = {
+                postcmd: 'extractbib',
+                assignmentId: this.mycard.assignmentId,
+                assignmentType = this.mycard.assignmentType
+            }
+            const resp = await ogst.editorquery(req);
             this.removeAttribute('aria-busy');
+            this.innerHTML = 'extract from main file';
+            if (!resp) { return; }
+            this.mycard.biblastextracted = Math.floor(
+                (new Date()).getTime()/1000);
+            if (resp.additions) {
+                this.mycard.addbibitems(resp.additions);
+            }
+            this.mycard.updatebibbuttons();
         }
     });
     card.bibuploadlabel = addelem({
@@ -705,7 +718,8 @@ ogst.assignmentcard = function(
         parent: card.bibinner
     });
     card.bibcontentshdr = addelem({
-        tag: 'h4',
+        tag: 'div',
+        classes: ['bibitemlabel'],
         parent: card.bibcontents,
         innerHTML: 'Items'
     });
@@ -734,6 +748,7 @@ ogst.assignmentcard = function(
     card.biblastextracted = (assignmentInfo?.biblastextracted ?? -1);
     card.biblastapplied = (assignmentInfo?.biblastapplied ?? -1);
     card.biblastchanged = (assignmentInfo?.biblastchanged ?? -1);
+    card.biblastsaved = (assignmentInfo?.biblastsaved ?? -1);
     card.extractbibmtime = (assignmentInfo?.extractbibmtime ?? -1);
     card.updatebibbuttons = function() {
         const card = this;
@@ -749,11 +764,17 @@ ogst.assignmentcard = function(
             card.bibapplybutton.disabled = true;
         }
         const numitems = card.bibcontentsitems.getElementsByClassName("bibitem").length;
-        if (numitems == 0) {
-            card.bibcontentbuttons.style.display = 'none';
+        if (card.biblastchanged > card.biblastsaved) {
+            card.bibsavebutton.disabled = false;
         } else {
-            card.bibcontentbuttons.style.display = 'block';
+            card.bibsavebutton.disabled = true;
         }
+        if (numitems > 0 && card.bibsavebutton.disabled) {
+            card.bibapplybutton.disabled = false;
+        } else {
+            card.bibapplybutton.disabled = true;
+        }
+
     }
     card.updatebibbuttons();
 

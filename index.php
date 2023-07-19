@@ -271,7 +271,10 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 text-decoration: none;
                 color: var(--color);
             }
-
+            section article.assignment details.ogst-assignmentblock div.bibitemlabel {
+                font-weight: bold;
+                margin-bottom: 0.5rem;
+            }
         </style>
         <script>
             // starting globals

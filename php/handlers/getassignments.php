@@ -83,10 +83,12 @@ foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_s
                 filemtime($assignment_dir . '/extracted-bib.txt');
         }
         if (in_array('bibliography.json', $filenames)) {
+            $mtime = filemtime($assignment_dir . '/bibliography.json');
             $rv->{$assignment_type}->{$assignment_id}->biblastchanged =
-                filemtime($assignment_dir . '/bibliography.json');
+                $mtime;
+            $rv->{$assignment_type}->{$assignment_id}->biblastsaved =
+                $mtime;
         }
-
     }
 }
 
