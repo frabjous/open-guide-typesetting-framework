@@ -78,11 +78,11 @@ foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_s
             $rv->{$assignment_type}->{$assignment_id}->biblastapplied =
                 filemtime($assignment_dir . '/biblastapplied');
         }
-        if (in_array('extracted-bib.txt')) {
+        if (in_array('extracted-bib.txt', $filenames)) {
             $rv->{$assignment_type}->{$assignment_id}->extractbibmtime =
                 filemtime($assignment_dir . '/extracted-bib.txt');
         }
-        if (in_array('bibliography.json')) {
+        if (in_array('bibliography.json', $filenames)) {
             $rv->{$assignment_type}->{$assignment_id}->biblastchanged =
                 filemtime($assignment_dir . '/bibliography.json');
         }

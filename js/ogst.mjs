@@ -81,7 +81,7 @@ function editUrl(assignmentType, assignmentId, filename) {
             assignmentType + 's/' +
             assignmentId) +
         '&basename=' + encodeURIComponent(filename);
-gv"+y}
+}
 
 function iseditable(fn) {
     const ext = fn.replace(/^.*\.([^\.]*)$/,'$1');
@@ -657,7 +657,7 @@ ogst.assignmentcard = function(
     // top of bibliography area, with buttons
     card.bibtop = addelem({
         tag: 'div',
-        parent: card.bininner,
+        parent: card.bibinner,
         classes: ['grid']
     });
     // three areas for buttons at top of bibliography
@@ -681,18 +681,18 @@ ogst.assignmentcard = function(
     });
     card.bibuploadlabel = addelem({
         tag: 'span',
-        innerHTML: 'upload items',
-        parent: card.bibtopmiddle
+        innerHTML: 'import .bib, .json, .ris, .xml, .yaml',
+        parent: card.bibtopright
     });
     card.bibuploadinput = addelem({
         tag: 'input',
         type: 'file',
-        parent: card.bibtopmiddle
+        parent: card.bibtopright
     });
     card.bibapplybutton = addelem({
         tag: 'button',
         type: 'button',
-        parent: card.bibtopright,
+        parent: card.bibtopmiddle,
         innerHTML: 'apply to document'
     });
     card.bibcontents = addelem({
@@ -702,7 +702,7 @@ ogst.assignmentcard = function(
     card.bibcontentshdr = addelem({
         tag: 'h4',
         parent: card.bibcontents,
-        innerHTML: 'items'
+        innerHTML: 'Items'
     });
     card.bibcontentsitems = addelem({
         tag: 'div',
@@ -710,7 +710,7 @@ ogst.assignmentcard = function(
     });
     card.bibsavebutton = addelem({
         tag: 'button',
-        type: 'button'
+        type: 'button',
         innerHTML: 'save bibiography'
     });
     card.bibsavebutton.disabled = true;
