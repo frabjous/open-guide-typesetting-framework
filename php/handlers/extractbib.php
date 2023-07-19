@@ -27,9 +27,25 @@ require_once(dirname(__FILE__) . '/../libassignments.php');
 $assigndir = get_assignment_dir($assignmentType, $assignmentId, false);
 
 if (!$assigndir) {
-    jquit('Unable to find or create directory for document.' .
+    jquit('Unable to find directory for document.' .
     ' Contact your site administrator.');
 }
+
+$extracted_bibfile = $assigndir . '/extracted-bib.txt';
+
+// if no file, just send back empty array
+if (!file_exists($extracted_bib)) {
+    $rv->additions = array();
+    $rv->success = true;
+    $rv->error = false;
+    jsend();
+}
+
+$ext_bibfile_contents = file_get_contents($extracted_bibfile);
+
+$plain_entries = explode(PHP_EOL, $ext_bibfile_contents);
+
+
 
 // create json file with metadata
 $metadata_file = "$assigndir/metadata.json";

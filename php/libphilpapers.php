@@ -52,6 +52,10 @@ function id_to_bib($id) {
     return bib_fix($bib);
 }
 
+function id_to_obj($id) {
+    return bib_to_obj(id_to_bib($id));
+}
+
 function ids_to_bib($ids) {
     $rv = '';
     foreach ($ids as $id) {
