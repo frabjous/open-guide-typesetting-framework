@@ -69,6 +69,19 @@ foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_s
         if (count($filenames) > 0) {
             $rv->{$assignment_type}->{$assignment_id}->filenames = $filenames;
         }
+        // check when bib last extracted, bib last applied
+        if (in_array('biblastextracted', $filenames)) {
+            $rv->{$assignment_type}->{$assignment_id}->biblastextracted =
+                filemtime($assignment_dir . '/biblastextracted');
+        }
+        if (in_array('biblastapplied', $filenames)) {
+            $rv->{$assignment_type}->{$assignment_id}->biblastapplied =
+                filemtime($assignment_dir . '/biblastapplied');
+        }
+        if (in_array('extracted-bib.txt')) {
+            $rv->{$assignment_type}->{$assignment_id}->extractbibmtime =
+                filemtime($assignment_dir . '/extracted-bib.txt');
+        }
     }
 }
 
