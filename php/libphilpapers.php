@@ -113,14 +113,30 @@ function plain_to_ids($plain, $maxcount = 5) {
     $url = 'https://philpapers.org/s/' . $escaped;
     $search = curl_get($url);
     if (!$search) { return array(); }
-    error_log('==============='.$search.'=================');
-    $portions = explode('<ol class=\'entryList\'>', $search, 2);
-    if (count($portions) < 2) { return array(); }
-    $entries = explode("\n<li id='e", $portions[1], ($maxcount + 1));
-    if (count($entries) < 2) { return array(); }
+    // sometimes philpapers uses single quotes, other times
+    // double quotes; I don't know why.
+    file_put_contents('/home/kck/tmp/search.html',$search);
+    $portions = explode('<ol class="entryList">', $search, 2);
+    if (count($portions) < 2) {
+        $portions = explode('<ol class=\'entryList\'>', $search, 2);
+        if (count($portions) < 2) {
+            return array();
+        }
+    }
+    $dblquotes = true;
+    $entries = explode("\n<li id=\"e", $portions[1], ($maxcount + 1));
+    if (count($entries) < 2) {
+        $dblquotes = false;
+        $entries = explode("\n<li id='e", $portions[1], ($maxcount + 1));
+        if (count($entries) < 2) { return array(); }
+    }
     $rv = array();
     for ($i=1; $i<count($entries); $i++) {
-        $ids = explode("'",$entries[$i],2);
+        $sep = '"';
+        if (!$dblquotes) {
+            $sep = "'";
+        }
+        $ids = explode($sep, $entries[$i],2);
         if (count($ids) > 1) {
             array_push($rv, $ids[0]);
         }
