@@ -55,7 +55,7 @@ function id_to_bib($id) {
 function ids_to_bib($ids) {
     $rv = '';
     foreach ($ids as $id) {
-        $rv .= PHP_EOL . id_to_bib($id);
+        $rv .= id_to_bib($id);
     }
     return $rv;
 }
@@ -71,8 +71,9 @@ function ids_to_obj($ids) {
 function plain_array_to_bib($arr, $maxcount = 5) {
     $rv = '';
     foreach ($arr as $plain) {
-        $rv .= PHP_EOL . plain_to_bib($plain, $maxcount);
+        $rv .=  plain_to_bib($plain, $maxcount);
     }
+    return $rv;
 }
 
 function plain_array_to_json($arr, $maxcount = 5) {
