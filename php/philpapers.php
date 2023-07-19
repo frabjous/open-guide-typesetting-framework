@@ -25,6 +25,8 @@ $idmode = false;
 $ids = array();
 $bibentries = array();
 $maxcount = 1;
+$bibtexmode = false;
+$jsonmode = false;
 
 while (count($arguments) > 0) {
     // read next argument
@@ -44,6 +46,16 @@ while (count($arguments) > 0) {
         continue;
     }
 
+    if ($arg == '--bibtex') {
+        $bibtexmode = true;
+        continue;
+    }
+
+    if ($arg == '--json') {
+        $jsonmode = true;
+        continue;
+    }
+
     if ($idmode) {
         array_push($ids, $arg);
         continue;
@@ -52,11 +64,26 @@ while (count($arguments) > 0) {
     array_push($bibentries, $arg);
 }
 
-foreach ($ids as $id) {
-    echo "I should do the id $id";
+if (!$jsonmode && !$bibtexmode) {
+    $jsonmode = true;
 }
 
-foreach ($bibentries as $bibentry) {
-    echo plain_to_bib($bibentry, $maxcount);
+if (count($ids) > 0) {
+    if ($jsonmode) {
+        echo ids_to_json($ids);
+    }
+    if ($bibtexmode) {
+        echo ids_to_bib($ids);
+    }
 }
 
+if (count($bibentries) > 0) {
+    if ($jsonmode) {
+        echo plain_array_to_json($bibentries, $maxcount);
+    }
+    if ($bibtexmode) {
+        echo plain_array_to_bib($bibentries, $maxcount);
+    }
+}
+
+exit(0);

@@ -30,7 +30,7 @@ function bib_to_json($bib) {
 }
 
 function bib_to_obj($bib) {
-    return json_encode(bib_to_json($bib)) ?? array();
+    return json_decode(bib_to_json($bib)) ?? array();
 }
 
 function curl_get($url) {
@@ -55,18 +55,52 @@ function id_to_bib($id) {
 function ids_to_bib($ids) {
     $rv = '';
     foreach ($ids as $id) {
-        $rv .= PHP_EOL . id_to_bib($id);
+        $rv .= id_to_bib($id);
     }
     return $rv;
 }
 
-function ids_to_json($id) {
-    return bib_to_json(ids_to_bib($id)
+function ids_to_json($ids) {
+    return bib_to_json(ids_to_bib($ids));
+}
+
+function ids_to_obj($ids) {
+    return bib_to_obj(ids_to_bib($ids));
+}
+
+function plain_array_to_bib($arr, $maxcount = 5) {
+    $rv = '';
+    foreach ($arr as $plain) {
+        $rv .=  plain_to_bib($plain, $maxcount);
+    }
+    return $rv;
+}
+
+function plain_array_to_json($arr, $maxcount = 5) {
+    return json_encode(plain_array_to_obj($arr, $maxcount),
+        JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
+}
+
+function plain_array_to_obj($arr, $maxcount = 5) {
+    $rv = array();
+    foreach ($arr as $plain) {
+        $toadd = plain_to_obj($plain, $maxcount);
+        $rv = array_merge($rv, $toadd);
+    }
+    return $rv;
 }
 
 function plain_to_bib($plain, $maxcount = 5) {
     $ids = plain_to_ids($plain, $maxcount);
     return ids_to_bib($ids);
+}
+
+function plain_to_json($plain, $maxcount = 5) {
+    return bib_to_json(plain_to_bib($plain, $maxcount));
+}
+
+function plain_to_obj($plain, $maxcount = 5) {
+    return bib_to_obj(plain_to_bib($plain, $maxcount));
 }
 
 function plain_to_ids($plain, $maxcount = 5) {
@@ -100,8 +134,10 @@ function show_help() {
 Usage: philpapers.php [options] [item1] [item2]
 
 Options may be:
+--bibtex    : use bibtex mode
 --count [n] : return n entries for each search item, rather than 1
 --id        : remaining items will be interepreted as PhilPapers IDs
+--json      : use csl json mode
 --help      : show this help
 
 
