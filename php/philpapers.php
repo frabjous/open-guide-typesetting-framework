@@ -24,10 +24,20 @@ $arguments = array_slice($argv, 1);
 $idmode = false;
 $ids = array();
 $bibentries = array();
+$maxcount = 1;
 
 while (count($arguments) > 0) {
     // read next argument
     $arg = array_shift($arguments);
+
+    if ($arg == '--help') {
+        show_help();
+        continue;
+    }
+
+    if ($arg == '--count') {
+        $maxcount = intval(array_shift($arguments)) ?? 1;
+    }
 
     if ($arg == '--idmode') {
         $idmore = true;
@@ -47,6 +57,6 @@ foreach ($ids as $id) {
 }
 
 foreach ($bibentries as $bibentry) {
-    echo plain_to_bib($bibentry);
+    echo plain_to_bib($bibentry, $maxcount);
 }
 
