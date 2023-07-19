@@ -34,6 +34,11 @@ export function addbibitems(itemarray, arenew = false) {
             classes: ['bibitemhdrright'],
             parent: itemelem.hdr
         });
+        itemelem.hdr.display = addelem({
+            tag: 'span',
+            classes: ['bibitemhdrdisplay'],
+            parent: itemelem.hdr
+        });
         itemelem.details = addelem({
             tag: 'div',
             classes: ['bibitemdetails'],
