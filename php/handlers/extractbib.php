@@ -54,10 +54,13 @@ foreach ($plain_entries as $plain) {
     $addition = new StdClass();
     $addition->extractedfrom = $plain;
     $ids = plain_to_ids($plain);
+    set_time_limit(30);
+    sleep(1);
     $addition->possibilities = new StdClass();
     foreach ($ids as $id) {
         $addition->possibilities->{$id} =
             id_to_obj($id);
+        sleep(1);
         if ((count($addition->possibilities->{$id}) > 0) &&
             (!isset($addition->info))) {
             $addition->info = $addition->possibilities->{$id}[0];
