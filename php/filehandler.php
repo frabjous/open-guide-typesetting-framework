@@ -130,6 +130,10 @@ if ($uploadtype == 'mainfile') {
             rename($bibfile, $newbibfile);
         }
         $saveresult = file_put_contents($bibfile, $bibcontents);
+        if (!$saveresult || $saveresult == 0) {
+            jquit('Could not save extracted bibliography.');
+        }
+        $rv->extractedbib = true;
     }
 
     $rv->error = false;
