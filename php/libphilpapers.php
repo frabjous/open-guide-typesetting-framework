@@ -113,6 +113,7 @@ function plain_to_ids($plain, $maxcount = 5) {
     $url = 'https://philpapers.org/s/' . $escaped;
     $search = curl_get($url);
     if (!$search) { return array(); }
+    error_log('==============='.$search.'=================');
     $portions = explode('<ol class=\'entryList\'>', $search, 2);
     if (count($portions) < 2) { return array(); }
     $entries = explode("\n<li id='e", $portions[1], ($maxcount + 1));
@@ -127,7 +128,7 @@ function plain_to_ids($plain, $maxcount = 5) {
     return $rv;
 }
 
-function rage_quit($errmsg) {
+function ragequit($errmsg) {
     error_log($errmsg);
     exit(1);
 }

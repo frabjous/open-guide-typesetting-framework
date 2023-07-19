@@ -11,12 +11,12 @@
 require_once(dirname(__FILE__) . '/libphilpapers.php');
 
 if (php_sapi_name() != 'cli') {
-    rage_quit("Must be run from command line.");
+    ragequit("Must be run from command line.");
 }
 
 if (count($argv) < 2) {
     show_help();
-    rage_quit('No arguments provided.');
+    ragequit('No arguments provided.');
 }
 
 $arguments = array_slice($argv, 1);
