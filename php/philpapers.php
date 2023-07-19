@@ -40,7 +40,7 @@ while (count($arguments) > 0) {
     }
 
     if ($arg == '--idmode') {
-        $idmore = true;
+        $idmode = true;
         continue;
     }
 

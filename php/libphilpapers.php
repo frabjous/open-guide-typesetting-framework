@@ -7,8 +7,31 @@
 // functions for interacting with the philpapers database             //
 ////////////////////////////////////////////////////////////////////////
 
+require_once(dirname(__FILE__) . '/../open-guide-editor/open-guide-misc/pipe.php');
+
 $curl = curl_init();
 
+// fix philpapers' annoying habit of sticking location
+// inside 
+function bib_fix($bib) {
+    $bib = mb_ereg_replace('publisher = {([^}:]*): ',
+        "address = {\\1},\n    publisher = {", $bib);
+    // move extra whitespace
+    $bib = mb_ereg_replace("\n\s\s*","\n    ",$bib);
+    return $bib;
+}
+
+function bib_to_json($bib) {
+    $res = pipe_to_command('pandoc -f bibtex -t csljson', $bib);
+    if ($res->returnvalue != 0) {
+        error_log($res->stderr);
+    }
+    return $res->stdout;
+}
+
+function bib_to_obj($bib) {
+    return json_encode(bib_to_json($bib)) ?? array();
+}
 
 function curl_get($url) {
     global $curl;
@@ -25,16 +48,25 @@ function curl_get($url) {
 function id_to_bib($id) {
     global $curl;
     $url = 'https://philpapers.org/formats/item.bib?id=' . $id;
-    return curl_get($url);
+    $bib = curl_get($url);
+    return bib_fix($bib);
 }
 
-function plain_to_bib($plain, $maxcount = 5) {
-    $ids = plain_to_ids($plain, $maxcount);
+function ids_to_bib($ids) {
     $rv = '';
     foreach ($ids as $id) {
         $rv .= PHP_EOL . id_to_bib($id);
     }
     return $rv;
+}
+
+function ids_to_json($id) {
+    return bib_to_json(ids_to_bib($id)
+}
+
+function plain_to_bib($plain, $maxcount = 5) {
+    $ids = plain_to_ids($plain, $maxcount);
+    return ids_to_bib($ids);
 }
 
 function plain_to_ids($plain, $maxcount = 5) {
