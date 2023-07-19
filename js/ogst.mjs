@@ -453,7 +453,8 @@ ogst.assignmentcard = function(
             this.mycard.uploadmaininputloading.removeAttribute('aria-busy');
             if (!resp) { return; }
             if (("extractedbib" in resp) && (resp.extractedbib)) {
-                this.mycard.hasextractedbib = true;
+                this.mycard.extractbibmtime =
+                    Math.floor((new Date()).getTime()/1000);
                 this.mycard.updatebib();
             }
             this.mycard.updateuploadmain(resp.extension);
@@ -653,7 +654,6 @@ ogst.assignmentcard = function(
         tag: 'div',
         parent: card.bibblock
     });
-    card.hasextractedbib = (filenames.indexOf('extracted-bib.txt') != -1);
     // top of bibliography area, with buttons
     card.bibtop = addelem({
         tag: 'div',
@@ -679,7 +679,7 @@ ogst.assignmentcard = function(
         innerHTML: 'extract from main file',
         parent: card.bibtopleft
     });
-    card.bibuploadlable = addelem({
+    card.bibuploadlabel = addelem({
         tag: 'span',
         innerHTML: 'upload items',
         parent: card.bibtopmiddle
@@ -716,8 +716,21 @@ ogst.assignmentcard = function(
     card.bibsavebutton.disabled = true;
     card.biblastextracted = (assignmentInfo?.biblastextracted ?? -1);
     card.biblastapplied = (assignmentInfo?.biblastapplied ?? -1);
+    card.biblastchanged = (assignmentInfo?.biblastchanged ?? -1);
+    card.extractbibmtime = (assignmentInfo?.extractbibmtime ?? -1);
     card.updatebib = function() {
         const card = this;
+        if (card.extractbibmtime > card.biblastextracted) {
+            card.bibextractbutton.disabled = false;
+        } else {
+            card.bibextractbutton.disabled = true;
+        }
+        if ((card.mainuploadext != '') &&
+            (card.biblastsaved > card.biblastapplid)) {
+            card.bibapplybutton.disabled = false;
+        } else {
+            card.bibapplybutton = true;
+        }
     }
     card.updatebib();
 
