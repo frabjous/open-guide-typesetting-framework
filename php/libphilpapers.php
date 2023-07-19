@@ -55,7 +55,7 @@ function id_to_bib($id) {
 function ids_to_bib($ids) {
     $rv = '';
     foreach ($ids as $id) {
-        $rv .= id_to_bib($id);
+        $rv .= PHP_EOL . id_to_bib($id);
     }
     return $rv;
 }
