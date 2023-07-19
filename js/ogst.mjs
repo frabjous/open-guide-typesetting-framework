@@ -662,7 +662,7 @@ ogst.assignmentcard = function(
             const req = {
                 postcmd: 'extractbib',
                 assignmentId: this.mycard.assignmentId,
-                assignmentType = this.mycard.assignmentType
+                assignmentType: this.mycard.assignmentType
             }
             const resp = await ogst.editorquery(req);
             this.removeAttribute('aria-busy');
