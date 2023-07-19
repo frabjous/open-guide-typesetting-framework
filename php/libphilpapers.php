@@ -7,9 +7,11 @@
 // functions for interacting with the philpapers database             //
 ////////////////////////////////////////////////////////////////////////
 
+$curl = curl_init();
+
 
 function curl_get($url) {
-    $curl = curl_init();
+    global $curl;
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_HEADER, false);
     curl_setopt($curl, CURLOPT_URL, $url);
@@ -17,12 +19,19 @@ function curl_get($url) {
     if (curl_error($curl) != ''){
         error_log(curl_error($curl));
     }
-    curl_close($url);
     return $result;
 }
 
 function plain_to_bib($plain) {
-    $escaped = curl_escape($plain);
+    global $curl;
+    $escaped = curl_escape($curl, $plain);
+    $url = 'https://philpapers.org/s/' . $escaped;
+    return curl_get($url);
+}
+
+function plain_to_keys($plain) {
+    global $curl;
+    $escaped = curl_escape($curl, $plain);
     $url = 'https://philpapers.org/s/' . $escaped;
     return curl_get($url);
 }
@@ -30,4 +39,17 @@ function plain_to_bib($plain) {
 function rage_quit($errmsg) {
     error_log($errmsg);
     exit(1);
+}
+
+function show_help() {
+    echo <<<EOF
+
+Usage: philpapers.php [options] [item1] [item2]
+
+Options may be:
+--id   : remaining items will be interepreted as PhilPapers IDs
+--help : show this help
+
+
+EOF;
 }
