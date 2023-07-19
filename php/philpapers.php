@@ -14,5 +14,39 @@ if (php_sapi_name() != 'cli') {
     rage_quit("Must be run from command line.");
 }
 
+if (count($argv) < 2) {
+    show_help();
+    rage_quit('No arguments provided.');
+}
 
+$arguments = array_slice($argv, 1);
+
+$idmode = false;
+$ids = array();
+$bibentries = array();
+
+while (count($arguments) > 0) {
+    // read next argument
+    $arg = array_shift($arguments);
+
+    if ($arg == '--idmode') {
+        $idmore = true;
+        continue;
+    }
+
+    if ($idmode) {
+        array_push($ids, $arg);
+        continue;
+    }
+
+    array_push($bibentries, $arg);
+}
+
+foreach ($ids as $id) {
+    echo "I should do the id $id";
+}
+
+foreach ($bibentries as $bibentry) {
+    echo plain_to_bib($bibentry);
+}
 
