@@ -450,6 +450,10 @@ ogst.assignmentcard = function(
             this.mycard.uploadmaininputloading.style.display = 'none';
             this.mycard.uploadmaininputloading.removeAttribute('aria-busy');
             if (!resp) { return; }
+            if (("extractedbib" in resp) && (resp.extractedbib)) {
+                this.mycard.hasextractedbib = true;
+                this.mycard.updatebib();
+            }
             this.mycard.updateuploadmain(resp.extension);
             this.mycard.openNext();
         }
@@ -647,8 +651,35 @@ ogst.assignmentcard = function(
         tag: 'div',
         parent: card.bibblock
     });
-    // TODO: change this
-    card.hasBibliography = true;
+    card.hasextractedbib = (filenames.indexOf('extracted-bib.txt') != -1);
+    // top of bibliography area, with buttons
+    card.bibtop = addelem({
+        tag: 'div',
+        parent: card.bininner,
+        classes: ['grid']
+    });
+    // three areas for buttons at top of bibliography
+    card.bibtopleft = addelem({
+        tag: 'div',
+        parent: card.bibtop
+    });
+    card.bibtopmiddle = addelem({
+        tag: 'div',
+        parent: card.bibtop
+    });
+    card.bibtopright = addelem({
+        tag: 'div',
+        parent: card.bibtop
+    });
+    card.bibcontents = addelem({
+        tag: 'div',
+        parent: card.bibinner
+    });
+    
+    card.updatebib = function() {
+        const card = this;
+    }
+    card.updatebib();
 
     //
     // Edit block
