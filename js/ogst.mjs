@@ -657,23 +657,53 @@ ogst.assignmentcard = function(
         mycard: card,
         onclick: async function() {
             if (!this?.mycard?.assignmentId) { return; }
-            this.innerHTML = 'extracting (this may take awhile) …';
+            this.innerHTML = 'getting extracted items …';
             this.setAttribute('aria-busy','true');
             const req = {
-                postcmd: 'extractbib',
+                postcmd: 'extractbibitems',
                 assignmentId: this.mycard.assignmentId,
                 assignmentType: this.mycard.assignmentType
             }
             const resp = await ogst.editorquery(req);
-            this.removeAttribute('aria-busy');
             this.innerHTML = 'extract from main file';
+            this.removeAttribute('aria-busy');
             if (!resp) { return; }
+            if (!resp?.bibitems) {
+                this.mycard.reporterror('Response from server did not ' +
+                    'contain bibliographic material.');
+                return;
+            }
+            const bibitems = resp.bibitems;
+            for (let i=0; i<bibitems.length; i++) {
+                const bibitem = bibitems[i];
+                // slip blank entries
+                if (!/A-Za-z/.test(bibitem)) { continue; }
+                this.innerHTML = 'fetching IDs for item #' +
+                    (i+1).toString();
+                this.setAttribute('aria-busy','true');
+                const idreq = {
+                    postcmd: 'ppidsforitem',
+                    itemtext: bibitem
+                }
+                const idresp = await ogst.editorquery(idreq);
+                this.innerHTML = 'extract from main file';
+                this.removeAttribute('aria-busy');
+                if (!idresp) { return; }
+                if (!idresp.ids) {
+                    this.mycard.reporterror('Response from server did not ' +
+                        'contain a list of IDs (not even an empty one).');
+                    return;
+                }
+                console.log('IDS',idresp.ids);
+            }
+            /*
             this.mycard.biblastextracted = Math.floor(
                 (new Date()).getTime()/1000);
             if (resp.additions) {
                 this.mycard.addbibitems(resp.additions);
             }
             this.mycard.updatebibbuttons();
+            */
         }
     });
     card.bibuploadlabel = addelem({
