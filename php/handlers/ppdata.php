@@ -26,11 +26,12 @@ if (!verify_by_accesskey($project, $username, $accesskey)) {
 require_once(dirname(__FILE__) . '/../libphilpapers.php');
 
 $rv->data = id_to_obj($philpapersid);
-// philpapers freaks out if these are done too quickly
-sleep(2);
 
 // if we made it here, all was well
 $rv->success = true;
 $rv->error = false;
+
+// philpapers freaks out if these are done too quickly
+sleep(2);
 
 jsend();
