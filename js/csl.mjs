@@ -61,7 +61,6 @@ export default {
         "author": "names",
         "available-date": "date",
         "call-number": "string",
-        "categories": "array",
         "chair": "names",
         "chapter-number": "number",
         "citation-key": "string",

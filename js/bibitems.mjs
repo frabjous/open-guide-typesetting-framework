@@ -165,6 +165,9 @@ export function addbibitems(itemarray, arenew = false) {
                 bibitem.fields.extractedfrom.getVal = function() {
                     return this.value;
                 }
+                if (val == '') {
+                    tr.style.display = 'none';
+                }
                 return;
             }
             if (key == 'type') {
@@ -189,6 +192,7 @@ export function addbibitems(itemarray, arenew = false) {
                         value: common,
                         parent: commgroup
                     });
+                    if (common == val) { o.selected = true; }
                 }
                 for (other of csl.types) {
                     const o = addelem({
@@ -197,6 +201,7 @@ export function addbibitems(itemarray, arenew = false) {
                         value: other,
                         parent: othergroup
                     });
+                    if (other == val) { o.selected = true; }
                 }
                 bibitem.fields.type.mybibitem = bibitem;
                 // create appropriate fields
@@ -224,7 +229,7 @@ export function addbibitems(itemarray, arenew = false) {
                     mybibitem: bibitem,
                     oninput: function() {
                         this.removeAttribute('aria-invalid');
-                    }
+                    },
                     onchange: function() {
                         if (!/^[A-Za-z0-9_-]*$/.test(this.value)) {
                             this.setAttribute('aria-invalid','true');
@@ -232,11 +237,69 @@ export function addbibitems(itemarray, arenew = false) {
                         }
                         this.mybibitem.info.id = this.value;
                         this.mybibitem.updateLabel();
-                    }
+                    },
                     getVal: function() {
                         return this.value;
-                    }
+                    },
+                    value: val
                 });
+                return;
+            }
+            if (key == 'abbreviation') {
+                bibitem.fields.abbreviation = addelem({
+                    type: text,
+                    parent: valdt,
+                    mybibitem: bibitem,
+                    oninput: function() {
+                        this.removeAttribute('aria-invalid');
+                    },
+                    onchange: function() {
+                        if (!/^[A-Za-z0-9_-]*$/.test(this.value)) {
+                            this.setAttribute('aria-invalid','true');
+                            return;
+                        }
+                        this.mybibitem.info.abbreviation = this.value;
+                        this.mybibitem.updateLabel();
+                    },
+                    getVal: function() {
+                        return this.value;
+                    },
+                    value: val
+                });
+                return;
+            }
+
+            // only add real csl entries
+            if (!(key in csl.properties)) { return; }
+            const proptype = csl.properties[key];
+            // date, dateparts, names
+
+
+            // fell through here for string and number
+            bibitem.fields[key] = addelem({
+                tag: 'input',
+                type: 'text',
+                parent: valdt,
+                mybibitem: bibitem,
+                mykey: mykey,
+                placeholder: key + ((proptype == "number") ? ' (number)' : ''),
+                onchange: function() {
+                    this.mybibitem.info[this.mykey] = this.value
+                }
+            });
+            if (key == categories) {
+                bibitem.fields[key].value = val.join(', ');
+            } else {
+                if (val != '') {
+                    bibitem.fields[key].value = val;
+                }
+            }
+            bibitem.fields[key].getVal = function() { return this.value; }
+            // categories really an array; here we separate by commas
+            if (key == 'categories') {
+                bibitem.fields[key].getVal = function {
+                    return this.value.split(',').map((f) = (f.trim()));
+                }
             }
         }
     }
