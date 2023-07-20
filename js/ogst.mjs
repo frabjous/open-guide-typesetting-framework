@@ -673,6 +673,7 @@ ogst.assignmentcard = function(
                     'contain bibliographic material.');
                 return;
             }
+            const additions = [];
             const bibitems = resp.bibitems;
             for (let i=0; i<bibitems.length; i++) {
                 const bibitem = bibitems[i];
@@ -731,19 +732,24 @@ ogst.assignmentcard = function(
                     }
                     if (dataresp.data.length > 0) {
                         bibobj.data = dataresp.data[0];
+                        bibobj.philpapersid = best;
                     }
                 }
-                console.log('bobj',bibobj);
+                additions.push(bibobj);
             }
             this.mycard.biblastextracted = Math.floor(
                 (new Date()).getTime()/1000);
-            //TODO: save bibextracted?
-            /*
-            if (resp.additions) {
-                this.mycard.addbibitems(resp.additions);
+            // save in the background
+            const savereq = {
+                postcmd: 'savebiblastextracted',
+                assignmentId: this.mycard.assignmentId,
+                assignmentType: this.mycard.assignmentType
+            }
+            ogst.editorquery(savereq);
+            if (additions.length > 0)
+                this.mycard.addbibitems(additions);
             }
             this.mycard.updatebibbuttons();
-            */
         }
     });
     card.bibuploadlabel = addelem({
