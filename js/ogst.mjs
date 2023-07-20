@@ -677,7 +677,7 @@ ogst.assignmentcard = function(
             for (let i=0; i<bibitems.length; i++) {
                 const bibitem = bibitems[i];
                 // slip blank entries
-                if (!/A-Za-z/.test(bibitem)) { continue; }
+                if (!/[A-Za-z]/.test(bibitem)) { continue; }
                 this.innerHTML = 'fetching IDs for item #' +
                     (i+1).toString();
                 this.setAttribute('aria-busy','true');
@@ -694,7 +694,7 @@ ogst.assignmentcard = function(
                         'contain a list of IDs (not even an empty one).');
                     return;
                 }
-                console.log('IDS',idresp.ids);
+                console.log('IDS for ”' + bibitem + '“ =',idresp.ids);
             }
             /*
             this.mycard.biblastextracted = Math.floor(
