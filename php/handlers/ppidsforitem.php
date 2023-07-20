@@ -36,6 +36,28 @@ if ($itemtext == '') {
 // get library
 require_once(dirname(__FILE__). '/../libphilpapers.php');
 
+// fix up itemtext a bit
+// remove numbers at end
+// remove numbers at end
+$itemtext = mb_ereg_replace('[()0-9 :\.,—–-]*$','',$itemtext);
+// remove escaped hyphens
+$itemtext = mb_ereg_replace('\\\-','',$itemtext);
+// remote leading hyphens
+$itemtext = mb_ereg_replace('^-*\s*','',$itemtext);
+// add name from previous check if starts with numeral
+if (mb_ereg_match('[0-9].*', $itemtext)) {
+    if (isset($_SESSION["open-guide-typesetting-framework-bib-name"])) {
+        $itemtext = $_SESSION["open-guide-typesetting-framework-bib-name"]
+            . ' ' . $itemtext;
+    }
+} else {
+    // otherwise set that name
+    $_SESSION["open-guide-typesetting-framework-bib-name"] =
+        mb_ereg_replace('[0-9].*','',$itemtext);
+}
+
+error_log('getting ids for ' . $itemtext);
+
 // get the actual ids
 $rv->ids = plain_to_ids($itemtext, 5);
 
