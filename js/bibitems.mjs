@@ -6,6 +6,8 @@
 // a variety of functions for handling bibliographic items in o.g.s.t  //
 /////////////////////////////////////////////////////////////////////////
 
+import csl from './csl.mjs';
+
 // data, possibilities, philpapersid, extractedfrom
 
 // main function for adding a bibitem
@@ -118,6 +120,92 @@ export function addbibitems(itemarray, arenew = false) {
         // function to update the label
         bibitem.updateLabel = function() {
             this.itemlabel.innerHTML = '@' + (this.info?.id ?? '');
+        }
+        bibitem.infotable = addelem({
+            tag: 'table',
+            parent: bibitem.inner
+        });
+        bibitem.infotablebody = addelem({
+            tag: 'tbody',
+            parent: bibitem.infotable
+        });
+        bibitem.fields = {};
+        bibitem.addinfo = function(key, val = '') {
+            // no duplicates; but update value if non-blank
+            if (key in bibitem.fields) {
+                if (val != '') {
+                    bibitems.fields[key] = val;
+                }
+                return;
+            }
+            const tr = addelem({
+                tag: 'tr',
+                parent: this.infotablebody,
+                bibproperty: key
+            });
+            const keytd = addelem({
+                tag: 'td',
+                parent: tr,
+                innerHTML: key
+            })
+            const valtd = addelem({
+                tag: 'td',
+                parent: tr
+            });
+            if (key == 'extractedfrom') {
+                bibitem.fields[keys] = addelem({
+                    tag: 'textarea';
+                    parent: valtd,
+                    readOnly: true,
+                    value: val
+                });
+                return;
+            }
+            if (key == 'type') {
+                bibitem.fields.type = addelem({
+                    tag: 'select',
+                    parent: valtd
+                });
+                const commgroup = addelem({
+                    tag: 'optgroup',
+                    parent: bibitem.fields.type,
+                    label: 'Common types'
+                });
+                const othergroup = addelem({
+                    tag: 'optgroup',
+                    parent: bibitem.fields.type,
+                    label: 'Other types'
+                });
+                for (common in csl.common) {
+                    const o = addelem({
+                        tag: 'option',
+                        innerHTML: common,
+                        value: common,
+                        parent: commgroup
+                    });
+                }
+                for (other of csl.types) {
+                    const o = addelem({
+                        tag: 'option',
+                        innerHTML: other,
+                        value: other,
+                        parent: othergroup
+                    });
+                }
+                bibitem.fields.type.mybibitem = bibitem;
+                // create appropriate fields
+                bibitem.fields.type.onchange = function() {
+                    const bibitem = this.mybibitem;
+                    if (this.value in csl.common) {
+                        const expected = csl.common[this.value];
+                        for (const key of expected) {
+                            bibitem.addinfo(key, '');
+                        }
+                    }
+                }
+
+                return;
+            }
         }
     }
 }

@@ -289,6 +289,11 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             section article.assignment details.ogst-assignmentblock div.bibmiddlebtns {
                 margin-bottom: 0.3rem;
             }
+            section article.assignment details.ogst-assignmentblock div.bibitem td textarea {
+                height: 5rem;
+                resize: none;
+            }
+
         </style>
         <script>
             // starting globals
