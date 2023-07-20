@@ -17,26 +17,39 @@ function extract_bibliography($markdown) {
         $condensed = mb_ereg_replace('[^a-z]','',strtolower($line));
         if (in_array($condensed, array('bibliography',
             'workscited','references','thebibliography'))) {
+            $bibarray = array_values(array_filter(
+                array_slice($lines, $ln+1),
+                    function ($l) {
+                        return mb_ereg_match('.*[A-Z]', $l); 
+                    }
+            ));
+            $savedname = '';
+            for ($i=0; $i<count($bibarray); $i++) {
+                $l = $bibarray[$i];
+                // remove asterisks
+                $s = mb_ereg_replace('\*','',$l);
+                // remove double quotes
+                $s = mb_ereg_replace('["“”]','',$s);
+                // remove escaped hyphens
+                $s = mb_ereg_replace('\\\-','',$s);
+                // remote leading hyphens
+                $s = mb_ereg_replace('^-*\s*','',$s);
+                // add name from previous check if starts with numeral
+                if (mb_ereg_match('[0-9].*', $s)) {
+                    if ($savedname != '') {
+                        $s = $savedname . ' ' . $s;
+                    }
+                } else {
+                    $savedname = trim(mb_ereg_replace('[0-9].*','',$s));
+                }
+                // swapout
+                $bibarray[$i] = $s;
+            }
+
             return array(
                 implode(PHP_EOL,
                     array_slice($lines, 0 , (($ln>0) ? ($ln-1) : 0))),
-                implode(PHP_EOL,
-                    array_map(
-                        function($l) {
-                            // remove asterisks
-                            $s = mb_ereg_replace('\*','',$l);
-                            // remove double quotes
-                            $s = mb_ereg_replace('["“”]','',$s);
-                            return $s;
-                        },
-                        array_values(array_filter(
-                            array_slice($lines, $ln+1),
-                            function ($l) {
-                                return mb_ereg_match('.*[A-Z]', $l); 
-                            }
-                        ))
-                    )
-                )
+                implode(PHP_EOL, $bibarray)
             );
         }
     }
