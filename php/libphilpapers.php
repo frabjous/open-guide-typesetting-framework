@@ -108,8 +108,9 @@ function plain_to_obj($plain, $maxcount = 5) {
 }
 
 function plain_to_ids($plain, $maxcount = 5) {
-    global $curl;
-    $escaped = curl_escape($curl, $plain);
+    //global $curl;
+    //$escaped = curl_escape($curl, $plain);
+    $escaped = rawurlencode($plain);
     $url = 'https://philpapers.org/s/' . $escaped;
     $search = curl_get($url);
     if (!$search) { return array(); }
