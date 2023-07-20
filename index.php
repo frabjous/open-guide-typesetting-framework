@@ -275,6 +275,13 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 font-weight: bold;
                 margin-bottom: 0.5rem;
             }
+            section article.assignment details.ogst-assignmentblock button.bibremovebtn:hover {
+                color: var(--form-element-invalid-border-color);
+            }
+            section article.assignment details.ogst-assignmentblock button.bibremovebtn span {
+                position: relative;
+                top: 0.2rem;
+            }
             section article.assignment details.ogst-assignmentblock div.bibmiddlebtns {
                 margin-bottom: 0.3rem;
             }
