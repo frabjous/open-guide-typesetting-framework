@@ -42,8 +42,6 @@ require_once(dirname(__FILE__). '/../libphilpapers.php');
 $itemtext = mb_ereg_replace('[()0-9 :\.,—–-]*$','',$itemtext);
 
 
-error_log('getting ids for ' . $itemtext);
-
 // get the actual ids
 $rv->ids = plain_to_ids($itemtext, 5);
 
