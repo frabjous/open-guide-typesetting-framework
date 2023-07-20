@@ -694,11 +694,51 @@ ogst.assignmentcard = function(
                         'contain a list of IDs (not even an empty one).');
                     return;
                 }
-                console.log('IDS for ”' + bibitem + '“ =',idresp.ids);
+                const ids = idresp.ids;
+                // look for best id by comparing first three letters
+                const want = bibitem.substr(0,3).toUpperCase();
+                const bibobj = {
+                    extractedfrom: bibitem,
+                    possibilities: ids,
+                    data: {}
+                }
+                let best = '';
+                if (ids.length > 0) {
+                    for (const id of ids) {
+                        if (id.substr(0,3) == want) {
+                            best = id;
+                            break;
+                        }
+                        if (best == '') { best = id; }
+                    }
+                }
+                // get info for best id
+                if (best != '') {
+                    this.innerHTML = 'getting data for item #' +
+                        (i + 1).toString();
+                    this.setAttribute('aria-busy','true');
+                    const datareq = {
+                        postcmd: 'ppdata',
+                        philpapersid: best
+                    }
+                    const dataresp = await ogst.editorquery(datareq);
+                    this.removeAttribute('aria-busy');
+                    this.innerHTML = 'extract from main file';
+                    if (!dataresp?.data) {
+                        this.mycard.reporterror('Response from server did not ' +
+                            'contain bibliographic data (even empty).');
+                        return;
+                    }
+                    if (dataresp.data.length > 0) {
+                        bibobj.data = dataresp.data[0];
+                    }
+                }
+                console.log('bobj',bibobj);
             }
-            /*
             this.mycard.biblastextracted = Math.floor(
                 (new Date()).getTime()/1000);
+            //TODO: save bibextracted?
+            /*
             if (resp.additions) {
                 this.mycard.addbibitems(resp.additions);
             }
