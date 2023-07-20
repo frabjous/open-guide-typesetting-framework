@@ -6,6 +6,8 @@
 // a variety of functions for handling bibliographic items in o.g.s.t  //
 /////////////////////////////////////////////////////////////////////////
 
+// data, possibilities, philpapersid, extractedfrom
+
 // main function for adding a bibitem
 export function addbibitems(itemarray, arenew = false) {
     // should be attached to card item
