@@ -68,7 +68,10 @@ export function addbibitems(itemarray, arenew = false) {
             if (bibitem.possibilities.length == 0) {
                 bibitem.ppselect.innerHTML =
                     '<option value="" disabed selected">' +
-                    'none to select</option>';
+                    'none</option>';
+                if (this.reimportbtn) {
+                    this.reimportbtn.innerHTML = 'import';
+                }
                 return;
             }
             for (const ppposs of bibitem.possibilities) {
@@ -78,21 +81,34 @@ export function addbibitems(itemarray, arenew = false) {
                     innerHTML: ppposs
                 });
             }
+            if (this.reimportbtn) {
+                this.reimportbtn.innHTML = 'reimport';
+            }
         }
-        bibitem.setppselectopts();
         // input to add arbitrary new phil papers id
         bibitem.newppinput = addelem({
             tag: 'input',
             parent: bibitem.widgets,
             placeholder: 'new PhilPapers ID'
         });
+        // button to do reimportation
+        bibitem.reimportbtn = addelem({
+            tag: 'button',
+            type: 'button',
+            classes: ['outline'],
+            parent: bibitem.widgets,
+            innerHTML: 'import'
+        });
+        bibitem.setppselectopts();
+
         // delete the entry altogether
         bibitem.delbutton = addelem({
             tag: 'button',
             type: 'button',
+            classes: ['bibremovebtn','secondary','outline'],
             title: 'remove this bibliography item',
             innerHTML: '<span class="material-symbols-outlined">' +
-                'delete_forever</span> remove',
+                'delete_forever</span>',
             mybibitem: bibitem,
             parent: bibitem.widgets,
             onclick: function() {
