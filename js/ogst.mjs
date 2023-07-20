@@ -783,6 +783,22 @@ ogst.assignmentcard = function(
         tag: 'div',
         parent: card.bibcontents
     });
+    card.addentrydiv = addelem({
+        tag: 'div',
+        parent: card.bibcontents
+    });
+    card.addentrybtn = addelem({
+        tag: 'button',
+        type: 'button',
+        parent: card.addentrydiv,
+        classes: ['outlined'],
+        mycard: card,
+        innerHTML: 'add new entry',
+        onclick: function() {
+            this.mycard.addbibitems([{}], true);
+        }
+    });
+    card.addentrybtn.setAttribute('role','button');
     card.bibcontentbuttons = addelem({
         tag: 'div',
         classes: ['grid'],
