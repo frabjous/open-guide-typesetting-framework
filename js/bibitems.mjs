@@ -38,7 +38,7 @@ export function addbibitems(itemarray, arenew = false) {
             bibitem.extractedfrom = item.extractedfrom;
         }
         bibitem.inner = addelem({
-            tag: 'div'
+            tag: 'div',
             parent: bibitem
         });
         // label at the top; should change when id changes
@@ -56,7 +56,7 @@ export function addbibitems(itemarray, arenew = false) {
         // selector for different pp id
         bibitem.ppselect = addelem({
             tag: 'select',
-            parentid: bibitem.widgets
+            parent: bibitem.widgets
         });
         // function to fill selector
         bibitem.setppselectopts = function() {
@@ -67,7 +67,8 @@ export function addbibitems(itemarray, arenew = false) {
             }
             if (bibitem.possibilities.length == 0) {
                 bibitem.ppselect.innerHTML =
-                    '<option value="" disabed selected">none to select</option>';
+                    '<option value="" disabed selected">' +
+                    'none to select</option>';
                 return;
             }
             for (const ppposs of bibitem.possibilities) {
@@ -80,19 +81,20 @@ export function addbibitems(itemarray, arenew = false) {
         }
         bibitem.setppselectopts();
         // input to add arbitrary new phil papers id
-        bbitem.newppinput = addelem({
+        bibitem.newppinput = addelem({
             tag: 'input',
-            parent: bbitem.widgets,
+            parent: bibitem.widgets,
             placeholder: 'new PhilPapers ID'
         });
         // delete the entry altogether
-        bbitem.delbutton = addelem({
+        bibitem.delbutton = addelem({
             tag: 'button',
             type: 'button',
             title: 'remove this bibliography item',
             innerHTML: '<span class="material-symbols-outlined">' +
                 'delete_forever</span> remove',
             mybibitem: bibitem,
+            parent: bibitem.widgets,
             onclick: function() {
                 this.mybibitem.parentNode.removeChild(this.mybibitem);
             }
