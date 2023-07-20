@@ -23,7 +23,11 @@ function extract_bibliography($markdown) {
                 implode(PHP_EOL,
                     array_map(
                         function($l) {
-                            return mb_ereg_replace('\*','',$l);
+                            // remove asterisks
+                            $s = mb_ereg_replace('\*','',$l);
+                            // remove double quotes
+                            $s = mb_ereg_replace('["“”]','',$s);
+                            return $s;
                         },
                         array_values(array_filter(
                             array_slice($lines, $ln+1),
