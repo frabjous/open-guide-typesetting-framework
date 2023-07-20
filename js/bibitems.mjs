@@ -134,7 +134,10 @@ export function addbibitems(itemarray, arenew = false) {
             // no duplicates; but update value if non-blank
             if (key in bibitem.fields) {
                 if (val != '') {
-                    bibitems.fields[key] = val;
+                    bibitem.fields[key] = val;
+                    if (key != 'extractedfrom') {
+                        bibitem.info[key] = val;
+                    }
                 }
                 return;
             }
@@ -153,12 +156,15 @@ export function addbibitems(itemarray, arenew = false) {
                 parent: tr
             });
             if (key == 'extractedfrom') {
-                bibitem.fields[keys] = addelem({
+                bibitem.fields.extractedfrom = addelem({
                     tag: 'textarea';
                     parent: valtd,
                     readOnly: true,
                     value: val
                 });
+                bibitem.fields.extractedfrom.getVal = function() {
+                    return this.value;
+                }
                 return;
             }
             if (key == 'type') {
@@ -196,6 +202,8 @@ export function addbibitems(itemarray, arenew = false) {
                 // create appropriate fields
                 bibitem.fields.type.onchange = function() {
                     const bibitem = this.mybibitem;
+                    bibitem.info.type = this.value;
+                    // populate with common fields if common
                     if (this.value in csl.common) {
                         const expected = csl.common[this.value];
                         for (const key of expected) {
@@ -203,8 +211,32 @@ export function addbibitems(itemarray, arenew = false) {
                         }
                     }
                 }
-
+                bibitem.fields.type.getVal = function() {
+                    return this.value;
+                }
                 return;
+            }
+            let ftype
+            if (key == 'id') {
+                bibitem.fields.id = addelem({
+                    type: text,
+                    parent: valdt,
+                    mybibitem: bibitem,
+                    oninput: function() {
+                        this.removeAttribute('aria-invalid');
+                    }
+                    onchange: function() {
+                        if (!/^[A-Za-z0-9_-]*$/.test(this.value)) {
+                            this.setAttribute('aria-invalid','true');
+                            return;
+                        }
+                        this.mybibitem.info.id = this.value;
+                        this.mybibitem.updateLabel();
+                    }
+                    getVal: function() {
+                        return this.value;
+                    }
+                });
             }
         }
     }
