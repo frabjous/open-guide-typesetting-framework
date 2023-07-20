@@ -746,7 +746,7 @@ ogst.assignmentcard = function(
                 assignmentType: this.mycard.assignmentType
             }
             ogst.editorquery(savereq);
-            if (additions.length > 0)
+            if (additions.length > 0) {
                 this.mycard.addbibitems(additions);
             }
             this.mycard.updatebibbuttons();
@@ -785,16 +785,21 @@ ogst.assignmentcard = function(
     });
     card.addentrydiv = addelem({
         tag: 'div',
-        parent: card.bibcontents
+        parent: card.bibcontents,
+        classes: ['bibmiddlebtns'],
     });
     card.addentrybtn = addelem({
-        tag: 'button',
-        type: 'button',
+        tag: 'a',
+        href: '#',
+        onmousedown: function(e) {
+            e.preventDefault();
+        },
         parent: card.addentrydiv,
-        classes: ['outlined'],
+        classes: ['outline'],
         mycard: card,
         innerHTML: 'add new entry',
-        onclick: function() {
+        onclick: function(e) {
+            e.preventDefault();
             this.mycard.addbibitems([{}], true);
         }
     });
