@@ -15,37 +15,23 @@ export function addbibitems(itemarray, arenew = false) {
     // sanity check
     if (!card?.bibcontentsitems) { return false; }
     for (const item of itemarray) {
-        const itemelem = addelem({
-            tag: 'details',
+        const bibitem = addelem({
+            tag: 'div',
+            classes: ['bibitem'],
             parent: card.bibcontentsitems,
-            classes: ['bibitem']
         });
-        itemelem.info = item;
-        itemelem.hdr = addelem({
-            tag: 'summary',
-            classes: ['bibitemhdr'],
-            parent: itemelem
+        bibitem.inner = addelem({
+            tag: 'div'
+            parent: bibitem
         });
-        itemelem.hdr.left = addelem({
+        bibitem.itemlabel = addelem({
             tag: 'div',
-            classes: ['bibitemhdrleft'],
-            parent: itemelem.hdr
+            parent: bibitem.inner
         });
-        itemelem.hdr.right = addelem({
-            tag: 'div',
-            classes: ['bibitemhdrright'],
-            parent: itemelem.hdr
-        });
-        itemelem.hdr.display = addelem({
-            tag: 'span',
-            classes: ['bibitemhdrdisplay'],
-            parent: itemelem.hdr
-        });
-        itemelem.details = addelem({
-            tag: 'div',
-            classes: ['bibitemdetails'],
-            parent: itemelem
-        });
+
+        bibitem.updateLabel = function() {
+            this.itemlabel.innerHTML = '@' + this.info.id;
+        }
     }
 }
 
