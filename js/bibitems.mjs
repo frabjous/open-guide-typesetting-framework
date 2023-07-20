@@ -273,9 +273,20 @@ export function addbibitems(itemarray, arenew = false) {
             if (!(key in csl.properties)) { return; }
             const proptype = csl.properties[key];
             // date, dateparts, names
+            if (proptype == 'date' || proptype == 'dateparts' || proptype == 'names') {
+                bibitem.fields[key] = addelem({
+                    tag: 'div',
+                    parent: valdt,
+                    mybibitem: bibitem,
+                    mykey: key,
+                    updateInfo: function() {
+                        this.mybibitem.info[this.mykey] = this.getVal();
+                    }
+                });
+                return;
+            }
 
-
-            // fell through here for string and number
+            // fell through here for string and number (and array for categories)
             bibitem.fields[key] = addelem({
                 tag: 'input',
                 type: 'text',
@@ -283,8 +294,9 @@ export function addbibitems(itemarray, arenew = false) {
                 mybibitem: bibitem,
                 mykey: mykey,
                 placeholder: key + ((proptype == "number") ? ' (number)' : ''),
+                getVal: function() { return this.value; },
                 onchange: function() {
-                    this.mybibitem.info[this.mykey] = this.value
+                    this.mybibitem.info[this.mykey] = this.getVal();
                 }
             });
             if (key == categories) {
@@ -294,7 +306,6 @@ export function addbibitems(itemarray, arenew = false) {
                     bibitem.fields[key].value = val;
                 }
             }
-            bibitem.fields[key].getVal = function() { return this.value; }
             // categories really an array; here we separate by commas
             if (key == 'categories') {
                 bibitem.fields[key].getVal = function {
