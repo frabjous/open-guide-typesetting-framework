@@ -272,7 +272,7 @@ export function addbibitems(itemarray, arenew = false) {
             // only add real csl entries
             if (!(key in csl.properties)) { return; }
             const proptype = csl.properties[key];
-            // date, dateparts, names
+            // special kinds of inputs
             if (proptype == 'date' || proptype == 'dateparts' || proptype == 'names') {
                 bibitem.fields[key] = addelem({
                     tag: 'div',
@@ -283,6 +283,128 @@ export function addbibitems(itemarray, arenew = false) {
                         this.mybibitem.info[this.mykey] = this.getVal();
                     }
                 });
+                const div = bibitem.fields[key];
+                if (proptype == 'date') {
+                    div.classList.add('grid');
+                    div.setAttribute('role','grid');
+                    div.dsi = addelem({
+                        tag: 'input',
+                        type: 'number',
+                        parent: div,
+                        mydiv: div,
+                        placeholder: 'year (start)',
+                        onchange: function() {
+                            this.mydiv.updateInfo();
+                        }
+                    });
+                    div.dei = addelem({
+                        tag: 'input',
+                        type: 'number',
+                        parent: div,
+                        mydiv: div,
+                        placeholder: 'year (end)',
+                        onchange: function() {
+                            this.mydiv.updateInfo();
+                        }
+                    });
+                    // set value
+                    if (val && val !== '' && ("date-parts" in val)) {
+                        div.dsi.value = val["date-parts"][0][0].toString();
+                        if (val["date-parts"].length > 1) {
+                            div.dei.value = val["date-parts"][1][0].toString();
+                        }
+                    }
+                    // get value
+                    div.getVal = function() {
+                        const div = this;
+                        const rv = '';
+                        if (div.dsi.value == '' && div.dei.value == '') {
+                            return rv;
+                        }
+                        rv = {};
+                        rv["date-parts"] = [];
+                        if (div.dsi.value != '') {
+                            rv["date-parts"].push([parseInt(div.dsi.value)]);
+                        } else {
+                            rv["date-parts"].push([]);
+                        }
+                        if (div.dei.value != '') {
+                            rv["date-parts"].push([parseInt(div.dei.value)]);
+                        }
+                        return rv;
+                    }
+                }
+                if (proptype == 'dateparts') {
+                    div.classList.add('grid');
+                    div.setAttribute('role','grid');
+                    div.dyear = addelem({
+                        tag: 'input',
+                        type: 'number',
+                        parent: div,
+                        mydiv: div,
+                        placeholder: 'year',
+                        onchange: function() {
+                            this.mydiv.updateInfo();
+                        }
+                    });
+                    div.dmonth = addelem({
+                        tag: 'input',
+                        type: 'number',
+                        parent: div,
+                        mydiv: div,
+                        placeholder: 'month',
+                        onchange: function() {
+                            this.mydiv.updateInfo();
+                        }
+                    });
+                    div.dday = addelem({
+                        tag: 'input',
+                        type: 'number',
+                        parent: div,
+                        mydiv: div,
+                        placeholder: 'day',
+                        onchange: function() {
+                            this.mydiv.updateInfo();
+                        }
+                    });
+                    // set value
+                    if (val && val !== '' && ("date-parts" in val)) {
+                        if (val["date-parts"].length > 0) {
+                            const prts = val["date-parts"][0];
+                            if (prts.length > 0) {
+                                div.dyear.value = prts[0].toString();
+                            }
+                            if (prts.length > 1) {
+                                div.dmonth.value = prts[1].toString();
+                            }
+                            if (prts.length > 2) {
+                                div.dday.value = prts[2].toString();
+                            }
+                        }
+                    }
+                    // get value
+                    div.getVal = function() {
+                        const div = this;
+                        const rv = '';
+                        if (div.dyear.value == '') {
+                            return rv;
+                        }
+                        rv = {};
+                        rv["date-parts"] = [[]];
+                        rv["date-parts"][0].push(parseInt(div.dyear.value));
+                        if (div.dmonth.value != '') {
+                            rv["date-parts"][0].push(parseInt(div.dmonth.value));
+                        }
+                        if (div.dday.value != '') {
+                            rv["date-parts"][0].push(parseInt(div.dday.value));
+                        }
+                        return rv;
+                    }
+                }
+                if (proptype == 'names') {
+                }
+
+
                 return;
             }
 
@@ -299,7 +421,7 @@ export function addbibitems(itemarray, arenew = false) {
                     this.mybibitem.info[this.mykey] = this.getVal();
                 }
             });
-            if (key == categories) {
+            if (key == 'categories') {
                 bibitem.fields[key].value = val.join(', ');
             } else {
                 if (val != '') {
@@ -309,6 +431,7 @@ export function addbibitems(itemarray, arenew = false) {
             // categories really an array; here we separate by commas
             if (key == 'categories') {
                 bibitem.fields[key].getVal = function {
+                    if (this.value == '') { return ''; }
                     return this.value.split(',').map((f) = (f.trim()));
                 }
             }
