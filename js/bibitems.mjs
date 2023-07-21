@@ -727,13 +727,19 @@ export function getAllBibData(bibcontentsitems) {
             bibitem.fields.type.scrollIntoView();
             return false;
         }
-        unsorted[id] = info;
+        // sort keys in item
+        const sortedinfo = {};
+        const sortedkeys = Object.keys(info).sort();
+        for (const key of sortedkeys) {
+            sortedinfo[key] = info[key];
+        }
+        unsorted[id] = sortedinfo;
     }
+    // sort all entries by id
     const sorted = {};
     const keyssorted = Object.keys(unsorted).sort();
-    for (const key of keysorted) {
+    for (const key of keyssorted) {
         sorted[key] = unsorted[key];
     }
-    console.log(sorted);
     return sorted;
 }
