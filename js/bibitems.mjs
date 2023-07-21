@@ -220,6 +220,7 @@ export function addbibitems(itemarray, arenew = false) {
                     noneopt.selected = true;
                 }
                 bibitem.fields.type.mybibitem = bibitem;
+                bibitem.fields.type.mycard = card;
                 // create appropriate fields
                 bibitem.fields.type.onchange = function() {
                     const bibitem = this.mybibitem;
@@ -231,6 +232,9 @@ export function addbibitems(itemarray, arenew = false) {
                             bibitem.addinfo(key, '');
                         }
                     }
+                    this.mycard.biblastchanged =
+                        Math.floor((new Date()).getTime()/1000);
+                    this.mycard.updatebibbuttons();
                 }
                 bibitem.fields.type.getVal = function() {
                     return this.value;
@@ -248,6 +252,7 @@ export function addbibitems(itemarray, arenew = false) {
                     oninput: function() {
                         this.removeAttribute('aria-invalid');
                     },
+                    mycard: card,
                     onchange: function() {
                         if (!/^[A-Za-z0-9_-]*$/.test(this.value)) {
                             this.setAttribute('aria-invalid','true');
@@ -255,6 +260,9 @@ export function addbibitems(itemarray, arenew = false) {
                         }
                         this.mybibitem.info.id = this.value;
                         this.mybibitem.updateLabel();
+                        this.mycard.biblastchanged =
+                            Math.floor((new Date()).getTime()/1000);
+                        this.mycard.updatebibbuttons();
                     },
                     getVal: function() {
                         return this.value;
@@ -273,6 +281,7 @@ export function addbibitems(itemarray, arenew = false) {
                     oninput: function() {
                         this.removeAttribute('aria-invalid');
                     },
+                    mycard: card,
                     onchange: function() {
                         if (!/^[A-Za-z0-9_-]*$/.test(this.value)) {
                             this.setAttribute('aria-invalid','true');
@@ -280,6 +289,10 @@ export function addbibitems(itemarray, arenew = false) {
                         }
                         this.mybibitem.info.abbreviation = this.value;
                         this.mybibitem.updateLabel();
+                        this.mycard.biblastchanged =
+                            Math.floor((new Date()).getTime()/1000);
+                        this.mycard.updatebibbuttons();
+
                     },
                     getVal: function() {
                         return this.value;
@@ -299,8 +312,13 @@ export function addbibitems(itemarray, arenew = false) {
                     parent: valtd,
                     mybibitem: bibitem,
                     mykey: key,
+                    mycard: card,
                     updateInfo: function() {
                         this.mybibitem.info[this.mykey] = this.getVal();
+                        this.mycard.biblastchanged =
+                            Math.floor((new Date()).getTime()/1000);
+                        this.mycard.updatebibbuttons();
+
                     }
                 });
                 const div = bibitem.fields[key];
@@ -561,10 +579,14 @@ export function addbibitems(itemarray, arenew = false) {
                 type: 'text',
                 mybibitem: bibitem,
                 mykey: key,
+                mycard: card,
                 placeholder: placeholder,
                 getVal: function() { return this.value; },
                 onchange: function() {
                     this.mybibitem.info[this.mykey] = this.getVal();
+                    this.mycard.biblastchanged =
+                        Math.floor((new Date()).getTime()/1000);
+                    this.mycard.updatebibbuttons();
                 }
             });
             if (key == 'categories') {
