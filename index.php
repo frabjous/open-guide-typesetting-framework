@@ -297,10 +297,16 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 text-align: right;
             }
             section article.assignment details.ogst-assignmentblock div.bibnamefieldbuttons a {
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
-                padding-top: 0.3rem;
-                padding-bottom: 0.2rem;
+                padding-left: 0.4rem;
+                padding-right: 0.4rem;
+                padding-top: 0.4rem;
+                padding-bottom: 0.1rem;
+                margin-left: 1rem;
+            }
+            section article.assignment details.ogst-assignmentblock div.bibitem table tbody td:first-child {
+                text-align: right;
+                padding-top: 1rem;
+                vertical-align: top;
             }
         </style>
         <script>

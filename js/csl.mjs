@@ -150,7 +150,7 @@ export default {
         "year-suffix": "string"
     },
     "common": {
-        "book": ["author","editor","title","publisher-place","publisher","issued"],
+        "book": ["author","title","publisher-place","publisher","issued"],
         "chapter": ["author","title","editor","container-title","publisher-place","publisher","page","issued"],
         "article-journal": ["author","title","container-title","volume","page","issued"],
         "thesis": ["author","title","genre","publisher","issued"],
