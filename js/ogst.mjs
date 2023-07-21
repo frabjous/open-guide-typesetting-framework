@@ -13,7 +13,7 @@ import postData from '../open-guide-editor/open-guide-misc/fetch.mjs';
 import downloadFile from '../open-guide-editor/open-guide-misc/download.mjs';
 import uploadFiles from '../open-guide-editor/open-guide-misc/file-upload.mjs';
 import { createMetaElement } from './inputfields.mjs';
-import { addelem, addbibitems } from './bibitems.mjs';
+import { addelem, addbibitems, getAllBibData } from './bibitems.mjs';
 
 const nonauxfiles =[
     /^biblast.*$/,
@@ -781,6 +781,7 @@ ogst.assignmentcard = function(
     });
     card.bibcontentsitems = addelem({
         tag: 'div',
+        mycard: card,
         parent: card.bibcontents
     });
     card.addentrydiv = addelem({
@@ -813,7 +814,18 @@ ogst.assignmentcard = function(
         tag: 'button',
         type: 'button',
         parent: card.bibcontentbuttons,
-        innerHTML: 'save bibiography'
+        innerHTML: 'save bibiography',
+        mycard: card,
+        onclick: function() {
+            if (!this?.mycard?.assignmentId) {
+                this.mycard.reporterror('You cannot save the ' +
+                    'bibliography until a document ID is set.');
+                return;
+            }
+            const bibdata = getAllBibData(this.mycard.bibcontentsitems);
+            if (!bibdata) { return; }
+
+        }
     });
     card.bibapplybutton = addelem({
         tag: 'button',
@@ -829,6 +841,7 @@ ogst.assignmentcard = function(
     card.extractbibmtime = (assignmentInfo?.extractbibmtime ?? -1);
     card.updatebibbuttons = function() {
         const card = this;
+        if (card.clearmessage) { card.clearmessage(); }
         if (card.extractbibmtime > card.biblastextracted) {
             card.bibextractbutton.disabled = false;
         } else {

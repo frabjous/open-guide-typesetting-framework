@@ -8,8 +8,6 @@
 
 import csl from './csl.mjs';
 
-// data, possibilities, philpapersid, extractedfrom
-
 // main function for adding a bibitem
 export function addbibitems(itemarray, arenew = false) {
     // should be attached to card item
@@ -675,3 +673,17 @@ export function addelem(opts) {
     return elem;
 }
 
+export function getAllBibData(bibcontentsitems) {
+    const unsorted = {};
+    const bibi = bibcontentsitems.getElementsByClassName("bibitem");
+    for (const bibitem of bibi) {
+        const id = bibitem?.info?.id ?? '';
+        if (id == '') {
+            bibitem.fields.id.setAttribute('aria-invalid','true');
+            bibitem.fields.id.focus();
+            bibitem.fields.id.scrollIntoView();
+            bibitem.fields.id.placeholder = 'please enter an id';
+            return false;
+        }
+    }
+}
