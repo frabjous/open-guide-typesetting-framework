@@ -679,7 +679,25 @@ export function getAllBibData(bibcontentsitems) {
     const unsorted = {};
     const bibi = bibcontentsitems.getElementsByClassName("bibitem");
     for (const bibitem of bibi) {
-        let id = bibitem?.info?.id ?? '';
+        const info = {};
+        info.possibilities = bibitem.possibilities;
+        info.philpapersid = bibitem.philpapersid;
+        info.extractedfrom = bibitem.extractedfrom;
+        for (const field in bibitem.fields) {
+            if (!bibitem.fields[field].getVal) {
+                console.error('field ' + field + ' has no getVal ');
+                return false;
+            }
+            const val = bibitem.fields[field].getVal();
+            if ((val != '') && (
+                (Array.isArray(val) || val.length != 0) ||
+                ((typeof val == 'object')
+                    && Object.keys(val).length != 0 ) ||
+                (typeof val == 'string'))) {
+                info[field] = val;
+            }
+        }
+        let id = info?.id ?? '';
         // no id in one entry; let's complain about it
         if (id == '') {
             bibitem.fields.id.setAttribute('aria-invalid','true');
@@ -688,7 +706,7 @@ export function getAllBibData(bibcontentsitems) {
             bibitem.fields.id.placeholder = 'please enter an id';
             return false;
         }
-        if (id in unsorted) {
+        while (id in unsorted) {
             // increase last letter or add 'a';
             let uplast = false;
             const lastchar = id.substring(id.length-1);
@@ -696,17 +714,13 @@ export function getAllBibData(bibcontentsitems) {
                 uplast = true;
             }
             const nextletter = alphabet.at( alphabet.indexOf(lastchar) + 1 );
-            let newid = id;
-            while (newid in unsorted) {
-                newid = ((uplast) ? id.substring(0,id.length-1) : newid) +
-                    nextletter;
-            }
-            bibitem.fields.id.value = newid;
-            bibitem.info.id = newid;
+            id = ((uplast) ? id.substring(0,id.length-1) : id) + nextletter;
+            bibitem.fields.id.value = id;
+            info.id = id;
+            bibitem.info.id = id;
             bibitem.updateLabel();
-            id = newid;
         }
-        unsorted[id] = bibitem.info;
+        unsorted[id] = info;
     }
     console.log(unsorted);
 }
