@@ -175,6 +175,12 @@ export function addbibitems(itemarray, arenew = false) {
                     tag: 'select',
                     parent: valtd
                 });
+                const noneopt = addelem({
+                    tag: 'option',
+                    innerHTML: 'select a type',
+                    parent: bibitem.fields.type,
+                    disabled: true
+                });
                 const commgroup = addelem({
                     tag: 'optgroup',
                     parent: bibitem.fields.type,
@@ -185,23 +191,33 @@ export function addbibitems(itemarray, arenew = false) {
                     parent: bibitem.fields.type,
                     label: 'Other types'
                 });
-                for (common in csl.common) {
+                let fndselected = '';
+                for (const common in csl.common) {
                     const o = addelem({
                         tag: 'option',
                         innerHTML: common,
                         value: common,
                         parent: commgroup
                     });
-                    if (common == val) { o.selected = true; }
+                    if (common == val) {
+                        fndselected = true;
+                        o.selected = true;
+                    }
                 }
-                for (other of csl.types) {
+                for (const other of csl.types) {
                     const o = addelem({
                         tag: 'option',
                         innerHTML: other,
                         value: other,
                         parent: othergroup
                     });
-                    if (other == val) { o.selected = true; }
+                    if (other == val) {
+                        o.selected = true;
+                        fndselected = true;
+                    }
+                }
+                if (!fndselected) {
+                    noneopt.selected = true;
                 }
                 bibitem.fields.type.mybibitem = bibitem;
                 // create appropriate fields
@@ -248,7 +264,8 @@ export function addbibitems(itemarray, arenew = false) {
             }
             if (key == 'abbreviation') {
                 bibitem.fields.abbreviation = addelem({
-                    type: text,
+                    tag: 'input',
+                    type: 'text',
                     parent: valtd,
                     mybibitem: bibitem,
                     oninput: function() {
@@ -318,7 +335,7 @@ export function addbibitems(itemarray, arenew = false) {
                     // get value
                     div.getVal = function() {
                         const div = this;
-                        const rv = '';
+                        let rv = '';
                         if (div.dsi.value == '' && div.dei.value == '') {
                             return rv;
                         }
@@ -386,7 +403,7 @@ export function addbibitems(itemarray, arenew = false) {
                     // get value
                     div.getVal = function() {
                         const div = this;
-                        const rv = '';
+                        let rv = '';
                         if (div.dyear.value == '') {
                             return rv;
                         }
@@ -407,8 +424,9 @@ export function addbibitems(itemarray, arenew = false) {
                         const nf = addelem({
                             tag: 'div',
                             parent: this,
-                            classes: ['bibnamefields']
+                            classes: ['bibnamefields','grid']
                         });
+                        nf.setAttribute('role','grid');
                         this.insertBefore(nf, this.buttons);
                         nf.family = addelem({
                             tag: 'input',
@@ -441,28 +459,38 @@ export function addbibitems(itemarray, arenew = false) {
                     });
                     div.subtrbutton = addelem({
                         mydiv: div,
-                        tag: 'button',
-                        type: 'button',
+                        tag: 'a',
+                        href: '#',
                         parent: div.buttons,
                         innerHTML: '<span class="material-symbols-outlined">' +
                             'remove</span>',
                         title: 'remove',
-                        onclick: function() {
+                        onmousedown: function(e) {
+                            e.preventDefault();
+                        },
+                        onclick: function(e) {
+                            e.preventDefault();
                             this.mydiv.removename();
                         }
                     });
                     div.addbtn = addelem({
                         mydiv: div,
-                        tag: 'button',
-                        type: 'button',
+                        tag: 'a',
+                        href: '#',
                         parent: div.buttons,
                         innerHTML: '<span class="material-symbols-outlined">' +
                             'add</span>',
                         title: 'add',
-                        onclick: function() {
+                        onmousedown: function(e) {
+                            e.preventDefault();
+                        },
+                        onclick: function(e) {
+                            e.preventDefault();
                             this.mydiv.addname();
                         }
                     });
+                    div.subtrbutton.setAttribute('role','button');
+                    div.addbtn.setAttribute('role','button');
                     // set value
                     if (val != '' && (val.length > 0)) {
                         for (const nameobj of val) {
@@ -509,13 +537,16 @@ export function addbibitems(itemarray, arenew = false) {
             }
 
             // fell through here for string and number (and array for categories)
+            let placeholder = key + ((proptype == "number") ? ' (number)' : '');
+            if (key == '') {
+            }
             bibitem.fields[key] = addelem({
                 tag: 'input',
                 parent: valtd,
                 type: 'text',
                 mybibitem: bibitem,
-                mykey: mykey,
-                placeholder: key + ((proptype == "number") ? ' (number)' : ''),
+                mykey: key,
+                placeholder: placeholder,
                 getVal: function() { return this.value; },
                 onchange: function() {
                     this.mybibitem.info[this.mykey] = this.getVal();
