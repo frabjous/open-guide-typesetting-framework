@@ -8,6 +8,8 @@
 
 import csl from './csl.mjs';
 
+const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
 // main function for adding a bibitem
 export function addbibitems(itemarray, arenew = false) {
     // should be attached to card item
@@ -677,7 +679,8 @@ export function getAllBibData(bibcontentsitems) {
     const unsorted = {};
     const bibi = bibcontentsitems.getElementsByClassName("bibitem");
     for (const bibitem of bibi) {
-        const id = bibitem?.info?.id ?? '';
+        let id = bibitem?.info?.id ?? '';
+        // no id in one entry; let's complain about it
         if (id == '') {
             bibitem.fields.id.setAttribute('aria-invalid','true');
             bibitem.fields.id.focus();
@@ -685,5 +688,25 @@ export function getAllBibData(bibcontentsitems) {
             bibitem.fields.id.placeholder = 'please enter an id';
             return false;
         }
+        if (id in unsorted) {
+            // increase last letter or add 'a';
+            let uplast = false;
+            const lastchar = id.substring(id.length-1);
+            if (/[a-y]/.test(lastchar)) {
+                uplast = true;
+            }
+            const nextletter = alphabet.at( alphabet.indexOf(lastchar) + 1 );
+            let newid = id;
+            while (newid in unsorted) {
+                newid = ((uplast) ? id.substring(0,id.length-1) : newid) +
+                    nextletter;
+            }
+            bibitem.fields.id.value = newid;
+            bibitem.info.id = newid;
+            bibitem.updateLabel();
+            id = newid;
+        }
+        unsorted[id] = bibitem.info;
     }
+    console.log(unsorted);
 }
