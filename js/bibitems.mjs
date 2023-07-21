@@ -422,7 +422,7 @@ export function addbibitems(itemarray, arenew = false) {
                             type: 'text',
                             parent: nf,
                             mydiv: div,
-                            placeholder: 'family',
+                            placeholder: 'given',
                             onchange: function() { this.mydiv.updateInfo(); }
                         });
                         return nf;
@@ -433,9 +433,73 @@ export function addbibitems(itemarray, arenew = false) {
                         ff[0].parentNode.removeChild(ff[0]);
                         this.updateInfo();
                     }
-                    div.buttons = addelem('div', div, {
-                        p
+                    div.buttons = addelem({
+                        tag: 'div',
+                        parent: div,
                         classes: ['bibnamefieldbuttons']
+                    });
+                    div.subtrbutton = addelem({
+                        mydiv: div,
+                        tag: 'button',
+                        type: 'button',
+                        parent: div.buttons,
+                        innerHTML: '<span class="material-symbols-outlined">' +
+                            'remove</span>',
+                        title: 'remove',
+                        onclick: function() {
+                            this.mydiv.removename();
+                        }
+                    });
+                    div.addbtn = addelem({
+                        mydiv: div,
+                        tag: 'button',
+                        type: 'button',
+                        parent: div.buttons,
+                        innerHTML: '<span class="material-symbols-outlined">' +
+                            'add</span>',
+                        title: 'add',
+                        onclick: function() {
+                            this.mydiv.addname();
+                        }
+                    });
+                    // set value
+                    if (val != '' && (val.length > 0)) {
+                        for (const nameobj of val) {
+                            const nf = div.addname();
+                            nf.given.value = nameobj?.given ?? '';
+                            let family = nameobj?.family ?? '';
+                            if ("non-dropping-particle" in nameobj) {
+                                family = namobj["non-dropping-particle"] +
+                                    ' ' + family;
+                            }
+                            nf.family.value = family;
+                        }
+                    } else {
+                        // put in empty name otherwise
+                        const nf = div.addname();
+                    }
+                    // get value
+                    div.getVal = function() {
+                        const nfnf = this.getElementsByClassName("bibnamefields");
+                        if (!nfnf || nfnf.length == 0) { return ''; }
+                        const rv = [];
+                        for (const nf of nfnf) {
+                            let family = nf.family.value;
+                            if (family == '') { continue; }
+                            const nameobj = {};
+                            if (nf.given.value != '') {
+                                nameobj.given nf.given.value;
+                            }
+                            for (cont prtcl of ['von ', 'van ', 'de ', 'del ', 'der ', 'du ']) {
+                                if (family.substr(0, prtcl.length) == prtcl) {
+                                    nameobj["non-dropping-particle"] = prtcl.trim();
+                                    family = family.substr(prtcl.length);
+                                }
+                            }
+                            nameobj.family = family;
+                            rv.push(nameobj);
+                        }
+                        return rv;
                     }
                 }
 
