@@ -242,6 +242,7 @@ export function addbibitems(itemarray, arenew = false) {
                 bibitem.fields.id = addelem({
                     tag: 'input',
                     type: 'text',
+                    placeholder: 'citation id',
                     parent: valtd,
                     mybibitem: bibitem,
                     oninput: function() {
@@ -267,6 +268,7 @@ export function addbibitems(itemarray, arenew = false) {
                     tag: 'input',
                     type: 'text',
                     parent: valtd,
+                    placeholder: 'short citation alias',
                     mybibitem: bibitem,
                     oninput: function() {
                         this.removeAttribute('aria-invalid');
@@ -538,7 +540,20 @@ export function addbibitems(itemarray, arenew = false) {
 
             // fell through here for string and number (and array for categories)
             let placeholder = key + ((proptype == "number") ? ' (number)' : '');
-            if (key == '') {
+            if (key == 'container-title') {
+                placeholder = 'title of journal, anthology, website, etc.';
+            }
+            if (key == 'publisher-place') {
+                placeholder = 'location of publisher';
+            }
+            if (key == 'page') {
+                placeholder = 'page range';
+            }
+            if (key == 'genre') {
+                placeholder = 'e.g. PhD thesis, MA thesis, etc.';
+            }
+            if (key == 'publisher') {
+                placeholder = 'publisher (or thesis university)';
             }
             bibitem.fields[key] = addelem({
                 tag: 'input',
