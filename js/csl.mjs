@@ -41,7 +41,6 @@ export default {
         "post-weblog",
         "regulation",
         "report",
-        "review",
         "review-book",
         "software",
         "song",
@@ -150,9 +149,10 @@ export default {
         "year-suffix": "string"
     },
     "common": {
+        "article-journal": ["author","title","container-title","volume","page","issued"],
         "book": ["author","title","publisher-place","publisher","issued"],
         "chapter": ["author","title","editor","container-title","publisher-place","publisher","page","issued"],
-        "article-journal": ["author","title","container-title","volume","page","issued"],
+        "review": ["author","reviewed-title","reviewed-author","container-title","volume","page","issued"],
         "thesis": ["author","title","genre","publisher","issued"],
         "webpage": ["author","title","container-title","URL","issued","accessed"]
     }

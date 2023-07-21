@@ -303,7 +303,7 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 padding-bottom: 0.1rem;
                 margin-left: 1rem;
             }
-            section article.assignment details.ogst-assignmentblock div.bibitem table tbody td:first-child {
+            section article.assignment details.ogst-assignmentblock div.bibitem table td:first-child {
                 text-align: right;
                 padding-top: 1rem;
                 vertical-align: top;
