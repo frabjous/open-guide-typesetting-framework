@@ -402,6 +402,41 @@ export function addbibitems(itemarray, arenew = false) {
                     }
                 }
                 if (proptype == 'names') {
+                    div.addname = function() {
+                        const nf = addelem({
+                            tag: 'div',
+                            parent: this,
+                            classes: ['bibnamefields']
+                        });
+                        this.insertBefore(nf, this.buttons);
+                        nf.family = addelem({
+                            tag: 'input',
+                            type: 'text',
+                            parent: nf,
+                            mydiv: div,
+                            placeholder: 'family',
+                            onchange: function() { this.mydiv.updateInfo(); }
+                        });
+                        const nf.given = addelem({
+                            tag: 'input',
+                            type: 'text',
+                            parent: nf,
+                            mydiv: div,
+                            placeholder: 'family',
+                            onchange: function() { this.mydiv.updateInfo(); }
+                        });
+                        return nf;
+                    }
+                    div.removename = function() {
+                        cont ff = this.getElementsByClassName("bibnamefields");
+                        if (!ff || ff.length == 0) { return; }
+                        ff[0].parentNode.removeChild(ff[0]);
+                        this.updateInfo();
+                    }
+                    div.buttons = addelem('div', div, {
+                        p
+                        classes: ['bibnamefieldbuttons']
+                    }
                 }
 
 
@@ -411,8 +446,8 @@ export function addbibitems(itemarray, arenew = false) {
             // fell through here for string and number (and array for categories)
             bibitem.fields[key] = addelem({
                 tag: 'input',
-                type: 'text',
                 parent: valdt,
+                type: 'text',
                 mybibitem: bibitem,
                 mykey: mykey,
                 placeholder: key + ((proptype == "number") ? ' (number)' : ''),
