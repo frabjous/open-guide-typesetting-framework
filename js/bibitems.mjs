@@ -157,7 +157,7 @@ export function addbibitems(itemarray, arenew = false) {
             });
             if (key == 'extractedfrom') {
                 bibitem.fields.extractedfrom = addelem({
-                    tag: 'textarea';
+                    tag: 'textarea',
                     parent: valtd,
                     readOnly: true,
                     value: val
@@ -224,8 +224,9 @@ export function addbibitems(itemarray, arenew = false) {
             let ftype
             if (key == 'id') {
                 bibitem.fields.id = addelem({
-                    type: text,
-                    parent: valdt,
+                    tag: 'input',
+                    type: 'text',
+                    parent: valtd,
                     mybibitem: bibitem,
                     oninput: function() {
                         this.removeAttribute('aria-invalid');
@@ -248,7 +249,7 @@ export function addbibitems(itemarray, arenew = false) {
             if (key == 'abbreviation') {
                 bibitem.fields.abbreviation = addelem({
                     type: text,
-                    parent: valdt,
+                    parent: valtd,
                     mybibitem: bibitem,
                     oninput: function() {
                         this.removeAttribute('aria-invalid');
@@ -276,7 +277,7 @@ export function addbibitems(itemarray, arenew = false) {
             if (proptype == 'date' || proptype == 'dateparts' || proptype == 'names') {
                 bibitem.fields[key] = addelem({
                     tag: 'div',
-                    parent: valdt,
+                    parent: valtd,
                     mybibitem: bibitem,
                     mykey: key,
                     updateInfo: function() {
@@ -417,7 +418,7 @@ export function addbibitems(itemarray, arenew = false) {
                             placeholder: 'family',
                             onchange: function() { this.mydiv.updateInfo(); }
                         });
-                        const nf.given = addelem({
+                        nf.given = addelem({
                             tag: 'input',
                             type: 'text',
                             parent: nf,
@@ -428,7 +429,7 @@ export function addbibitems(itemarray, arenew = false) {
                         return nf;
                     }
                     div.removename = function() {
-                        cont ff = this.getElementsByClassName("bibnamefields");
+                        const ff = this.getElementsByClassName("bibnamefields");
                         if (!ff || ff.length == 0) { return; }
                         ff[0].parentNode.removeChild(ff[0]);
                         this.updateInfo();
@@ -488,9 +489,9 @@ export function addbibitems(itemarray, arenew = false) {
                             if (family == '') { continue; }
                             const nameobj = {};
                             if (nf.given.value != '') {
-                                nameobj.given nf.given.value;
+                                nameobj.given = nf.given.value;
                             }
-                            for (cont prtcl of ['von ', 'van ', 'de ', 'del ', 'der ', 'du ']) {
+                            for (const prtcl of ['von ', 'van ', 'de ', 'del ', 'der ', 'du ']) {
                                 if (family.substr(0, prtcl.length) == prtcl) {
                                     nameobj["non-dropping-particle"] = prtcl.trim();
                                     family = family.substr(prtcl.length);
@@ -510,7 +511,7 @@ export function addbibitems(itemarray, arenew = false) {
             // fell through here for string and number (and array for categories)
             bibitem.fields[key] = addelem({
                 tag: 'input',
-                parent: valdt,
+                parent: valtd,
                 type: 'text',
                 mybibitem: bibitem,
                 mykey: mykey,
@@ -529,12 +530,18 @@ export function addbibitems(itemarray, arenew = false) {
             }
             // categories really an array; here we separate by commas
             if (key == 'categories') {
-                bibitem.fields[key].getVal = function {
+                bibitem.fields[key].getVal = function() {
                     if (this.value == '') { return ''; }
                     return this.value.split(',').map((f) = (f.trim()));
                 }
             }
         }
+        bibitem.addinfo('extractedfrom', bibitem.extractedfrom);
+        bibitem.addinfo('id', (bibitem?.info?.id ?? ''));
+        bibitem.addinfo('type', (bibitem?.info?.type ?? ''));
+        bibitem.addinfo('abbreviation',
+            (bibitem?.info?.abbreviation ?? ''));
+
     }
 }
 
