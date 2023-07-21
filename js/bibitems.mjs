@@ -587,7 +587,48 @@ export function addbibitems(itemarray, arenew = false) {
         bibitem.addinfo('type', (bibitem?.info?.type ?? ''));
         bibitem.addinfo('abbreviation',
             (bibitem?.info?.abbreviation ?? ''));
-
+        bibitem.infotablefoot = addelem({
+            tag: 'tfoot',
+            parent: bibitem.infotable
+        });
+        bibitem.addinforow = addelem({
+            tag: 'tr',
+            parent: bibitem.infotablefoot
+        });
+        bibitem.addinfolabeltd = addelem({
+            tag: 'td',
+            parent: bibitem.addinforow,
+            innerHTML: '<em>add a field<em>'
+        });
+        bibitem.addinfoselecttd = addelem({
+            tag: 'td',
+            parent: bibitem.addinforow
+        });
+        bibitem.addinfoselect = addelem({
+            tag: 'select',
+            parent: bibitem.addinfoselecttd,
+            mybibitem: bibitem,
+            onchange: function() {
+                this.mybibitem.addinfo(this.value, '');
+            }
+        });
+        const noselect = addelem({
+            tag: 'option',
+            parent: bibitem.addinfoselect,
+            innerHTML: 'choose field to add',
+            selected: true,
+            disabled: true
+        });
+        for (const prop in csl.properties) {
+            if (prop == 'id') { return; }
+            if (prop == 'type') { return; }
+            const propopt = addelem({
+                tag: 'option',
+                parent: bibitem.addinfoselect,
+                value: prop,
+                innerHTML: prop
+            });
+        }
     }
 }
 
