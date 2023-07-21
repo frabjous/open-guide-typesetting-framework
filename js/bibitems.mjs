@@ -223,6 +223,7 @@ export function addbibitems(itemarray, arenew = false) {
                 bibitem.fields.type.mycard = card;
                 // create appropriate fields
                 bibitem.fields.type.onchange = function() {
+                    this.removeAttribute('aria-invalid');
                     const bibitem = this.mybibitem;
                     bibitem.info.type = this.value;
                     // populate with common fields if common
@@ -366,7 +367,7 @@ export function addbibitems(itemarray, arenew = false) {
                         } else {
                             rv["date-parts"].push([]);
                         }
-                        if (div.dei.value != '') {
+                        if (div.dei.value != '' && (div.dei.value != div.dsi.value)) {
                             rv["date-parts"].push([parseInt(div.dei.value)]);
                         }
                         return rv;
@@ -720,7 +721,19 @@ export function getAllBibData(bibcontentsitems) {
             bibitem.info.id = id;
             bibitem.updateLabel();
         }
+        if (info?.type == "select a type") {
+            bibitem.fields.type.setAttribute('aria-invalid','true');
+            bibitem.fields.type.focus();
+            bibitem.fields.type.scrollIntoView();
+            return false;
+        }
         unsorted[id] = info;
     }
-    console.log(unsorted);
+    const sorted = {};
+    const keyssorted = Object.keys(unsorted).sort();
+    for (const key of keysorted) {
+        sorted[key] = unsorted[key];
+    }
+    console.log(sorted);
+    return sorted;
 }
