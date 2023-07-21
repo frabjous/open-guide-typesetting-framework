@@ -293,7 +293,15 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 height: 5rem;
                 resize: none;
             }
-
+            section article.assignment details.ogst-assignmentblock div.bibnamefieldbuttons {
+                text-align: right;
+            }
+            section article.assignment details.ogst-assignmentblock div.bibnamefieldbuttons a {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+                padding-top: 0.3rem;
+                padding-bottom: 0.2rem;
+            }
         </style>
         <script>
             // starting globals
