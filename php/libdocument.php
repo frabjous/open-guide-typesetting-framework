@@ -55,19 +55,20 @@ function apply_bibitem($markdown, $bibitem) {
             $year .= '[-–—]+' . strval($bibitem->issued->{"date-parts"}[1][0]);
         }
     }
+
     // handle things of the form "(...Russell 1905...)"
-    error_log($namestr . ' ' . $year . ' ' . $id);
     $citepregex = '[\(\[]([^\(\)\[\]]*)' . $namestr . ' ' . $year .
         '([^\(\)\[\]]*)[\)\]]';
     $citepres = '[\1@' . $id . '\2]';
     $markdown = mb_ereg_replace($citepregex, $citepres, $markdown);
     // handle things of the form "Russell (1905)"
-    $citetregex = '\w' . $namestr . ' \(' . $year . '\)';
+    $citetregex = '\b' . $namestr . ' \(' . $year . '\)';
     $citetres = '@' . $id;
-    $markdown = mb_ereg_replace($citetregex, $citeres, $markdown);
+    $markdown = mb_ereg_replace($citetregex, $citetres, $markdown);
     // handle things of the form Russell (1905, p. 10)
-    $citetpregex = '\w' . $namestr . '\(' . $year . '([^\]\)]+)\)';
+    $citetpregex = '\b' . $namestr . ' \(' . $year . '[, ]*([^\]\)]+)\)';
     $citetpres = '@' . $id . ' [\1]';
+    $markdown = mb_ereg_replace($citetpregex, $citetpres, $markdown);
     // ensure there are semicolons in between citation
     $old = '';
     while ($old != $markdown) {
@@ -267,7 +268,7 @@ function join_authors($authors, $withemails = false, $withaffils = false) {
     return $rv;
 }
 
-function join_names($names) {
+function join_names($names, $includegiven = false) {
     $rv = '';
     foreach ($names as $n => $name) {
         if ($n > 0) {
@@ -277,7 +278,7 @@ function join_names($names) {
                 $rv .= ' and ';
             }
         }
-        if (isset($name->given)) {
+        if (isset($name->given) && $includegiven) {
             $rv .= $name->given . ' ';
         }
         if (isset($name->{"non-dropping-particle"})) {
