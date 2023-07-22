@@ -52,7 +52,16 @@ if (!file_exists($mainfile)) {
 $mainmd = file_get_contents($mainfile);
 
 // TODO: put real stuff here
-$rv->mainmd = $mainmd;
+require_once(dirname(__FILE__) . '/../libdocument.php');
+
+$mainmd = apply_all_bibdata($mainmd, $bibdata);
+
+$saveres = file_put_contents($mainfile, $mainmd);
+
+if (!$saveres || $saveres == 0) {
+    jquit('Unable to save modified document. Contact your site ' +
+        'administrator.');
+}
 
 // record application of bibliography
 $biblastappliedfile = "$assigndir/biblastapplied";
