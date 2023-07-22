@@ -66,20 +66,25 @@ export function addbibitems(itemarray) {
                 ss[ss.length-1].parentNode.removeChild(ss[ss.length-1]);
             }
             if (bibitem.possibilities.length == 0) {
-                bibitem.ppselect.innerHTML =
-                    '<option value="" disabled selected">' +
-                    'none</option>';
-                if (this.reimportbtn) {
-                    this.reimportbtn.innerHTML = 'import';
-                }
-                return;
+                const optelem = addelem({
+                    tag: 'option',
+                    parent: bibitem.ppselect,
+                    value: '',
+                    innerHTML: 'none',
+                    disabled: true,
+                    selected: true
+                });
             }
             for (const ppposs of bibitem.possibilities) {
                 const optelem = addelem({
                     tag: 'option',
+                    parent: bibitem.ppselect,
                     value: ppposs,
                     innerHTML: ppposs
                 });
+                if (ppposs == bibitem.philpapersid) {
+                    optelem.selected = true;
+                }
             }
             if (this.reimportbtn) {
                 this.reimportbtn.innHTML = 'reimport';
@@ -269,6 +274,7 @@ export function addbibitems(itemarray) {
                     },
                     value: val
                 });
+                bibitem.updateLabel();
                 return;
             }
             if (key == 'abbreviation') {

@@ -745,6 +745,7 @@ ogst.assignmentcard = function(
             }
             this.mycard.biblastextracted = Math.floor(
                 (new Date()).getTime()/1000);
+            // mark it as changed as well
             // save in the background
             const savereq = {
                 postcmd: 'savebiblastextracted',
@@ -754,6 +755,7 @@ ogst.assignmentcard = function(
             ogst.editorquery(savereq);
             if (additions.length > 0) {
                 this.mycard.addbibitems(additions);
+                this.mycard.biblastchanged = this.mycard.biblastextracted;
             }
             this.mycard.updatebibbuttons();
         }
