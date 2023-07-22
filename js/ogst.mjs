@@ -879,6 +879,7 @@ ogst.assignmentcard = function(
         innerHTML: 'apply to document',
         onclick: async function() {
             const card = this.mycard;
+            card.clearmessage();
             if (!card?.assignmentId) {
                 card.reporterror('Cannot apply a bibliography without ' +
                     'a document id.');
@@ -905,6 +906,8 @@ ogst.assignmentcard = function(
             }
             card.updatebibbuttons();
             card.openNext();
+            card.scrollIntoView();
+            card.okmessage('Bibliography applied.');
         }
     });
     card.bibsavebutton.disabled = true;
