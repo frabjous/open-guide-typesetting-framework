@@ -69,7 +69,7 @@ export function addbibitems(itemarray, arenew = false) {
             }
             if (bibitem.possibilities.length == 0) {
                 bibitem.ppselect.innerHTML =
-                    '<option value="" disabed selected">' +
+                    '<option value="" disabled selected">' +
                     'none</option>';
                 if (this.reimportbtn) {
                     this.reimportbtn.innerHTML = 'import';
@@ -99,6 +99,7 @@ export function addbibitems(itemarray, arenew = false) {
             type: 'button',
             classes: ['outline'],
             parent: bibitem.widgets,
+            title: '(re)import data from PhilPapers',
             innerHTML: 'import'
         });
         bibitem.setppselectopts();
