@@ -824,7 +824,9 @@ ogst.assignmentcard = function(
             }
             const bibdata = getAllBibData(this.mycard.bibcontentsitems);
             if (!bibdata) { return; }
-
+            this.innerHTML = 'saving';
+            this.setAttribute('aria-busy','true');
+            this.innerHTML = 'save bibliography';
         }
     });
     card.bibapplybutton = addelem({
