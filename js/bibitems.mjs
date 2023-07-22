@@ -23,7 +23,6 @@ export function addbibitems(itemarray) {
             parent: card.bibcontentsitems,
         });
         // set key values from item
-        bibitem.info = {};
         bibitem.info = item;
         bibitem.possibilities = [];
         if ("possibilities" in item) {
@@ -105,7 +104,55 @@ export function addbibitems(itemarray) {
             classes: ['outline'],
             parent: bibitem.widgets,
             title: '(re)import data from PhilPapers',
-            innerHTML: 'import'
+            innerHTML: 'import',
+            mybibitem: bibitem,
+            oninput: function() {
+                this.mybibitem.newppinput.removeAttribute('aria-invalid');
+            },
+            onclick: async function() {
+                const bibitem = this.mybibitem;
+                let ppid = this?.mybibitem?.newppinput?.value ?? '';
+                if (ppid == '') {
+                    const selectedpp =  bibitem.ppselect.value;
+                    if (selectedpp == 'none' || selectedpp == '' ||
+                        selectedpp = bibitem.PhilPapers) {
+                        // mark newpp input as invalid
+                        bibitem.newppinput.setAttribute('aria-invalid','true');
+                        //nothing else to do
+                        return;
+                    }
+                    ppid = selectedpp;
+                }
+                const req = {
+                    postcmd: 'ppdata',
+                    philpapersid: ppid
+                }
+                this.innerHTML = 'importing …';
+                this.setAttribute('aria-busy','true');
+                const resp = await ogst.editorquery(req);
+                this.removeAttribute('aria-busy');
+                this.innerHTML = 'reimport';
+                if (!req) { return; }
+                if (resp.data.length > 0) {
+                    bibobj = dataresp.data[0];
+                    bibitem.philpapersid = ppid;
+                    bibobj.philpapersid = ppid;
+                    if (bib.itempossibilities.indexOf(ppid) == -1) {
+                        bibitem.possibilities.push(ppid);
+                        bibobj.philpapersid = bibitem.possibilities;
+                    }
+                    bibitem.extractedfrom = '';
+                    bibobj.extractedfrom = '';
+                    
+
+                    bibobj.extractedfrom = bibitem;
+                    bibobj.possibilities = ids;
+                } else {
+                    if (bibitem.newppinput.value != '') {
+                        bibitem.newppinput.setAttribute('aria-invalid','true');
+                    }
+                }
+            }
         });
         bibitem.setppselectopts();
 
