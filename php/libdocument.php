@@ -86,21 +86,55 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
             }
             if ((isset($metadata->author) &&
                 (squish($metadata->author[0]->email) == squish($line)) ||
-                (squish($metadata->email[0]->affiliation = squish($line)))) {
+                (squish($metadata->email[0]->affiliation = squish($line))))) {
                 continue;
             }
         }
-        if (squish($line) == 'acknowledgements') {
+        if ((squish($line) == 'acknowledgements') || (squish($line) == 'thanks')) {
             $found_acknowledgements = true;
-            // strip surrounding asterisks
-            $line = mb_ereg_replace('^\*+(.*[^\*])\*+$','\1', $line);
+            // add blank line before if need be
+            if (($ln > 0) && ($lines[$ln - 1] != '')) {
+                $outcome .= PHP_EOL;
+            }
+            $outcome .= '## Acknowledgements {.unnumbered}' . PHP_EOL;
+            // add a blank line afterwards if need be
+            if (($ln < (count($lines) - 1)) && ($lines[$ln + 1] != '')) {
+                $outcome .= PHP_EOL;
+            }
+            continue;
         }
-    }
-}
+        // pseudo sections/subsections by lazy people
+        if (mb_ereg_match('\*+\s*[0-9]+\.\s*[^\.]+[^\s\*]\s*\*+$', $line)) {
+            $fixedline =
+                mb_ereg_replace('\*+\s*[0-9]+\.\s*([^\.]+[^\s\*])\s*\*+$', '# \1', $line);
+            // add blank line before if need be
+            if (($ln > 0) && ($lines[$ln - 1] != '')) {
+                $outcome .= PHP_EOL;
+            }
+            $outcome .= $fixedline . PHP_EOL;
+            // add a blank line afterwards if need be
+            if (($ln < (count($lines) - 1)) && ($lines[$ln + 1] != '')) {
+                $outcome .= PHP_EOL;
+            }
+            continue;
+        }
+        // regular paragraphs to split?
+        if ($splitsentences && mb_ereg_match('[A-Z]',$line)) {
+            
+        }
 
-// remove fix sections including those with numbers
-// add acknowledgements, add unnumbered to it
-// split sentences
+        // normal line, just push it to result
+        $outcome .= $line . PHP_EOL;
+    }
+    if (!$found_acknowledgements) {
+        // add blank line beforehand if need be
+        if ($lines[ (count($lines) - 1) ] != '']) {
+            $outcome .= PHP_EOL;
+        }
+        $outcome .= '## Acknowledgements {.unnumbered}' . PHP_EOL . PHP_EOL;
+    }
+    return $outcome;
+}
 
 // note: join_authors is based on metadata name arrays
 // and join_names is based on csl json name arrays
