@@ -58,12 +58,25 @@ function extract_bibliography($markdown) {
     return array($markdown, '');
 }
 
-function fix_markdown($markdown. $splitsentences) {
+function fix_markdown($markdown, $metadata, $splitsentences = false) {
     $lines = explode(PHP_EOL, $markdown);
     $firstline = true;
     $outcome = '';
     $found_acknowledgements = false;
-    foreach ($lines as $line) {
+    foreach ($lines as $ln => $line) {
+        // look for title, abstract, author, affiliation in first few lines
+        if ($ln < 6) {
+            if (mb_ereg_match('\*+Abstract', $line)) {
+                continue;
+            }
+            if (mb_ereg_match('Abstract: ', $line)) {
+                continue;
+            }
+            if ((isset($metadata->title)) &&
+                (squish($metadata->title) == squish($line))) {
+                continue;
+            }
+        }
     }
 }
 
@@ -72,3 +85,30 @@ function fix_markdown($markdown. $splitsentences) {
 // remove fix sections including those with numbers
 // add acknowledgements, add unnumbered to it
 // split sentences
+
+function join_names($names) {
+    $rv = '';
+    foreach ($names as $n => $name) {
+        if ($n > 0) {
+            if ($n < (count($names) - 1)) {
+                $rv .= ', ';
+            } else {
+                $rv .= ' and ';
+            }
+        }
+        if (isset($name->given)) {
+            $rv .= $name->given . ' ';
+        }
+        if (isset($name->{"non-dropping-particle"})) {
+            $rv .= $name->{"non-dropping-particle"} . ' ';
+        }
+        $ (isset($name->family)) {
+            $rv .= $name->family;
+        }
+    }
+    return $rv;
+}
+
+function squish($s) {
+    return strtolower(mb_ereg_replace('[^A-Za-z]','',$s));
+}
