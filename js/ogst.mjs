@@ -845,6 +845,7 @@ ogst.assignmentcard = function(
         innerHTML: 'save bibiography',
         mycard: card,
         onclick: async function() {
+            this.mycard.clearmessage();
             if (!this?.mycard?.assignmentId) {
                 this.mycard.reporterror('You cannot save the ' +
                     'bibliography until a document ID is set.');
@@ -873,8 +874,22 @@ ogst.assignmentcard = function(
     card.bibapplybutton = addelem({
         tag: 'button',
         type: 'button',
+        mycard: card,
         parent: card.bibcontentbuttons,
-        innerHTML: 'apply to document'
+        innerHTML: 'apply to document',
+        onclick: function() {
+            const card = this.mycard;
+            if (!card?.assignmentId) {
+                card.reporterror('Cannot apply a bibliography without ' +
+                    'a document id.');
+                return;
+            }
+            if (card.biblastchanged > card.biblastsaved) {
+                card.reporterror('Please save the bibliography '
+                    + 'before applying it.');
+                return;
+            }
+        }
     });
     card.bibsavebutton.disabled = true;
     card.biblastextracted = (assignmentInfo?.biblastextracted ?? -1);
@@ -891,7 +906,7 @@ ogst.assignmentcard = function(
             card.bibextractbutton.disabled = true;
         }
         if ((card.mainuploadext != '') &&
-            (card.biblastsaved > card.biblastapplid)) {
+            (card.biblastsaved > card.biblastapplied)) {
             card.bibapplybutton.disabled = false;
         } else {
             card.bibapplybutton.disabled = true;
