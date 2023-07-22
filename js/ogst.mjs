@@ -777,13 +777,24 @@ ogst.assignmentcard = function(
         accept: '.bib, .json, .ris, .xml, .yaml',
         mycard: card,
         parent: card.bibtopright,
-        onchange: function() {
+        onchange: async function() {
+            this.style.display = 'none';
+            this.mycard.bibuploading.style.display = 'inline-block';
             const req = {
                 uploadtype: 'bibimport',
                 assignmentId: this?.mycard?.assignmentId ?? 'none',
                 assignmentType: this?.mycard?.assignmentType ?? 'none',
             }
-            ogst.editorupload(this, req);
+            const resp = await ogst.editorupload(this, req);
+            this.mycard.bibuploading.style.display = 'none';
+            this.style.display = 'inline';
+            if (!resp) { return; }
+            if (!resp?.additions) { return; }
+            if (resp.additions.length > 0) {
+                this.mycard.addbibitems(resp.additions);
+                this.mycard.biblastchanged = this.mycard.biblastextracted;
+            }
+            this.mycard.updatebibbuttons();
         }
     });
     card.bibcontents = addelem({
