@@ -352,7 +352,8 @@ export function addbibitems(itemarray) {
                         }
                     });
                     // set value
-                    if (val && val !== '' && ("date-parts" in val)) {
+                    if (val && val !== '' && ("date-parts" in val) &&
+                        (val["date-parts"].length > 0)) {
                         div.dsi.value = val["date-parts"][0][0].toString();
                         if (val["date-parts"].length > 1) {
                             div.dei.value = val["date-parts"][1][0].toString();
@@ -524,7 +525,7 @@ export function addbibitems(itemarray) {
                             nf.given.value = nameobj?.given ?? '';
                             let family = nameobj?.family ?? '';
                             if ("non-dropping-particle" in nameobj) {
-                                family = namobj["non-dropping-particle"] +
+                                family = nameobj["non-dropping-particle"] +
                                     ' ' + family;
                             }
                             nf.family.value = family;

@@ -204,6 +204,9 @@ if ($uploadtype == 'bibimport') {
         $json = $piperes->stdout;
     }
     $rv->additions = json_decode($json);
+    if (!is_array($rv->additions)) {
+        jquit('Wrong kind of json found in file.');
+    }
     if (!$rv->additions || count($rv->additions) == 0) {
         jquit('Unable to decode bibliography items from file.');
     }
