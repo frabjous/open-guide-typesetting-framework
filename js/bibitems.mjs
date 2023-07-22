@@ -106,6 +106,7 @@ export function addbibitems(itemarray) {
             title: '(re)import data from PhilPapers',
             innerHTML: 'import',
             mybibitem: bibitem,
+            mycard: card,
             oninput: function() {
                 this.mybibitem.newppinput.removeAttribute('aria-invalid');
             },
@@ -115,7 +116,7 @@ export function addbibitems(itemarray) {
                 if (ppid == '') {
                     const selectedpp =  bibitem.ppselect.value;
                     if (selectedpp == 'none' || selectedpp == '' ||
-                        selectedpp = bibitem.PhilPapers) {
+                        selectedpp == bibitem.philpapersid) {
                         // mark newpp input as invalid
                         bibitem.newppinput.setAttribute('aria-invalid','true');
                         //nothing else to do
@@ -135,7 +136,7 @@ export function addbibitems(itemarray) {
                 if (!req) { return; }
                 // we got data, process it
                 if (resp.data.length > 0) {
-                    bibobj = dataresp.data[0];
+                    const bibobj = resp.data[0];
                     // set new philpapers id
                     bibitem.philpapersid = ppid;
                     bibobj.philpapersid = ppid;
@@ -143,7 +144,7 @@ export function addbibitems(itemarray) {
                     if (bibitem.possibilities.indexOf(ppid) == -1) {
                         bibitem.possibilities.push(ppid);
                         bibobj.philpapersid = bibitem.possibilities;
-                        bibitem.selppselectopts();
+                        bibitem.setppselectopts();
                     }
                     // clear out new value for inserting yet another
                     bibitem.newppinput.value = '';
@@ -153,7 +154,7 @@ export function addbibitems(itemarray) {
                     const oldextractedfrom = bibitem?.fields
                         ?.extractedfrom?.value ?? '';
                     // clear out old field table
-                    bibitem.info = bibobject;
+                    bibitem.info = bibobj;
                     bibitem.fields = {};
                     const trtr = bibitem.infotablebody
                         .getElementsByTagName('tr');
@@ -174,6 +175,10 @@ export function addbibitems(itemarray) {
                         }
                         bibitem.addinfo(prop, bibobj[prop]);
                     }
+                    bibitem.updateLabel();
+                    bibitem.newppinput.removeAttribute('aria-invalid');
+                    this.mycard.biblastchanged = ((new Date()).getTime()/1000);
+                    this.mycard.updatebibbuttons();
                 } else {
                     if (bibitem.newppinput.value != '') {
                         bibitem.newppinput.setAttribute('aria-invalid','true');
