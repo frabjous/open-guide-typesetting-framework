@@ -19,8 +19,8 @@ function apply_all_bibdata($markdown, $bibdata) {
         if (isset($bibitem->abbreviation)) {
             // shouldn't do it right after '[' do avoid duplication
             $regex = '([^\[])\*' . $bibitem->abbreviation . '\*';
-            $res = '\1\[\*' . $bibitem->abbreviation . '\*\](#ref-' .
-                $id + ')';
+            $res = '\1[*' . $bibitem->abbreviation . '*](#ref-' .
+                $id . ')';
             $markdown = mb_ereg_replace($regex, $res, $markdown);
         }
         // do other substitutions
@@ -30,6 +30,53 @@ function apply_all_bibdata($markdown, $bibdata) {
 }
 
 function apply_bibitem($markdown, $bibitem) {
+    // nothing to do if no id
+    if (!isset($bibitem->id)) {
+        return $markdown;
+    }
+    $id = $bibitem->id;
+    $namestr = 'Anonymous';
+    if (isset($bibitem->author)) {
+        $namestr = join_names($bibitem->author);
+    }
+    if ($namestr == '' && isset($bibitem->editor)) {
+        $namestr = join_names($bibitem->editor);
+    }
+    $year = 'forthcoming';
+    if (isset($bibitem->issued->{"date-parts"})) {
+        // year should be first part of first part of date-parts
+        if ((count($bibitem->issued->{"date-parts"}) > 0) &&
+            (count($bibitem->issued->{"date-parts"}[0]) > 0)) {
+            $year = strval($bibitem->issued->{"date-parts"}[0][0]);
+        }
+        // if there is an end-year
+        if ((count($bibitem->issued->{"date-parts"}) > 1) &&
+            (count($bibitem->issues->{"date-parts"}[1]) > 0)) {
+            $year .= '[-–—]+' . strval($bibitem->issued->{"date-parts"}[1][0]);
+        }
+    }
+    // handle things of the form "(...Russell 1905...)"
+    error_log($namestr . ' ' . $year . ' ' . $id);
+    $citepregex = '[\(\[]([^\(\)\[\]]*)' . $namestr . ' ' . $year .
+        '([^\(\)\[\]]*)[\)\]]';
+    $citepres = '[\1@' . $id . '\2]';
+    $markdown = mb_ereg_replace($citepregex, $citepres, $markdown);
+    // handle things of the form "Russell (1905)"
+    $citetregex = '\w' . $namestr . ' \(' . $year . '\)';
+    $citetres = '@' . $id;
+    $markdown = mb_ereg_replace($citetregex, $citeres, $markdown);
+    // handle things of the form Russell (1905, p. 10)
+    $citetpregex = '\w' . $namestr . '\(' . $year . '([^\]\)]+)\)';
+    $citetpres = '@' . $id . ' [\1]';
+    // ensure there are semicolons in between citation
+    $old = '';
+    while ($old != $markdown) {
+        $old = $markdown;
+        $fixregex = '\[([^@\[\]]*)@([^@\[\];]*),([^@\[\];,]*)@([^\[\]]*)\]';
+        $fixres = '[\1@\2;\3@\4]';
+        $markdown = mb_ereg_replace($fixregex, $fixres, $markdown);
+    }
+    return $markdown;
 }
 
 function extract_bibliography($markdown) {
