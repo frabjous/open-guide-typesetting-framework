@@ -792,7 +792,7 @@ ogst.assignmentcard = function(
             if (!resp?.additions) { return; }
             if (resp.additions.length > 0) {
                 this.mycard.addbibitems(resp.additions);
-                this.mycard.biblastchanged = this.mycard.biblastextracted;
+                this.mycard.biblastchanged = ((new Date()).getTime()/1000);
             }
             this.mycard.updatebibbuttons();
         }
