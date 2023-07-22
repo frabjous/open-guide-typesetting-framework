@@ -816,7 +816,7 @@ ogst.assignmentcard = function(
         parent: card.bibcontentbuttons,
         innerHTML: 'save bibiography',
         mycard: card,
-        onclick: function() {
+        onclick: async function() {
             if (!this?.mycard?.assignmentId) {
                 this.mycard.reporterror('You cannot save the ' +
                     'bibliography until a document ID is set.');
@@ -826,7 +826,20 @@ ogst.assignmentcard = function(
             if (!bibdata) { return; }
             this.innerHTML = 'saving';
             this.setAttribute('aria-busy','true');
+            const req = {
+                postcmd: 'savebibliography',
+                bibdata: bibdata,
+                assignmentId: this.mycard.assignmentId,
+                assignmentType: this.mycard.assignmentType
+            }
+            const resp = await ogst.editorquery(req);
+            this.removeAttribute('aria-busy');
             this.innerHTML = 'save bibliography';
+            if (!resp) { return; }
+            if ("biblastsaved" in resp) {
+                this.mycard.biblastsaved = resp.biblastsaved;
+            }
+            this.mycard.updatebibbuttons();
         }
     });
     card.bibapplybutton = addelem({
