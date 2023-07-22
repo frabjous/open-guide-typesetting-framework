@@ -1299,6 +1299,7 @@ ogst.clearmessage = function() {
 }
 
 ogst.editordownload = function(assignmenttype, assignmentid, filename) {
+    if (ogst.clearmessage) { ogst.clearmessage(); }
     downloadFile('php/servelet.php?filename=' +
         encodeURIComponent(filename) + '&project=' +
         encodeURIComponent(window.projectname) + '&username=' +
@@ -1311,6 +1312,7 @@ ogst.editordownload = function(assignmenttype, assignmentid, filename) {
 // generic function to make json requests, but only for logged in
 // editors
 ogst.editorquery = async function(req) {
+    if (ogst.clearmessage) { ogst.clearmessage(); }
     // always set postcmd in req
     if (!("postcmd" in req)) {
         console.error("Editor query made without postcmd.");
