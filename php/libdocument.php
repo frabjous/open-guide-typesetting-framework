@@ -60,7 +60,6 @@ function extract_bibliography($markdown) {
 
 function fix_markdown($markdown, $metadata, $splitsentences = false) {
     $lines = explode(PHP_EOL, $markdown);
-    $firstline = true;
     $outcome = '';
     $found_acknowledgements = false;
     foreach ($lines as $ln => $line) {
@@ -120,7 +119,24 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
         }
         // regular paragraphs to split?
         if ($splitsentences && mb_ereg_match('[A-Z]',$line)) {
-            
+            $processedindex = 0;
+            for ($lookindex = 2; $lookindex < (mb_strlen($line)-3); $lookindex++) {
+                $char = mb_substr($line, $lookindex, 1);
+                if ($char == ' ') {
+                    $twobefore = mb_substr($line, ($lookindex-2), 2);
+                    $oneafter = mb_substr($line, $lookindex+1, 1);
+                    $break = (mb_ereg_match('[a-z][\.\?!]', $twobefore) &&
+                        mb_ereg_match('[A-Z]',$oneafter));
+                    if ($break) {
+                        $outcome .= mb_substr($line, $processedindex,
+                            ($lookindex - $processedindex)) . PHP_EOL;
+                        $processedindex = $lookindex+1;
+                    }
+                }
+            }
+            // add remainder
+            $outcome .= mb_substr($line, $processedindex) . PHP_EOL;
+            continue;
         }
 
         // normal line, just push it to result
