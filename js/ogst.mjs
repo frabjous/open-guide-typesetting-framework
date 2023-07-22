@@ -888,6 +888,10 @@ ogst.assignmentcard = function(
 
     }
     card.addbibitems = addbibitems;
+    // restore bibliography
+    if ("bibdata" in assignmentInfo) {
+        card.addbibitems(Object.values(assignmentInfo.bibdata));
+    }
     card.updatebibbuttons();
 
     //

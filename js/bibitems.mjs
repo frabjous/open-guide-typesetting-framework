@@ -551,8 +551,6 @@ export function addbibitems(itemarray) {
                         return rv;
                     }
                 }
-
-
                 return;
             }
 
@@ -609,6 +607,14 @@ export function addbibitems(itemarray) {
         bibitem.addinfo('type', (bibitem?.info?.type ?? ''));
         bibitem.addinfo('abbreviation',
             (bibitem?.info?.abbreviation ?? ''));
+        // add all the rest already there
+        for (const prop in bibitem.info) {
+            // skip the ones already handled
+            if (prop == 'id' || prop == 'extractedfrom' ||
+                prop == 'philpapersid' || prop == 'possibilities' ||
+                prop == 'abbreviation' || prop == 'type') { continue; }
+            bibitem.addinfo(prop, bibitem.info[prop]);
+        }
         bibitem.infotablefoot = addelem({
             tag: 'tfoot',
             parent: bibitem.infotable
