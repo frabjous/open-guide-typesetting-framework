@@ -61,7 +61,7 @@ require_once(dirname(__FILE__) . '/libassignments.php');
 
 $assignment_dir = get_assignment_dir($assignment_type, $assignment_id);
 
-if (!$assignment_dir) {
+if (!$assignment_dir && (!($uploadtype == 'bibimport' && $assignment_id == 'none'))) {
     jquit('Could not find or create document/assignment directory.');
 }
 
@@ -163,6 +163,50 @@ if ($uploadtype == 'auxfiles') {
         $ctr++;
     }
     $rv->error = false;
+    jsend();
+}
+
+if ($uploadtype == 'bibimport') {
+    if (!isset($_FILES["files0"])) {
+        jquit('Could not find appropriate file in upload.');
+    }
+    $fileinfo = $_FILES["files0"];
+    if ($fileinfo["error"] !== 0) {
+        jquit('Error when uploading file.');
+    }
+    $origfilename = $fileinfo["name"];
+    $tmpname = $fileinfo["tmp_name"];
+    $extension = strtolower(pathinfo($origfilename, PATHINFO_EXTENSION));
+    if (!in_array($extension, array('bib','json','ris','xml','yaml','yml'))) {
+        jquit('File with inappropriate extension for bibliography ' +
+            'import uploaded.');
+    }
+    $filecontents = file_get_contents($tmpname);
+    $json = '';
+    if ($extension == 'json') {
+        $json = $filecontents;
+    } else {
+        $cmd = 'pandoc -t csljson ';
+        if ($extension == 'bib') {
+            $cmd .= '-f bibtex ';
+        }
+        if ($extension == 'ris') {
+            $cmd .= '-f ris ';
+        }
+        if ($extension == 'xml') {
+            $cmd .= '-f endnotexml ';
+        }
+        require_once(dirname(__FILE__) . '/../open-guide-editor/open-guide-misc/pipe.php');
+        $piperes = pipe_to_command($cmd, $filecontents);
+        if ($piperes->returnvalue != 0) {
+            jquit('Could not convert file: ' . $piperes->stderr);
+        }
+        $json = $piperes->stdout;
+    }
+    $rv->additions = json_decode($json);
+    if (!$rv->additions || count($rv->additions) == 0) {
+        jquit('Unable to decode bibliography items from file.');
+    }
     jsend();
 }
 

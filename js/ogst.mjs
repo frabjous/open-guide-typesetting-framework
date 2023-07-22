@@ -779,14 +779,14 @@ ogst.assignmentcard = function(
         parent: card.bibtopright,
         onchange: async function() {
             this.style.display = 'none';
-            this.mycard.bibuploading.style.display = 'inline-block';
+            this.mycard.bibuploadloading.style.display = 'inline-block';
             const req = {
                 uploadtype: 'bibimport',
                 assignmentId: this?.mycard?.assignmentId ?? 'none',
                 assignmentType: this?.mycard?.assignmentType ?? 'none',
             }
             const resp = await ogst.editorupload(this, req);
-            this.mycard.bibuploading.style.display = 'none';
+            this.mycard.bibuploadloading.style.display = 'none';
             this.style.display = 'inline';
             if (!resp) { return; }
             if (!resp?.additions) { return; }
