@@ -92,6 +92,7 @@ ogst.assignmentcard = function(
         tag: 'article',
         parent: sect,
         assignmentType: assignmentType,
+        isarchived: isarchived,
         classes: [
             'assignment',
             'ogst-' + assignmentType,
@@ -185,7 +186,6 @@ ogst.assignmentcard = function(
             this.innerHTML = ((this.isarchived) ? 'un' : '') + 'archive';
             if (!resp) { return; }
             if (req.makearchived) {
-                console.log("removing card");
                 this.mycard.parentNode.removeChild(this.mycard);
                 return;
             }
@@ -1135,6 +1135,10 @@ ogst.assignmentcard = function(
         }
         // do not open any of no assignmentId
         if (this.assignmentId == '') {
+            return;
+        }
+        // no not open any if archived
+        if (this.isarchived) {
             return;
         }
         if (!this.hasMetaData) {

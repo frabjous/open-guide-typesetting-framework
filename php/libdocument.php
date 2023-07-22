@@ -7,7 +7,6 @@
 // functions for working with markdown documents                       //
 /////////////////////////////////////////////////////////////////////////
 
-
 function extract_bibliography($markdown) {
     $lines = explode(PHP_EOL, $markdown);
     $ln = count($lines);
@@ -119,23 +118,7 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
         }
         // regular paragraphs to split?
         if ($splitsentences && mb_ereg_match('[A-Z]',$line)) {
-            $processedindex = 0;
-            for ($lookindex = 2; $lookindex < (mb_strlen($line)-3); $lookindex++) {
-                $char = mb_substr($line, $lookindex, 1);
-                if ($char == ' ') {
-                    $twobefore = mb_substr($line, ($lookindex-2), 2);
-                    $oneafter = mb_substr($line, $lookindex+1, 1);
-                    $break = (mb_ereg_match('[a-z][\.\?!]', $twobefore) &&
-                        mb_ereg_match('[A-Z]',$oneafter));
-                    if ($break) {
-                        $outcome .= mb_substr($line, $processedindex,
-                            ($lookindex - $processedindex)) . PHP_EOL;
-                        $processedindex = $lookindex+1;
-                    }
-                }
-            }
-            // add remainder
-            $outcome .= mb_substr($line, $processedindex) . PHP_EOL;
+            $outcome .= split_into_sentences($line) . PHP_EOL;
             continue;
         }
 
@@ -193,6 +176,32 @@ function join_names($names) {
         $ (isset($name->family)) {
             $rv .= $name->family;
         }
+    }
+    return $rv;
+}
+
+function split_into_sentences($line) {
+    $exploded = explode(' ', $line);
+    $rv = '';
+    foreach ($exploded as $n => $word) {
+        // just add last word; no space at end
+        if ($n == (count($exploded) - 1)) {
+            $rv .= $word;
+            break;
+        }
+        // get rid of double spaces
+        if ($word == '') { continue; }
+        $nextword = $exploded[$n+1];
+        // if next word starts with a capital and this
+        // word ends with a lowercase letter and a punctuation
+        // mark ending a sentence, it's a sentence break
+        if (mb_ereg_match('[A-Z]', $nextword) &&
+            mb_ereg_match('.*[a-z][\.\?!]$', $word)) {
+            $rv .= $word . PHP_EOL;
+            continue;
+        }
+        // otherwise add back the word and a space
+        $rv .= $word . ' ';
     }
     return $rv;
 }
