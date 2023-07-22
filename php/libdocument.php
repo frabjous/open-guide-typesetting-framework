@@ -57,3 +57,18 @@ function extract_bibliography($markdown) {
     }
     return array($markdown, '');
 }
+
+function fix_markdown($markdown. $splitsentences) {
+    $lines = explode(PHP_EOL, $markdown);
+    $firstline = true;
+    $outcome = '';
+    $found_acknowledgements = false;
+    foreach ($lines as $line) {
+    }
+}
+
+// remove title
+// remove abstract
+// remove fix sections including those with numbers
+// add acknowledgements, add unnumbered to it
+// split sentences
