@@ -64,7 +64,9 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
     $lines = explode(PHP_EOL, $markdown);
     $outcome = '';
     $found_acknowledgements = false;
-    foreach ($lines as $ln => $line) {
+    for ($ln=0; $ln<count($lines); $ln++) {
+        $line = $lines[$ln];
+        error_log('LN ' . $ln . ' line = ' . $lines[$ln]);
         // look for title, abstract, author, affiliation in first few lines
         // remove them (by skipping them with continue) if found
         if ($ln < 6) {
@@ -109,6 +111,7 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
             $fixedline =
                 mb_ereg_replace('\*+\s*[0-9]+\.\s*([^\.\*]+[^\s\*])\s*\*+$', '# \1', $line);
             // add blank line before if need be
+            error_log('=== ln = ' .$ln . ' ===== ln-1 ' . $lines[$ln-1]);
             if (($ln > 0) && ($lines[$ln - 1] != '')) {
                 $outcome .= PHP_EOL;
             }
@@ -124,7 +127,7 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
             if (($ln > 0) && ($lines[$ln - 1] != '')) {
                 $outcome .= PHP_EOL;
             }
-            $outcome .= PHP_EOL;
+            $outcome .= $line . PHP_EOL;
             // add a blank line afterwards if need be
             if (($ln < (count($lines) - 1)) && ($lines[$ln + 1] != '')) {
                 $outcome .= PHP_EOL;
