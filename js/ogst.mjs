@@ -775,7 +775,16 @@ ogst.assignmentcard = function(
         tag: 'input',
         type: 'file',
         accept: '.bib, .json, .ris, .xml, .yaml',
-        parent: card.bibtopright
+        mycard: card,
+        parent: card.bibtopright,
+        onchange: function() {
+            const req = {
+                uploadtype: 'bibimport',
+                assignmentId: this?.mycard?.assignmentId ?? 'none',
+                assignmentType: this?.mycard?.assignmentType ?? 'none',
+            }
+            ogst.editorupload(this, req);
+        }
     });
     card.bibcontents = addelem({
         tag: 'div',
