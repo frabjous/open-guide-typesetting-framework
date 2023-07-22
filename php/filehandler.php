@@ -111,6 +111,13 @@ if ($uploadtype == 'mainfile') {
     require_once(dirname(__FILE__) . '/libdocument.php');
     $markdown = $conv_result->stdout;
     [$markdown, $bibcontents] = extract_bibliography($markdown);
+    // fix up main file
+    $splitsentences =
+        (isset($project_settings->assignmentTypes->{$assignment_type}->splitsentences) &&
+        $project_settings->assignmentTypes->{$assignment_type}->splitsentences);
+    $markdown = fix_markdown($markdown, $splitsentences);
+
+    // save main file
     $markdown_file = $assignment_dir . '/main.md';
     // back up old main
     if (file_exists($markdown_file)) {

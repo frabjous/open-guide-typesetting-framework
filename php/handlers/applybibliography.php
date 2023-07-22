@@ -47,7 +47,6 @@ if (!$bibdata) {
 $mainfile = "$assigndir/main.md";
 
 if (!file_exists($mainfile)) {
-    error_log('==============================='.$mainfile);
     jquit("Could not find main document to which to apply bibliography.");
 }
 $mainmd = file_get_contents($mainfile);
