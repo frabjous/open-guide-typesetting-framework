@@ -35,6 +35,9 @@ function extract_bibliography($markdown) {
                 $s = mb_ereg_replace('\\\-','',$s);
                 // remove escaped single quotes
                 $s = mb_ereg_replace("\\\'","'",$s);
+                // remove escaped brackers
+                $s = mb_ereg_replace('\\\\[\[]','[',$s);
+                $s = mb_ereg_replace('\\\\[\]]',']',$s);
                 // add name from previous check if starts with numeral
                 if (mb_ereg_match('[0-9].*', $s)) {
                     if ($savedname != '') {
@@ -84,7 +87,7 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
             }
             if ((isset($metadata->author) &&
                 (squish($metadata->author[0]->email) == squish($line)) ||
-                (squish($metadata->email[0]->affiliation = squish($line))))) {
+                (squish($metadata->author[0]->affiliation == squish($line))))) {
                 continue;
             }
         }
@@ -127,7 +130,7 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
     }
     if (!$found_acknowledgements) {
         // add blank line beforehand if need be
-        if ($lines[ (count($lines) - 1) ] != '']) {
+        if ($lines[ (count($lines) - 1) ] != '') {
             $outcome .= PHP_EOL;
         }
         $outcome .= '## Acknowledgements {.unnumbered}' . PHP_EOL . PHP_EOL;
@@ -173,7 +176,7 @@ function join_names($names) {
         if (isset($name->{"non-dropping-particle"})) {
             $rv .= $name->{"non-dropping-particle"} . ' ';
         }
-        $ (isset($name->family)) {
+        if (isset($name->family)) {
             $rv .= $name->family;
         }
     }
@@ -195,8 +198,15 @@ function split_into_sentences($line) {
         // if next word starts with a capital and this
         // word ends with a lowercase letter and a punctuation
         // mark ending a sentence, it's a sentence break
-        if (mb_ereg_match('[A-Z]', $nextword) &&
-            mb_ereg_match('.*[a-z][\.\?!]$', $word)) {
+        if (mb_ereg_match('[\*\(]?[A-Z]', $nextword) &&
+            mb_ereg_match('.*[0-9a-z][\*\)]?[\.\?!]$', $word)) {
+            $rv .= $word . PHP_EOL;
+            continue;
+        }
+        // if next word starts with a capital and this one
+        // ends with a footnote, it's a sentence break
+        if (mb_ereg_match('[\*\(]?[A-Z]', $nextword) &&
+            mb_ereg_match('.*[\.\?!]\[\^[0-9]+\]', $word)) {
             $rv .= $word . PHP_EOL;
             continue;
         }
