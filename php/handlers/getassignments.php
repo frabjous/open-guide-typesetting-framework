@@ -89,6 +89,12 @@ foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_s
             $rv->{$assignment_type}->{$assignment_id}->biblastsaved =
                 $mtime;
         }
+        // read bibliography
+        if (in_array('all-bibinfo.json', $filenames)) {
+            $rv->bibdata = json_decode(file_get_contents(
+                $assignment_dir . '/all-bibinfo.json'
+            )) ?? false;
+        }
     }
 }
 

@@ -678,6 +678,7 @@ ogst.assignmentcard = function(
                 return;
             }
             const additions = [];
+            // note terminology: here "bibitems" are plain text entries
             const bibitems = resp.bibitems;
             for (let i=0; i<bibitems.length; i++) {
                 const bibitem = bibitems[i];
@@ -702,10 +703,9 @@ ogst.assignmentcard = function(
                 const ids = idresp.ids;
                 // look for best id by comparing first three letters
                 const want = bibitem.substr(0,3).toUpperCase();
-                const bibobj = {
+                let bibobj = {
                     extractedfrom: bibitem,
-                    possibilities: ids,
-                    data: {}
+                    possibilities: ids
                 }
                 let best = '';
                 if (ids.length > 0) {
@@ -735,8 +735,10 @@ ogst.assignmentcard = function(
                         return;
                     }
                     if (dataresp.data.length > 0) {
-                        bibobj.data = dataresp.data[0];
+                        bibobj = dataresp.data[0];
                         bibobj.philpapersid = best;
+                        bibobj.extractedfrom = bibitem;
+                        bibobj.possibilities = ids;
                     }
                 }
                 additions.push(bibobj);
@@ -805,7 +807,7 @@ ogst.assignmentcard = function(
         innerHTML: 'add new entry',
         onclick: function(e) {
             e.preventDefault();
-            this.mycard.addbibitems([{}], true);
+            this.mycard.addbibitems([{}]);
         }
     });
     card.addentrybtn.setAttribute('role','button');
