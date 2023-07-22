@@ -60,12 +60,17 @@ function extract_bibliography($markdown) {
     return array($markdown, '');
 }
 
-function fix_markdown($markdown, $metadata, $splitsentences = false) {
+function fix_markdown($markdown, $metadata, $importreplacements,
+    $splitsentences = false) {
     $lines = explode(PHP_EOL, $markdown);
     $outcome = '';
     $found_acknowledgements = false;
     for ($ln=0; $ln<count($lines); $ln++) {
         $line = $lines[$ln];
+        // do import replacements
+        foreach ($importreplacements as $regex => $repl) {
+            $line = mb_ereg_replace($regex, $repl, $line);
+        }
         // look for title, abstract, author, affiliation in first few lines
         // remove them (by skipping them with continue) if found
         if ($line != '' && (($ln <6) || (($ln+6)>count($lines)))) {

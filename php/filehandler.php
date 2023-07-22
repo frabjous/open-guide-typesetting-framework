@@ -122,7 +122,12 @@ if ($uploadtype == 'mainfile') {
     $splitsentences =
         (isset($project_settings->assignmentTypes->{$assignment_type}->splitsentences) &&
         $project_settings->assignmentTypes->{$assignment_type}->splitsentences);
-    $markdown = fix_markdown($markdown, $metadata, $splitsentences);
+    $importreplacements = new StdClass();
+    if (isset($project_settings->importreplacements)) {
+        $importreplacements = $project_settings->importreplacements;
+    }
+    $markdown = fix_markdown($markdown, $metadata,
+        $importreplacements, $splitsentences);
 
     // TODO: create oge-settings.json
 
