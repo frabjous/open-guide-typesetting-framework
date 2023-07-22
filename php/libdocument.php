@@ -68,7 +68,7 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
         $line = $lines[$ln];
         // look for title, abstract, author, affiliation in first few lines
         // remove them (by skipping them with continue) if found
-        if ($ln < 6 && $line != '') {
+        if ($line != '' && (($ln <6) || (($ln+6)>count($lines)))) {
             if (mb_ereg_match('\*+Abstract', $line)) {
                 continue;
             }
@@ -88,7 +88,7 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
             }
             if ((isset($metadata->author) &&
                 (squish($metadata->author[0]->email) == squish($line)) ||
-                (squish($metadata->author[0]->affiliation == squish($line))))) {
+                (squish($metadata->author[0]->affiliation) == squish($line)))) {
                 continue;
             }
         }
@@ -172,6 +172,7 @@ function join_authors($authors, $withemails = false, $withaffils = false) {
             $rv .= ' ' . $authorinfo->affiliation;
         }
     }
+    return $rv;
 }
 
 function join_names($names) {
