@@ -111,11 +111,20 @@ if ($uploadtype == 'mainfile') {
     require_once(dirname(__FILE__) . '/libdocument.php');
     $markdown = $conv_result->stdout;
     [$markdown, $bibcontents] = extract_bibliography($markdown);
+    // read metadata file if it exists, useful for fixing up the main file
+    $metadatafile = $assignment_dir . '/metadata.json';
+    $metadata = new StdClass();
+    if (file_exists($metadatafile)) {
+        $metadata = json_decode(file_get_contents($metadatafile)) ??
+            (new StdClass());
+    }
     // fix up main file
     $splitsentences =
         (isset($project_settings->assignmentTypes->{$assignment_type}->splitsentences) &&
         $project_settings->assignmentTypes->{$assignment_type}->splitsentences);
-    $markdown = fix_markdown($markdown, $splitsentences);
+    $markdown = fix_markdown($markdown, $metadata, $splitsentences);
+
+    // TODO: create oge-settings.json
 
     // save main file
     $markdown_file = $assignment_dir . '/main.md';
