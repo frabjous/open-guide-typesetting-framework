@@ -11,7 +11,7 @@ import csl from './csl.mjs';
 const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
 // main function for adding a bibitem
-export function addbibitems(itemarray, arenew = false) {
+export function addbibitems(itemarray) {
     // should be attached to card item
     const card = this;
     // sanity check
@@ -24,9 +24,7 @@ export function addbibitems(itemarray, arenew = false) {
         });
         // set key values from item
         bibitem.info = {};
-        if ("data" in item) {
-            bibitem.info = item.data;
-        }
+        bibitem.info = item;
         bibitem.possibilities = [];
         if ("possibilities" in item) {
             bibitem.possibilities = item.possibilities;
