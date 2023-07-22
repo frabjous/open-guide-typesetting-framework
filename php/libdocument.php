@@ -65,6 +65,7 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
     $found_acknowledgements = false;
     foreach ($lines as $ln => $line) {
         // look for title, abstract, author, affiliation in first few lines
+        // remove them (by skipping them with continue) if found
         if ($ln < 6) {
             if (mb_ereg_match('\*+Abstract', $line)) {
                 continue;
@@ -76,15 +77,52 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
                 (squish($metadata->title) == squish($line))) {
                 continue;
             }
+            if ((isset($metadata->author)) &&
+                ((squish(join_authors($metadata->author,false,false)) == squish($line)) ||
+                (squish(join_authors($metadata->author,false,true)) == squish($line)) ||
+                (squish(join_authors($metadata->author,true,false)) == squish($line)) ||
+                (squish(join_authors($metadata->author,true,true)) == squish($line)))) {
+                continue;
+            }
+            if ((isset($metadata->author) &&
+                (squish($metadata->author[0]->email) == squish($line)) ||
+                (squish($metadata->email[0]->affiliation = squish($line)))) {
+                continue;
+            }
+        }
+        if (squish($line) == 'acknowledgements') {
+            $found_acknowledgements = true;
+            // strip surrounding asterisks
+            $line = mb_ereg_replace('^\*+(.*[^\*])\*+$','\1', $line);
         }
     }
 }
 
-// remove title
-// remove abstract
 // remove fix sections including those with numbers
 // add acknowledgements, add unnumbered to it
 // split sentences
+
+// note: join_authors is based on metadata name arrays
+// and join_names is based on csl json name arrays
+function join_authors($authors, $withemails = false, $withaffils = false) {
+    $rv = '';
+    foreach ($authors as $n => $authorinfo) {
+        if ($n > 0) {
+            if ($n < (count($authors) - 1)) {
+                $rv .= ', ';
+            } else {
+                $rv .= ' and ';
+            }
+        }
+        $rv .= $authorinfo->name;
+        if ($withemails) {
+            $rv .= ' ' . $authorinfo->email;
+        }
+        if ($withaffils) {
+            $rv .= ' ' . $authorinfo->affiliation;
+        }
+    }
+}
 
 function join_names($names) {
     $rv = '';
