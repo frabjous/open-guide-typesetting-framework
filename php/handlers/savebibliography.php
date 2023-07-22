@@ -42,7 +42,7 @@ if (!$json_save || $json_save == 0) {
 
 // create csl-json file
 $cslarray = array();
-foreach ($bibinfo as $id => $bibentry) {
+foreach ($bibdata as $id => $bibentry) {
     foreach( array('abbreviation', 'possibilities',
         'philpapersid', 'extractedfrom') as $extrafield) {
         if (isset($bibentry->{$extrafield})) {
