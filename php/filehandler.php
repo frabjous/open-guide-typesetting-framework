@@ -204,6 +204,7 @@ if ($uploadtype == 'bibimport') {
         $json = $piperes->stdout;
     }
     $rv->additions = json_decode($json);
+    // delete the uploaded file now that we have its contents
     unlink($tmpname);
     if (!is_array($rv->additions)) {
         jquit('Wrong kind of json found in file.');

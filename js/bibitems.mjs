@@ -626,6 +626,16 @@ export function addbibitems(itemarray) {
                             const nameobj = {};
                             if (nf.given.value != '') {
                                 nameobj.given = nf.given.value;
+                                // impose my will universally on initials G. E. / W. V. O.
+                                // note the replacements use a thin space between $1 and $2
+                                if (/^[A-Z]\. ?[A-Z]\.$/.test(nameobj.given)) {
+                                    nameobj.given = nameobj.given.replace(/^([A-Z]\.) ?([A-Z]\.)/,"$1 $2");
+                                    nf.given.value = nameobj.given;
+                                }
+                                if (/^[A-Z]\. ?[A-Z]\. ?[A-Z]\.$/.test(nameobj.given)) {
+                                    nameobj.given = nameobj.given.replace(/^([A-Z]\.) ?([A-Z]\.) ? ([A-Z]\.)/,"$1 $2 $3");
+                                    nf.given.value = nameobj.given;
+                                }
                             }
                             for (const prtcl of ['von ', 'van ', 'de ', 'del ', 'der ', 'du ']) {
                                 if (family.substr(0, prtcl.length) == prtcl) {
