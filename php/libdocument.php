@@ -30,10 +30,12 @@ function extract_bibliography($markdown) {
                 $s = mb_ereg_replace('\*','',$l);
                 // remove double quotes
                 $s = mb_ereg_replace('["“”]','',$s);
+                // remove leading hyphens
+                $s = mb_ereg_replace('^-*\s*','',$s);
                 // remove escaped hyphens
                 $s = mb_ereg_replace('\\\-','',$s);
-                // remote leading hyphens
-                $s = mb_ereg_replace('^-*\s*','',$s);
+                // remove escaped single quotes
+                $s = mb_ereg_replace("\\\'","'",$s);
                 // add name from previous check if starts with numeral
                 if (mb_ereg_match('[0-9].*', $s)) {
                     if ($savedname != '') {
