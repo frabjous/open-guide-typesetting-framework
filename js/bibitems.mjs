@@ -86,8 +86,10 @@ export function addbibitems(itemarray) {
                     optelem.selected = true;
                 }
             }
-            if (this.reimportbtn) {
-                this.reimportbtn.innHTML = 'reimport';
+            if (bibitem.possibilities.length > 0) {
+                if (this.reimportbtn) {
+                    this.reimportbtn.innerHTML = 'reimport';
+                }
             }
         }
         // input to add arbitrary new phil papers id
