@@ -7,6 +7,31 @@
 // functions for working with markdown documents                       //
 /////////////////////////////////////////////////////////////////////////
 
+function apply_all_bibdata($markdown, $bibdata) {
+    foreach($bibdata as $keyid => $bibitem) {
+        // keyid should be same as id in bibitem, but just in case,
+        // we grab it if available
+        $id = $keyid;
+        if (isset($bibitem->id)) {
+            $id = $bibitem->id;
+        }
+        // replace abbreviations with links
+        if (isset($bibitem->abbreviation)) {
+            // shouldn't do it right after '[' do avoid duplication
+            $regex = '([^\[])\*' . $bibitem->abbreviation . '\*';
+            $res = '\1\[\*' . $bibitem->abbreviation . '\*\](#ref-' .
+                $id + ')';
+            $markdown = mb_ereg_replace($regex, $res, $markdown);
+        }
+        // do other substitutions
+        $markdown = apply_bibitem($markdown, $bibitem);
+    }
+    return $markdown;
+}
+
+function apply_bibitem($markdown, $bibitem) {
+}
+
 function extract_bibliography($markdown) {
     $lines = explode(PHP_EOL, $markdown);
     $ln = count($lines);
