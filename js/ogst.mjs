@@ -877,7 +877,7 @@ ogst.assignmentcard = function(
         mycard: card,
         parent: card.bibcontentbuttons,
         innerHTML: 'apply to document',
-        onclick: function() {
+        onclick: async function() {
             const card = this.mycard;
             if (!card?.assignmentId) {
                 card.reporterror('Cannot apply a bibliography without ' +
@@ -889,6 +889,22 @@ ogst.assignmentcard = function(
                     + 'before applying it.');
                 return;
             }
+            this.innerHTML = 'applying …';
+            this.setAttribute('aria-busy','true');
+            const req = {
+                postcmd: 'applybibliography',
+                assignmentId: card.assignmentId,
+                assignmentType: card.assignmentType
+            }
+            const resp = await ogst.editorquery(req);
+            this.removeAttribute('aria-busy');
+            this.innerHTML = 'apply to document';
+            if (!resp) { return; }
+            if ("biblastapplied" in resp) {
+                card.biblastapplied = resp.biblastapplied;
+            }
+            card.updatebibbuttons();
+            card.openNext();
         }
     });
     card.bibsavebutton.disabled = true;
@@ -1124,6 +1140,10 @@ ogst.assignmentcard = function(
         }
         if (this.mainuploadext == '') {
             this.uploadblock.setAttribute("open", "open");
+            return;
+        }
+        if (this.biblastapplied <= this.biblastchanged) {
+            this.bibblock.setAttribute("open", "open");
             return;
         }
     }
