@@ -105,9 +105,9 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
             continue;
         }
         // pseudo sections/subsections by lazy people
-        if (mb_ereg_match('\*+\s*[0-9]+\.\s*[^\.]+[^\s\*]\s*\*+$', $line)) {
+        if (mb_ereg_match('\*+\s*[0-9]+\.\s*[^\.\*]+[^\s\*]\s*\*+$', $line)) {
             $fixedline =
-                mb_ereg_replace('\*+\s*[0-9]+\.\s*([^\.]+[^\s\*])\s*\*+$', '# \1', $line);
+                mb_ereg_replace('\*+\s*[0-9]+\.\s*([^\.\*]+[^\s\*])\s*\*+$', '# \1', $line);
             // add blank line before if need be
             if (($ln > 0) && ($lines[$ln - 1] != '')) {
                 $outcome .= PHP_EOL;
@@ -119,8 +119,21 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
             }
             continue;
         }
+        // pad around headers
+        if (mb_ereg_match('#',$line)) {
+            if (($ln > 0) && ($lines[$ln - 1] != '')) {
+                $outcome .= PHP_EOL;
+            }
+            $outcome .= PHP_EOL;
+            // add a blank line afterwards if need be
+            if (($ln < (count($lines) - 1)) && ($lines[$ln + 1] != '')) {
+                $outcome .= PHP_EOL;
+            }
+            continue;
+        }
+
         // regular paragraphs to split?
-        if ($splitsentences && mb_ereg_match('[A-Z]',$line)) {
+        if ($splitsentences && mb_ereg_match('[\(]?[A-Z]',$line)) {
             $outcome .= split_into_sentences($line) . PHP_EOL;
             continue;
         }
@@ -198,14 +211,14 @@ function split_into_sentences($line) {
         // if next word starts with a capital and this
         // word ends with a lowercase letter and a punctuation
         // mark ending a sentence, it's a sentence break
-        if (mb_ereg_match('[\*\(]?[A-Z]', $nextword) &&
-            mb_ereg_match('.*[0-9a-z][\*\)]?[\.\?!]$', $word)) {
+        if (mb_ereg_match('[\*\(\'"]*[A-Z]', $nextword) &&
+            mb_ereg_match('.*[0-9a-z]["\'\*\)]*[\.\?!]$', $word)) {
             $rv .= $word . PHP_EOL;
             continue;
         }
         // if next word starts with a capital and this one
         // ends with a footnote, it's a sentence break
-        if (mb_ereg_match('[\*\(]?[A-Z]', $nextword) &&
+        if (mb_ereg_match('[\*\(\'"]*[A-Z]', $nextword) &&
             mb_ereg_match('.*[\.\?!]\[\^[0-9]+\]', $word)) {
             $rv .= $word . PHP_EOL;
             continue;
