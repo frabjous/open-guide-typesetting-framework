@@ -133,20 +133,47 @@ export function addbibitems(itemarray) {
                 this.removeAttribute('aria-busy');
                 this.innerHTML = 'reimport';
                 if (!req) { return; }
+                // we got data, process it
                 if (resp.data.length > 0) {
                     bibobj = dataresp.data[0];
+                    // set new philpapers id
                     bibitem.philpapersid = ppid;
                     bibobj.philpapersid = ppid;
-                    if (bib.itempossibilities.indexOf(ppid) == -1) {
+                    // add to possibilities drop down
+                    if (bibitem.possibilities.indexOf(ppid) == -1) {
                         bibitem.possibilities.push(ppid);
                         bibobj.philpapersid = bibitem.possibilities;
+                        bibitem.selppselectopts();
                     }
-                    bibitem.extractedfrom = '';
-                    bibobj.extractedfrom = '';
-                    
-
-                    bibobj.extractedfrom = bibitem;
-                    bibobj.possibilities = ids;
+                    // clear out new value for inserting yet another
+                    bibitem.newppinput.value = '';
+                    // preserve abbreviation, and extractedfrom
+                    const oldabbreviation = bibitem?.fields
+                        ?.abbreviation?.value ?? '';
+                    const oldextractedfrom = bibitem?.fields
+                        ?.extractedfrom?.value ?? '';
+                    // clear out old field table
+                    bibitem.info = bibobject;
+                    bibitem.fields = {};
+                    const trtr = bibitem.infotablebody
+                        .getElementsByTagName('tr');
+                    while (trtr.length > 0) {
+                        const ltr = trtr[ trtr.length - 1];
+                        ltr.parentNode.removeChild(ltr);
+                    }
+                    bibitem.addinfo('extractedfrom', oldextractedfrom);
+                    bibitem.addinfo('id', bibobj?.id ?? '');
+                    bibitem.addinfo('type', bibobj?.type ?? '');
+                    bibitem.addinfo('abbreviation', oldabbreviation);
+                    for (const prop in bibobj) {
+                        // skip the ones already handled
+                        if (prop == 'id' || prop == 'extractedfrom' ||
+                            prop == 'philpapersid' || prop == 'possibilities' ||
+                            prop == 'abbreviation' || prop == 'type') {
+                            continue;
+                        }
+                        bibitem.addinfo(prop, bibobj[prop]);
+                    }
                 } else {
                     if (bibitem.newppinput.value != '') {
                         bibitem.newppinput.setAttribute('aria-invalid','true');
@@ -788,13 +815,7 @@ export function getAllBibData(bibcontentsitems) {
             bibitem.fields.type.scrollIntoView();
             return false;
         }
-        // sort keys in item
-        const sortedinfo = {};
-        const sortedkeys = Object.keys(info).sort();
-        for (const key of sortedkeys) {
-            sortedinfo[key] = info[key];
-        }
-        unsorted[id] = sortedinfo;
+        unsorted[id] = info;
     }
     // sort all entries by id
     const sorted = {};
