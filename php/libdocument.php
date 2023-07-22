@@ -66,10 +66,9 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
     $found_acknowledgements = false;
     for ($ln=0; $ln<count($lines); $ln++) {
         $line = $lines[$ln];
-        error_log('LN ' . $ln . ' line = ' . $lines[$ln]);
         // look for title, abstract, author, affiliation in first few lines
         // remove them (by skipping them with continue) if found
-        if ($ln < 6) {
+        if ($ln < 6 && $line != '') {
             if (mb_ereg_match('\*+Abstract', $line)) {
                 continue;
             }
@@ -93,6 +92,7 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
                 continue;
             }
         }
+
         if ((squish($line) == 'acknowledgements') || (squish($line) == 'thanks')) {
             $found_acknowledgements = true;
             // add blank line before if need be
@@ -111,7 +111,6 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
             $fixedline =
                 mb_ereg_replace('\*+\s*[0-9]+\.\s*([^\.\*]+[^\s\*])\s*\*+$', '# \1', $line);
             // add blank line before if need be
-            error_log('=== ln = ' .$ln . ' ===== ln-1 ' . $lines[$ln-1]);
             if (($ln > 0) && ($lines[$ln - 1] != '')) {
                 $outcome .= PHP_EOL;
             }
@@ -140,7 +139,6 @@ function fix_markdown($markdown, $metadata, $splitsentences = false) {
             $outcome .= split_into_sentences($line) . PHP_EOL;
             continue;
         }
-
         // normal line, just push it to result
         $outcome .= $line . PHP_EOL;
     }
