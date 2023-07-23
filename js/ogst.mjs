@@ -974,6 +974,20 @@ ogst.assignmentcard = function(
     });
 
     // TODO: main file
+    card.editmainfilelabel = addelem({
+        tag: 'div',
+        innerHTML: 'Edit main file',
+        classes: ['editmainfilelabel'],
+        parent: card.editinner,
+    });
+    card.editanywaymsg = addelem({
+        tag: 'p',
+        innerHTML: '(The bibliography has not been applied to the main ' +
+            'file yet. Click <a href="' + editUrl(this.assignmentType,
+            this.assignmentId, 'main.md') + '" target="_blank">' +
+            'here to edit the main file anyway.)';
+        parent: card.editinner
+    });
 
     card.editsep = addelem({
         tag: 'p',
