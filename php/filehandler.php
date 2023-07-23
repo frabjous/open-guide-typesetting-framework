@@ -129,7 +129,6 @@ if ($uploadtype == 'mainfile') {
     $markdown = fix_markdown($markdown, $metadata,
         $importreplacements, $splitsentences);
 
-    // TODO: create oge-settings.json
 
     // save main file
     $markdown_file = $assignment_dir . '/main.md';
@@ -143,6 +142,7 @@ if ($uploadtype == 'mainfile') {
     if (!$saveresult || $saveresult == 0) {
         jquit('Could not save markdown file.');
     }
+    // save bibliography
     if ($bibcontents != '') {
         $bibfile = $assignment_dir . '/extracted-bib.txt';
         if (file_exists($bibfile)) {
@@ -155,6 +155,25 @@ if ($uploadtype == 'mainfile') {
             jquit('Could not save extracted bibliography.');
         }
         $rv->extractedbib = true;
+    }
+
+    // TODO: create oge-settings.json
+    $ogesettings = new StdClass();
+    $ogesettings->rootdocument = 'main.md';
+    $ogesettings->bibliographies = array('bibliography.json');
+    $ogesettings->routines = new StdClass();
+    $ogesettings->routines->md = new StdClass();
+    $outputinfo = new StdClass();
+    if (isset($project_settings->assignmentTypes->{$assignment_type}->output)) {
+        $outputinfo = $project_settings->assignmentTypes->{$assignment_type}->output;
+    }
+    foreach ($outputinfo as $outputext => $extinfo) {
+        if (isset($extinfo->editorcommand)) {
+            $ogesettings->routines->md->{$outputext} = new StdClass();
+            $command = $extinfo->editorcommand;
+            $command = str_replace('%projectdir%','"' . $projectdir . '"',$command);
+
+        }
     }
 
     $rv->error = false;
