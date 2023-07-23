@@ -32,11 +32,18 @@ if (!$assigndir) {
 }
 
 // create blank file
-$touchresult = touch("assigndir/main.md");
+$touchresult = touch("$assigndir/main.md");
 
 if (!$touchresult) {
     jquit('Could not create blank file. Please contact your ' .
         'site administrator.');
+}
+
+$ogesave = create_oge_settings($assignmentType, $assignmentId);
+
+if (!$ogesave) {
+    jquit('Could not create settings for the open guide editor. ' +
+        'Please contact your site administrator.');
 }
 
 // if we made it here, all was well
