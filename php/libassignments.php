@@ -34,3 +34,34 @@ function get_assignment_type_dir($assignment_type, $ensure = true) {
     }
     return $dir;
 }
+
+function create_oge_settings($assignment_type, $assignment_id) {
+    global $project_settings, $projectdir;
+    $assignment_dir =  get_assignment_dir($assignment_type,
+        $assignment_id, true);
+    if (!$assignment_dir) { return false; }
+    // create oge-settings.json
+    $ogesettings = new StdClass();
+    $ogesettings->rootdocument = 'main.md';
+    $ogesettings->bibliographies = array('bibliography.json');
+    $ogesettings->routines = new StdClass();
+    $ogesettings->routines->md = new StdClass();
+    $outputinfo = new StdClass();
+    if (isset($project_settings->assignmentTypes->{$assignment_type}->output)) {
+        $outputinfo = $project_settings->assignmentTypes->{$assignment_type}->output;
+    }
+    // look for commands for each output extension
+    foreach ($outputinfo as $outputext => $extinfo) {
+        if (isset($extinfo->editorcommand)) {
+            $ogesettings->routines->md->{$outputext} = new StdClass();
+            $command = $extinfo->editorcommand;
+            // fill in project directory in commands
+            $command = str_replace('%projectdir%',
+                '"' . $projectdir . '"', $command);
+            $ogesettings->routines->md->{$outputext}->command = $command;
+        }
+    }
+    $ogesettings_file = $assignment_dir . '/oge-settings.json';
+    return file_put_contents($ogesettings_file, json_encode($ogesettings,
+        JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
+}

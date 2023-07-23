@@ -172,17 +172,21 @@ ogst.assignmentcard = function(
         role: 'button',
         classes: ['outline'],
         isarchived: isarchived,
-        assignmentType: assignmentType,
-        assignmentId: assignmentId,
         mycard: card,
         parent: card.hdrright,
         innerHTML: ((isarchived) ? 'un' : '') + 'archive',
         onclick: async function() {
+            const card = this.mycard;
+            if (!card.assignmentId) {
+                card.reporterror('Cannot archive a document without an ID.');
+                return;
+            }
+            card.clearmessage();
             const req = {};
             req.postcmd = 'archive';
             req.makearchived = (!this.isarchived);
-            req.assignmentType = this.assignmentType;
-            req.assignmentId = this.assignmentId;
+            req.assignmentType = card.assignmentType;
+            req.assignmentId = card.assignmentId;
             if (req.makearchived) {
                 this.innerHTML = 'archiving …';
             } else {
@@ -1008,7 +1012,7 @@ ogst.assignmentcard = function(
             return;
         }
         const mainlink = editUrl(this.assignmentType,
-            this.assignmentId, 'main');
+            this.assignmentId, 'main.md');
         if (card.filenames.indexOf('main.md') == -1 &&
             card.mainuploadext == '') {
             card.editmainlink.style.display = 'none';
