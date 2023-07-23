@@ -557,7 +557,7 @@ export function addbibitems(itemarray) {
                     div.removename = function() {
                         const ff = this.getElementsByClassName("bibnamefields");
                         if (!ff || ff.length == 0) { return; }
-                        ff[0].parentNode.removeChild(ff[0]);
+                        ff[ ff.length - 1].parentNode.removeChild(ff[ ff.length - 1 ]);
                         this.updateInfo();
                     }
                     div.buttons = addelem({
