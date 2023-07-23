@@ -145,11 +145,6 @@ if ($uploadtype == 'mainfile') {
     // save bibliography
     if ($bibcontents != '') {
         $bibfile = $assignment_dir . '/extracted-bib.txt';
-        if (file_exists($bibfile)) {
-            $newbibfile = $assignment_dir . '/previous-' .
-                strval(filemtime($bibfile)) . '-extracted-bib.txt';
-            rename($bibfile, $newbibfile);
-        }
         $saveresult = file_put_contents($bibfile, $bibcontents);
         if (!$saveresult || $saveresult == 0) {
             jquit('Could not save extracted bibliography.');
@@ -157,7 +152,7 @@ if ($uploadtype == 'mainfile') {
         $rv->extractedbib = true;
     }
 
-    // TODO: create oge-settings.json
+    // create oge-settings.json
     $ogesettings = new StdClass();
     $ogesettings->rootdocument = 'main.md';
     $ogesettings->bibliographies = array('bibliography.json');
