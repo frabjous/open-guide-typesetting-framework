@@ -4,37 +4,47 @@
 // https://www.gnu.org/licenses/.
 
 ///////////////////// proofs/index.php /////////////////////////////////
-// Serves the 
+// Serves the main page proof editing and commenting page             //
+////////////////////////////////////////////////////////////////////////
 
 session_start();
+
+
 
 ?><!DOCTYPE html>
 <html lang="en">
     <head>
         <!-- standard metadata -->
         <meta charset="utf-8">
-        <meta name="description" content="A description of my site">
-        <meta name="author" content="Your name">
-        <meta name="copyright" content="© Your name">
-        <meta name="keywords" content="this,that,someotherthing">
-        <meta name="dcterms.date" content="TODAYSDATE">
+        <meta name="description" content="Open Guide Typesetting Proofs">
+        <meta name="author" content="Kevin C. Klement">
+        <meta name="copyright" content="Copyright 2023 © Kevin C. Klement">
+        <meta name="keywords" content="academic,typesetting,journal,anthology,guide,pages,proofs">
+        <meta name="dcterms.date" content="2023-07-23">
 
-        <!-- facebook opengraph stuff -->
-        <meta property="og:title" content="title">
-        <meta property="og:image" content="image_url">
-        <meta property="og:description" content="A description of my site">
-
-        <!-- if you want to disable search indexing -->
+        <!-- to disable search indexing -->
         <meta name="robots" content="noindex,nofollow">
 
-        <!-- if mobile ready -->
+        <!-- mobile ready -->
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="mobile-web-app-capable" content="yes">
 
         <!-- web icon -->
-        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
         <title>Page title</title>
+
+        <!-- simple css framework -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+            @import url('https://fonts.googleapis.com/css?family=Material+Symbols+Outlined');
+            :root {
+                --font-family: 'Nunito Sans', 'Roboto', 'Noto Sans', 'TeX Gyre Heros', 'Arimo', 'Helvetica', 'Arial', sans-serif;
+            }
+        </style>
+
 
         <!-- css file -->
         <!-- <link rel="stylesheet" type="text/css" href="/kcklib/kckdialog.css"> -->
