@@ -137,6 +137,9 @@ ogst.assignmentcard = function(
             this.mycard.assignmentId = this.value;
             this.mycard.updateTitle();
             this.mycard.clearmessage();
+            if (this.mycard.updateeditsection) {
+                this.mycard.updateeditsection();
+            }
             setTimeout(
                 () => {
                     this.mycard.openNext();
@@ -1007,7 +1010,7 @@ ogst.assignmentcard = function(
         const mainlink = editUrl(this.assignmentType,
             this.assignmentId, 'main');
         if (card.filenames.indexOf('main.md') == -1 &&
-            card.mainuploadext = '';) {
+            card.mainuploadext == '') {
             card.editmainlink.style.display = 'none';
             card.editanywaymsg.style.display = 'block';
             card.editanywaymsg.innerHTML = '';
@@ -1016,7 +1019,7 @@ ogst.assignmentcard = function(
                 parent: card.editanywaymsg,
                 innerHTML: '(A main document has not been uploaded ' +
                     'yet. If you would really like to create a blank ' +
-                    'one from scratch anyway, you can ';
+                    'one from scratch anyway, you can '
             });
             addelem({
                 tag: 'a',
@@ -1041,10 +1044,11 @@ ogst.assignmentcard = function(
                     card.editmainlink.innerHTML = 'edit main document ' +
                         '<span class="material-symbols-outlined">' +
                         'edit_note</span>';
-                    card.editmainklink.removeAttribute('aria-busy');
+                    card.editmainlink.removeAttribute('aria-busy');
                     if (!resp) { return; }
                     card.filenames.push('main.md');
                     window.open(this.mylink, "_blank");
+                    card.updateeditsection();
                 }
             });
             addelem({
@@ -1052,6 +1056,7 @@ ogst.assignmentcard = function(
                 parent: card.editanywaymsg,
                 innerHTML: '.)'
             });
+            return;
         }
 
 
@@ -1061,6 +1066,7 @@ ogst.assignmentcard = function(
             'here to edit the main file anyway.)';
         card.editmainlink.href = mainlink;
     }
+    card.updateeditsection();
     
     
     card.editsep = addelem({
