@@ -392,10 +392,10 @@ ogst.assignmentcard = function(
         parent: card.uploadblock
     });
     let filenames = [];
-    card.filenames = filenames;
     if ("filenames" in assignmentInfo) {
         filenames = assignmentInfo.filenames;
     }
+    card.filenames = filenames;
     card.mainuploadext = '';
     for (const filename of filenames) {
         if (filename.substr(0,11) == 'mainupload.') {
@@ -954,6 +954,9 @@ ogst.assignmentcard = function(
         } else {
             card.bibapplybutton.disabled = true;
         }
+        if (card.updateeditsection) {
+            card.updateeditsection();
+        }
 
     }
     card.addbibitems = addbibitems;
@@ -1063,11 +1066,17 @@ ogst.assignmentcard = function(
             return;
         }
 
-
-        card.editanywaymsg.innerHTML =
-            '(The bibliography has not been applied to the main ' +
-            'file yet. Click <a href="' + mainlink + '" target="_blank">' +
-            'here to edit the main file anyway.)';
+        if (card.biblastapplied == -1) {
+            card.editmainlink.style.display = 'none';
+            card.editanywaymsg.style.display = 'block';
+            card.editanywaymsg.innerHTML =
+                '(The bibliography has not been applied to the main ' +
+                'file yet. Click <a href="' + mainlink + '" target="_blank">' +
+                'here to edit the main file anyway.)';
+            return;
+        }
+        card.editmainlink.style.display = 'block';
+        edit.editanywaymsg.style.display = 'none';
         card.editmainlink.href = mainlink;
     }
     card.updateeditsection();
