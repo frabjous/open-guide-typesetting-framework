@@ -1076,7 +1076,7 @@ ogst.assignmentcard = function(
             return;
         }
         card.editmainlink.style.display = 'block';
-        edit.editanywaymsg.style.display = 'none';
+        card.editanywaymsg.style.display = 'none';
         card.editmainlink.href = mainlink;
     }
     card.updateeditsection();
