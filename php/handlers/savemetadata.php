@@ -135,6 +135,7 @@ foreach($metadata as $mkey => $mval) {
 // add universal nocite save yaml
 if ($yaml != '') {
     $yaml .= 'nocite: |' . PHP_EOL . '  @*' . PHP_EOL;
+    $yaml .= 'link-citations: true' . PHP_EOL;
     $yaml_file = "$assigndir/metadata.yaml";
     $yaml_save = file_put_contents($yaml_file, $yaml);
     if (!$yaml_save || $yaml_save == 0) {
