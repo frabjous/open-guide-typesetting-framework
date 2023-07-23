@@ -385,6 +385,7 @@ ogst.assignmentcard = function(
         parent: card.uploadblock
     });
     let filenames = [];
+    card.filenames = filenames;
     if ("filenames" in assignmentInfo) {
         filenames = assignmentInfo.filenames;
     }
@@ -982,13 +983,86 @@ ogst.assignmentcard = function(
     });
     card.editanywaymsg = addelem({
         tag: 'p',
-        innerHTML: '(The bibliography has not been applied to the main ' +
-            'file yet. Click <a href="' + editUrl(this.assignmentType,
-            this.assignmentId, 'main.md') + '" target="_blank">' +
-            'here to edit the main file anyway.)';
         parent: card.editinner
     });
+    card.editmainlink = addelem({
+        tag: 'a',
+        innerHTML: 'edit main document <span class="material-symbols-' +
+            'outlined">edit_note</span>',
+        classes: ['editmainbutton'],
+        target: '_blank',
+        parent: card.editinner
+    })
+    card.editmainlink.setAttribute('role', 'button');
+    card.updateeditsection = function() {
+        const card = this;
+        if (!card?.assignmentId) {
+            card.editmainlink.style.display = 'none';
+            card.editanywaymsg.style.display = 'block';
+            card.editanywaymsg.innerHTML = '(A document id must be ' +
+                'set, and a main document uploaded, before it ' +
+                'can be edited.)';
+            return;
+        }
+        const mainlink = editUrl(this.assignmentType,
+            this.assignmentId, 'main');
+        if (card.filenames.indexOf('main.md') == -1 &&
+            card.mainuploadext = '';) {
+            card.editmainlink.style.display = 'none';
+            card.editanywaymsg.style.display = 'block';
+            card.editanywaymsg.innerHTML = '';
+            addelem({
+                tag: 'span',
+                parent: card.editanywaymsg,
+                innerHTML: '(A main document has not been uploaded ' +
+                    'yet. If you would really like to create a blank ' +
+                    'one from scratch anyway, you can ';
+            });
+            addelem({
+                tag: 'a',
+                parent: card.editanywaymsg,
+                href: '#',
+                innerHTML: 'click here',
+                mycard: card,
+                mylink: mainlink,
+                onmousedown: function(e) { e.preventDefault(); },
+                onclick: async function(e) {
+                    e.preventDefault();
+                    const card = this.mycard;
+                    card.editmainlink.style.display = 'block';
+                    card.editmainlink.setAttribute('aria-busy', 'true');
+                    card.editmainlink.innerHTML = 'creating …';
+                    const req = {
+                        postcmd: 'createblankmain',
+                        assignmentId: card.assignmentId,
+                        assignmentType: card.assignmentType
+                    }
+                    const resp = await ogst.editorquery(req);
+                    card.editmainlink.innerHTML = 'edit main document ' +
+                        '<span class="material-symbols-outlined">' +
+                        'edit_note</span>';
+                    card.editmainklink.removeAttribute('aria-busy');
+                    if (!resp) { return; }
+                    card.filenames.push('main.md');
+                    window.open(this.mylink, "_blank");
+                }
+            });
+            addelem({
+                tag: 'span',
+                parent: card.editanywaymsg,
+                innerHTML: '.)'
+            });
+        }
 
+
+        card.editanywaymsg.innerHTML =
+            '(The bibliography has not been applied to the main ' +
+            'file yet. Click <a href="' + mainlink + '" target="_blank">' +
+            'here to edit the main file anyway.)';
+        card.editmainlink.href = mainlink;
+    }
+    
+    
     card.editsep = addelem({
         tag: 'p',
         parent: card.editinner
