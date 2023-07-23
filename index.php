@@ -77,7 +77,7 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
         <!--to disable search indexing -->
         <meta name="robots" content="noindex,nofollow">
 
-        <!-- if mobile ready -->
+        <!-- mobile ready -->
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="mobile-web-app-capable" content="yes">
