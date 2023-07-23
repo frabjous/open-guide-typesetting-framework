@@ -38,13 +38,31 @@ if (!$keys) {
     itanogo('Could not decode access key file.');
 }
 
-$accessinfo = false;
-foreach ($keys as $hash => $keyinfo) {
-    if (password_verify($key, $hash) {
-        $accessinfo = $keyinfo;
-    }
-}
-
-if (!$accessinfo) {
+if (!isset($keys->{$key})) {
     itsanogo('Invalid access key provided.');
 }
+$accessinfo = $keys->{$key};
+$project = $accessinfo->project ?? '';
+$editor = $accessinfo->editor ?? (new StdClass());
+$assignment_id = $accessinfo->assignmentId ?? '';
+$assignment_type = $accessinfo->assignmentType;
+$proofset = $accessinfo->proofset;
+
+require_once(dirname(__FILE__) . '/../php/libassignments.php';
+
+$assigndir = get_assignment_dir($assignment_type, $assignment_id, false);
+
+if (!$assigndir) {
+    itsanogo('Cannot find directory for this document.');
+}
+
+if (file_exists("$assigndir/archived")) {
+    itsanogo('Document has been archived. Proofs can no longer be examined.');
+}
+
+$proofdir = "$assigndir/proofs/$proofset";
+
+if (!is_dir($proofdir)) {
+    itsanogo('Requested proofs do not exist.');
+}
+
