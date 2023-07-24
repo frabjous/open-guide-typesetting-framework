@@ -78,6 +78,10 @@ function editUrl(assignmentType, assignmentId, filename) {
         '&basename=' + encodeURIComponent(filename);
 }
 
+function proofUrl(key) {
+    return 'proofs/?key' + encodeURIComponent(key);
+}
+
 function iseditable(fn) {
     const ext = fn.replace(/^.*\.([^\.]*)$/,'$1');
     return (editableexts.indexOf(ext) != -1);
@@ -1233,7 +1237,7 @@ ogst.assignmentcard = function(
     });
     card.proofstable = addelem({
         tag: 'table',
-        classes: ['proofslist'],
+        classes: ['proofslist','grid'],
         parent: card.proofsinner
     });
     card.proofstbdy = addelem({
@@ -1251,6 +1255,16 @@ ogst.assignmentcard = function(
                 '(or created) and edited.)';
             return;
         }
+
+        if (card.isarchived) {
+            card.createproofsbtn.style.display = 'none';
+            card.proofstable.style.display = 'none';
+            card.proofslabel.style.display = 'block';
+            card.proofslabel.innerHTML = '(Unarchive the document' +
+                'to re-enable creating/viewing its proof sets.)';
+            return;
+        }
+
         card.createproofsbtn.style.display = 'block';
         if (card.proofsets.length == 0) {
             card.proofstable.style.display = 'none';
@@ -1267,7 +1281,8 @@ ogst.assignmentcard = function(
         let ctr=0;
         for (const proofset of card.proofsets) {
             ctr++;
-            const key = proofset.key;
+            const ekey = proofset.ekey;
+            const akey = proofset.akey;
             const ofiles = proofset.outputfiles;
             const ts = proofset.settime;
             const dto = new Date(ts * 1000);
@@ -1276,12 +1291,47 @@ ogst.assignmentcard = function(
             const timed = addelem({
                 tag: 'td',
                 parent: trow,
-                innerHTML: ctr.toString() + '. Created ' + timstr
+                innerHTML: ctr.toString() + '. Created ' + timestr
             });
+            const elink = proofUrl(ekey);
+            const alink = proofUrl(akey);
+
             const elinkd = addelem({
                 tag: 'td',
-                // HERE
+                parent: trow,
+                innerHTML: '<a ref="' + elink + '" target="_blank">' +
+                    'editor link</a>'
             });
+            const alinkd = addelem({
+                tag: 'td',
+                parent: trow,
+                innerHTML: '<a ref="' + alink + '" target="_blank">' +
+                    'editor link</a>'
+            });
+            const dld = addelem({
+                tag: 'td',
+                parent: trow
+            });
+            for (const ofile of proofset.outputfiles) {
+                const ext = ofile.split('.').reverse()[0];
+                let ic = 'download';
+                if (ext in exticons) {
+                    ic = exticons[ext];
+                }
+                const dlb = addelem({
+                    tag: 'span',
+                    parent: dld,
+                    classes: ['material-symbols-outlined', 'proofsdl'],
+                    innerHTML: ic,
+                    mycard: card,
+                    onclick: function() {
+                        const card = this.mycard;
+                        ogst.editordownload(card.assignmentType,
+                            card.assignmentId, 'proofs/' +
+                            ts.toString() + '/' + ofile);
+                    }
+                });
+            }
         }
     }
     card.updateproofblock();
