@@ -29,7 +29,7 @@ if (!file_exists($keyfile)) {
     itsanogo('No access keys have been set for this site.');
 }
 
-$json = file_get_contents($keyfile);
+$json = file_get_contents($keyfile) ?? '';
 
 $keys = json_decode($json);
 
@@ -42,12 +42,12 @@ if (!isset($keys->{$key})) {
 }
 $accessinfo = $keys->{$key};
 $project = $accessinfo->project ?? '';
-$editor = $accessinfo->editor ?? (new StdClass());
+$username = $accessinfo->username ?? '';
 $assignment_id = $accessinfo->assignmentId ?? '';
-$assignment_type = $accessinfo->assignmentType;
-$proofset = $accessinfo->proofset;
+$assignment_type = $accessinfo->assignmentType ?? '';
+$proofset = $accessinfo->proofset ?? '';
 
-require_once(dirname(__FILE__) . '/../php/libassignments.php';
+require_once(dirname(__FILE__) . '/../php/libassignments.php');
 
 $assigndir = get_assignment_dir($assignment_type, $assignment_id, false);
 
