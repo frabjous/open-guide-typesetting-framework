@@ -79,7 +79,7 @@ function editUrl(assignmentType, assignmentId, filename) {
 }
 
 function proofUrl(key) {
-    return 'proofs/?key' + encodeURIComponent(key);
+    return 'proofs/?key=' + encodeURIComponent(key);
 }
 
 function iseditable(fn) {
@@ -1196,6 +1196,7 @@ ogst.assignmentcard = function(
     if ("proofsets" in assignmentInfo) {
         card.proofsets = assignmentInfo.proofsets;
     }
+    console.log(card.proofsets);
     card.createproofsbtn = addelem({
         tag: 'button',
         type: 'button',
@@ -1299,18 +1300,23 @@ ogst.assignmentcard = function(
             const elinkd = addelem({
                 tag: 'td',
                 parent: trow,
-                innerHTML: '<a ref="' + elink + '" target="_blank">' +
+                innerHTML: '<a href="' + elink + '" target="_blank">' +
                     'editor link</a>'
             });
             const alinkd = addelem({
                 tag: 'td',
                 parent: trow,
-                innerHTML: '<a ref="' + alink + '" target="_blank">' +
-                    'editor link</a>'
+                innerHTML: '<a href="' + alink + '" target="_blank">' +
+                    'author link</a>'
             });
             const dld = addelem({
                 tag: 'td',
                 parent: trow
+            });
+            const dldl = addelem({
+                tag: 'span',
+                parent: dld,
+                innerHTML: 'downloads: '
             });
             for (const ofile of proofset.outputfiles) {
                 const ext = ofile.split('.').reverse()[0];
@@ -1324,6 +1330,7 @@ ogst.assignmentcard = function(
                     classes: ['material-symbols-outlined', 'proofsdl'],
                     innerHTML: ic,
                     mycard: card,
+                    title: 'download ' + ofile,
                     onclick: function() {
                         const card = this.mycard;
                         ogst.editordownload(card.assignmentType,

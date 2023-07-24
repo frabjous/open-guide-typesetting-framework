@@ -106,7 +106,7 @@ foreach($ogesettings->routines->md as $outext => $routine) {
                 $convresult->stderr);
         }
     }
-    array_push($rv->proofset->outputfiles, $prooffilename);
+    array_push($rv->proofset->outputfiles, basename($prooffilename));
 }
 // copy main file
 $mfcopyres = copy('main.md', "$proofdir/main-" . strval($ts) . '.md');
@@ -126,7 +126,7 @@ $ekey = random_string(24);
 while (isset($keys->{$ekey})) {
     $ekey = random_string(24);
 }
-$rv->proofset->ekey = $key;
+$rv->proofset->ekey = $ekey;
 
 $keys->{$ekey} = new StdClass();
 $keys->{$ekey}->project = $project;
@@ -140,7 +140,7 @@ $akey = random_string(24);
 while (isset($keys->{$akey})) {
     $akey = random_string(24);
 }
-$rv->proofset->akey = $key;
+$rv->proofset->akey = $akey;
 
 $keys->{$akey} = new StdClass();
 $keys->{$akey}->project = $project;
