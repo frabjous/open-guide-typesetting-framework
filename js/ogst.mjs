@@ -57,6 +57,12 @@ const editwarnings = [
         'will be overwritten if it changes']
 ];
 
+const exticons = {
+    "epub": "install_mobile",
+    "html": "public",
+    "pdf": "picture_as_pdf"
+}
+
 // to save some typing
 function byid(id) {
     return document.getElementById(id);
@@ -1178,7 +1184,7 @@ ogst.assignmentcard = function(
     });
     card.proofsets = [];
     if ("proofsets" in assignmentInfo) {
-        card.proofsets = assignmentInfo;
+        card.proofsets = assignmentInfo.proofsets;
     }
     card.createproofsbtn = addelem({
         tag: 'button',
