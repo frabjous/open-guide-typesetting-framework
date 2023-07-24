@@ -455,6 +455,12 @@ ogst.assignmentcard = function(
                 this.mycard.updatebibbuttons();
             }
             this.mycard.updateuploadmain(resp.extension);
+            if (this.mycard.filenames) {
+                this.mycard.filenames.push('main.md');
+            }
+            if (this.mycard.updatebibbuttons) {
+                this.mycard.updatebibbuttons();
+            }
             this.mycard.openNext();
         }
     });
@@ -1080,8 +1086,6 @@ ogst.assignmentcard = function(
         card.editmainlink.href = mainlink;
     }
     card.updateeditsection();
-    
-    
     card.editsep = addelem({
         tag: 'p',
         parent: card.editinner
@@ -1172,6 +1176,51 @@ ogst.assignmentcard = function(
         tag: 'div',
         parent: card.proofsblock
     });
+    card.proofsets = [];
+    if ("proofsets" in assignmentInfo) {
+        card.proofsets = assignmentInfo;
+    }
+    card.createproofsbtn = addelem({
+        tag: 'button',
+        type: 'button',
+        innerHTML: 'create new proof set',
+        mycard: card,
+        onclick: async function() {
+            const card = this.mycard;
+            // sanity checks
+            if (!card?.assignmentId) {
+                return;
+            }
+            if (card.filenames.indexOf('main.md') == -1) {
+                return;
+            }
+            this.innerHTML = 'creating … (may take awhile)';
+            this.setAttribute('aria-busy', 'true');
+            const req = {
+                assignmentId: card.assignmentId,
+                assignmentType: card.assignmentType,
+                postcmd: 'createproofset'
+            }
+            const resp = await ogst.editorquery(req);
+            this.removeAttribute('aria-busy');
+            this.innerHTML = 'create new proof set';
+            if (!resp) { return; }
+            if (!("proofset" in resp)) { return; }
+            if (card.proofsets) {
+                card.proofsets.push(resp.proofset);
+            }
+            if (card.updateproofblock) {
+                card.updateproofblock();
+            }
+        }
+    });
+    card.updateproofblock = function() {
+        console.log(card.proofsets);
+        if (card.proofsets.length == 0) {
+            console.log('TODO: no proofsets.');
+        }
+    }
+    card.updateproofblock();
     //
     // Publication block
     //

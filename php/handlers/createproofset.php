@@ -64,7 +64,7 @@ if (!mkdir($proofdir, 0755, true)) {
     jquit('Could not create directory for proof set.');
 }
 
-$rv->proofset = (new StdClass());
+$rv->proofset = new StdClass();
 $rv->proofset->settime = $ts;
 $rv->proofset->outputfiles = array();
 
@@ -126,7 +126,7 @@ $key = random_string(24);
 while (isset($keys->{$key})) {
     $key = random_string(24);
 }
-$rv->key = $key;
+$rv->proofset->key = $key;
 
 $keys->{$key} = new StdClass();
 $keys->{$key}->project = $project;
