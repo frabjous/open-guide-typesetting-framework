@@ -1185,6 +1185,7 @@ ogst.assignmentcard = function(
         type: 'button',
         innerHTML: 'create new proof set',
         mycard: card,
+        parent: card.proofsinner,
         onclick: async function() {
             const card = this.mycard;
             // sanity checks

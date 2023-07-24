@@ -88,7 +88,7 @@ foreach($ogesettings->routines->md as $outext => $routine) {
         jquit('Error when processing markdown to ' . $outext . ': ' .
             $result->stderr);
     }
-    $prooffilename = $proofdir . '/' . $assignment_id . '.' . $outext;
+    $prooffilename = $proofdir . '/' . $assignmentId . '.' . $outext;
     $copyresult = copy($opts->outputfile, $prooffilename);
     if (!$copyresult) {
         jquit('Could not copy output file into proofs directory.');
