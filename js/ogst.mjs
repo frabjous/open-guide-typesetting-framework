@@ -1227,19 +1227,61 @@ ogst.assignmentcard = function(
             }
         }
     });
+    card.proofslabel = addelem({
+        tag: 'div',
+        parent: card.proofsinner
+    });
+    card.proofstable = addelem({
+        tag: 'table',
+        classes: ['proofslist'],
+        parent: card.proofsinner
+    });
+    card.proofstbdy = addelem({
+        tag: 'tbody',
+        parent: card.proofstable
+    });
     card.updateproofblock = function() {
         const card=this;
         if (card.filenames.indexOf('main.md') == -1) {
             card.createproofsbtn.style.display = 'none';
             card.proofstable.style.display = 'none';
+            card.proofslabel.style.display = 'block';
             card.proofslabel.innerHTML = '(Proofs can only be created ' +
                 'once the main document has been uploaded, converted ' +
                 '(or created) and edited.)';
             return;
         }
-        console.log(card.proofsets);
+        card.createproofsbtn.style.display = 'block';
         if (card.proofsets.length == 0) {
-            console.log('TODO: no proofsets.');
+            card.proofstable.style.display = 'none';
+             card.proofslabel.style.display = 'none';
+            return;
+        }
+        card.proofstable.style.display = 'block';
+        card.proofslabel.style.display = 'block';
+        card.proofslabel.innerHTML = 'Existing Proof Sets';
+        card.proofstbdy.innerHTML = '';
+        card.proofsets = card.proofsets.sort(function(a,b) {
+            return (a.settime - b.settime);
+        });
+        let ctr=0;
+        for (const proofset of card.proofsets) {
+            ctr++;
+            const key = proofset.key;
+            const ofiles = proofset.outputfiles;
+            const ts = proofset.settime;
+            const dto = new Date(ts * 1000);
+            const timestr = dto.toLocaleString();
+            const trow = addelem({ tag: 'tr', parent: card.proofstbdy });
+            const timed = addelem({
+                tag: 'td',
+                parent: trow,
+                innerHTML: ctr.toString() + '. Created ' + timstr
+            });
+            const elinkd = addelem({
+                tag: 'td',
+                // HERE
+            });
         }
     }
     card.updateproofblock();

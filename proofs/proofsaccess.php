@@ -46,6 +46,7 @@ $username = $accessinfo->username ?? '';
 $assignment_id = $accessinfo->assignmentId ?? '';
 $assignment_type = $accessinfo->assignmentType ?? '';
 $proofset = $accessinfo->proofset ?? '';
+$iseditor = (isset($accessinfo->editor) && $accessinfo->editor);
 
 require_once(dirname(__FILE__) . '/../php/libassignments.php');
 
