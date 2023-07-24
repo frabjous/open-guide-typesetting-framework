@@ -125,8 +125,14 @@ foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_s
                     ($prdata->assignmentId == $assignment_id) &&
                     ($prdata->assignmentType == $assignment_type) &&
                     ($prdata->proofset == $proofset)) {
-                    $newset->key = $key;
-                    break;
+                    if (isset($prdata->editor) && ($prdata->editor)) {
+                        $newset->ekey = $key;
+                    } else {
+                        $newset->akey = $key;
+                    }
+                    if (isset($newset->ekey) && (isset($newset->akey))) {
+                        break;
+                    }
                 }
             }
             if ($newset->key != '') {

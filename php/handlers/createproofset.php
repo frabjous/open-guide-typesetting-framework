@@ -114,7 +114,7 @@ if (!$mfcopyres) {
     jquit('Could not make a copy of the main file.');
 }
 
-// save key
+// save keys
 $keyfile = "$datadir/proofkeys.json";
 $keys = false;
 if (file_exists($keyfile)) {
@@ -122,18 +122,32 @@ if (file_exists($keyfile)) {
 }
 if (!$keys) { $keys = new StdClass(); }
 
-$key = random_string(24);
-while (isset($keys->{$key})) {
-    $key = random_string(24);
+$ekey = random_string(24);
+while (isset($keys->{$ekey})) {
+    $ekey = random_string(24);
 }
-$rv->proofset->key = $key;
+$rv->proofset->ekey = $key;
 
-$keys->{$key} = new StdClass();
-$keys->{$key}->project = $project;
-$keys->{$key}->username = $username;
-$keys->{$key}->assignmentId = $assignmentId;
-$keys->{$key}->assignmentType = $assignmentType;
-$keys->{$key}->proofset = strval($ts);
+$keys->{$ekey} = new StdClass();
+$keys->{$ekey}->project = $project;
+$keys->{$ekey}->username = $username;
+$keys->{$ekey}->assignmentId = $assignmentId;
+$keys->{$ekey}->assignmentType = $assignmentType;
+$keys->{$ekey}->proofset = strval($ts);
+$keys->{$ekey}->editor = true;
+
+$akey = random_string(24);
+while (isset($keys->{$akey})) {
+    $akey = random_string(24);
+}
+$rv->proofset->akey = $key;
+
+$keys->{$akey} = new StdClass();
+$keys->{$akey}->project = $project;
+$keys->{$akey}->username = $username;
+$keys->{$akey}->assignmentId = $assignmentId;
+$keys->{$akey}->assignmentType = $assignmentType;
+$keys->{$akey}->proofset = strval($ts);
 
 $saveres = file_put_contents($keyfile, json_encode($keys,
     JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
