@@ -1196,7 +1196,6 @@ ogst.assignmentcard = function(
     if ("proofsets" in assignmentInfo) {
         card.proofsets = assignmentInfo.proofsets;
     }
-    console.log(card.proofsets);
     card.createproofsbtn = addelem({
         tag: 'button',
         type: 'button',
