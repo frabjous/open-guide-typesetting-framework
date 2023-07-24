@@ -248,7 +248,7 @@ export function addbibitems(itemarray) {
                     value: val
                 });
                 bibitem.fields.extractedfrom.getVal = function() {
-                    return this.value;
+                    return this.value.trim();
                 }
                 if (val == '') {
                     tr.style.display = 'none';
@@ -344,14 +344,14 @@ export function addbibitems(itemarray) {
                             this.setAttribute('aria-invalid','true');
                             return;
                         }
-                        this.mybibitem.info.id = this.value;
+                        this.mybibitem.info.id = this.value.trim();
                         this.mybibitem.updateLabel();
                         this.mycard.biblastchanged =
                             Math.floor((new Date()).getTime()/1000);
                         this.mycard.updatebibbuttons();
                     },
                     getVal: function() {
-                        return this.value;
+                        return this.value.trim();
                     },
                     value: val
                 });
@@ -374,7 +374,7 @@ export function addbibitems(itemarray) {
                             this.setAttribute('aria-invalid','true');
                             return;
                         }
-                        this.mybibitem.info.abbreviation = this.value;
+                        this.mybibitem.info.abbreviation = this.value.trim();
                         this.mybibitem.updateLabel();
                         this.mycard.biblastchanged =
                             Math.floor((new Date()).getTime()/1000);
@@ -382,7 +382,7 @@ export function addbibitems(itemarray) {
 
                     },
                     getVal: function() {
-                        return this.value;
+                        return this.value.trim();
                     },
                     value: val
                 });
@@ -621,11 +621,11 @@ export function addbibitems(itemarray) {
                         if (!nfnf || nfnf.length == 0) { return ''; }
                         const rv = [];
                         for (const nf of nfnf) {
-                            let family = nf.family.value;
+                            let family = nf.family.value.trim();
                             if (family == '') { continue; }
                             const nameobj = {};
                             if (nf.given.value != '') {
-                                nameobj.given = nf.given.value;
+                                nameobj.given = nf.given.value.trim();
                                 // impose my will universally on initials G. E. / W. V. O.
                                 // note the replacements use a thin space between $1 and $2
                                 if (/^[A-Z]\. ?[A-Z]\.$/.test(nameobj.given)) {
@@ -677,7 +677,7 @@ export function addbibitems(itemarray) {
                 mykey: key,
                 mycard: card,
                 placeholder: placeholder,
-                getVal: function() { return this.value; },
+                getVal: function() { return this.value.trim(); },
                 onchange: function() {
                     this.mybibitem.info[this.mykey] = this.getVal();
                     this.mycard.biblastchanged =
