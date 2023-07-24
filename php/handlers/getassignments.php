@@ -95,6 +95,47 @@ foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_s
                 $assignment_dir . '/all-bibinfo.json'
             )) ?? false;
         }
+        // get info on proofs
+        $proofsdir = $assignment_dir . '/proofs';
+        if (!is_dir($proofsdir)) { continue; }
+        $rv->{$assignment_type}->{$assignment_id}->proofsets = array();
+        $proofsets = scandir($proofsdir);
+        // we need info on keys
+        $keyfile = "$datadir/proofkeys.json";
+        $proofkeys = json_decode(file_get_contents($keyfile) ?? '');
+        if (!$proofkeys) { $proofkeys = new StdClass(); }
+        foreach ($proofsets as $proofset) {
+            if ($proofset == '.' || $proofset == '..') { continue; }
+            if (!is_dir("$proofsdir/$proofset")) { continue; }
+            $ts = intval($proofset);
+            if ($ts == 0) { continue; }
+            $newset = new StdClass();
+            $newset->settime = $ts;
+            $newset->outputfiles = array();
+            $newset->key = '';
+            $prooffiles = scandir("$proofsdir/$proofset");
+            foreach ($prooffiles as $pfile) {
+                if (substr($pfile, 0, strlen($assignment_id)+1) ==
+                    ($assignment_id + '.')) {
+                    array_push($newset->prooffiles, $pfile);
+                }
+            }
+            foreach($proofkeys as $key => $prdata) {
+                if (($prdata->project == $project) &&
+                    ($prdata->assignmentId == $assignment_id) &&
+                    ($prdata->assignmentType == $assignment_type) &&
+                    ($prdata->proofset == $proofset)) {
+                    $newset->key = $key;
+                    break;
+                }
+            }
+            if ($newset->key != '') {
+                array_push(
+                    $rv->{$assignment_type}->{$assignment_id}->proofsets,
+                    $newset
+                );
+            }
+        }
     }
 }
 
