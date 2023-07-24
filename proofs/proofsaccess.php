@@ -22,7 +22,6 @@ if (!isset($_GET["key"])) {
 $key = $_GET["key"];
 
 require_once(dirname(__FILE__) . '/../php/readsettings.php');
-require_once(dirname(__FILE__) . '/../php/libauthentication.php');
 
 $keyfile = "$datadir/proofkeys.json";
 

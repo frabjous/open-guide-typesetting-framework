@@ -56,15 +56,76 @@ if (!isset($ogesettings->routines->md)) {
         'oge-settings.json file.');
 }
 
+$ts = time();
+$proofdir = $proofsdir . '/' . strval($ts);
+
+if (!mkdir($proofdir, 0755, true)) {
+    jquit('Could not create directory for proof set.');
+}
+
+$rv->proofset = (new StdClass());
+$rv->proofset->settime = $ts;
+$rv->proofset->outputfiles = array();
+
 require_once(dirname(__FILE__) . '/../../open-guide-editor/php/libprocessing.php');
 
+// move into assignment directory for processing
+if (!chdir($assigndir)) {
+    jquit('Could not change to appropriate directory.');
+}
+
+// process each output file
 foreach($ogesettings->routines->md as $outext => $routine) {
     $opts = new StdClass();
     $opts->routine = $routine;
     $opts->rootdocument = 'main.md';
     $opts->savedfile = 'main.md';
     $opts->outputfile = 'main.' . $outext;
+    $cmd = fill_processing_variables($opts, false);
+    $result = pipe_to_command($cmd);
+    if ($result->returnvalue != 0) {
+        jquit('Error when processing markdown to ' + $outext + ': ' +
+            $result->stderr);
+    }
+    $prooffilename = $proofdir . '/' . $assignment_id . '.' . $outext;
+    $copyresult = copy($opts->outputfile, $prooffilename);
+    if (!$copyresult) {
+        jquit('Could not copy output file into proofs directory.');
+    }
+    // convert PDF to pages
+    if ($outext == 'pdf' && file_exists($prooffilename)) {
+        $pagesdir = "$proofdir/pages";
+        if (!mkdir($pagesdir, 0755, true)) {
+            jquit('Could not create directory for pdf pages.');
+        }
+        $convresult = pipe_to_command('mutool draw -o "' .
+            $pagesdir . '/page%02d.svg" "' . $prooffilename . '"');
+        if ($convresult->returnvalue != 0) {
+            jquit('Could not convert pdf pages to images: ' .
+                $convresult->stderr);
+        }
+    }
+    array_push($rv->outputfiles, $prooffilename);
 }
+
+// save key
+$keyfile = "$datadir/proofkeys.json";
+$keys = false;
+if (file_exists($keyfile)) {
+    $keys = json_decode(file_get_contents($keyfile));
+}
+if (!$keys) { $keys = new StdClass(); }
+
+$key = random_string(24);
+while (isset($keys->{$key})) {
+    $key = random_string(4);
+}
+
+$keys->{$key} = new StdClass();
+$keys->{$key}->project = $project;
+$keys->{$key}->username = $username;
+$keys->{$key}->assignmentId = $assignmentId;
+$keys->{$key}->assignmentType = $assignmentType;
 
 // if we made it here, all was well
 $rv->success = true;
