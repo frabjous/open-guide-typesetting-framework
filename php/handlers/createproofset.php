@@ -28,8 +28,8 @@ require_once(dirname(__FILE__) . '/../libassignments.php');
 $assigndir = get_assignment_dir($assignmentType, $assignmentId);
 
 if (!$assigndir) {
-    jquit('Unable to find or create directory for document.' .
-    ' Contact your site administrator.');
+    jquit('Unable to find or create directory for document. ' .
+    'Contact your site administrator.');
 }
 
 $proofsdir = "$assigndir/proofs";
@@ -45,7 +45,7 @@ if (!file_exists($ogesettings_file)) {
     jquit('Could not find editor settings for processing files.');
 }
 
-$ogesettings = json_decode(file_get_contents($ogesettings_file)) ?? false;
+$ogesettings = json_decode(file_get_contents($ogesettings_file) ?? 'xx');
 
 if(!$ogesettings) {
     jquit('Could not load settings for editor for processing files.');
@@ -56,6 +56,7 @@ if (!isset($ogesettings->routines->md)) {
         'oge-settings.json file.');
 }
 
+// proof set is named after current timestamp
 $ts = time();
 $proofdir = $proofsdir . '/' . strval($ts);
 
@@ -84,7 +85,7 @@ foreach($ogesettings->routines->md as $outext => $routine) {
     $cmd = fill_processing_variables($opts, false);
     $result = pipe_to_command($cmd);
     if ($result->returnvalue != 0) {
-        jquit('Error when processing markdown to ' + $outext + ': ' +
+        jquit('Error when processing markdown to ' . $outext . ': ' .
             $result->stderr);
     }
     $prooffilename = $proofdir . '/' . $assignment_id . '.' . $outext;
@@ -105,7 +106,12 @@ foreach($ogesettings->routines->md as $outext => $routine) {
                 $convresult->stderr);
         }
     }
-    array_push($rv->outputfiles, $prooffilename);
+    array_push($rv->proofset->outputfiles, $prooffilename);
+}
+// copy main file
+$mfcopyres = copy('main.md', "$proofdir/main-" . strval($ts) . '.md');
+if (!$mfcopyres) {
+    jquit('Could not make a copy of the main file.');
 }
 
 // save key
@@ -118,14 +124,23 @@ if (!$keys) { $keys = new StdClass(); }
 
 $key = random_string(24);
 while (isset($keys->{$key})) {
-    $key = random_string(4);
+    $key = random_string(24);
 }
+$rv->key = $key;
 
 $keys->{$key} = new StdClass();
 $keys->{$key}->project = $project;
 $keys->{$key}->username = $username;
 $keys->{$key}->assignmentId = $assignmentId;
 $keys->{$key}->assignmentType = $assignmentType;
+$keys->{$key}->proofset = strval($ts);
+
+$saveres = file_put_contents($keyfile, json_encode($keys,
+    JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
+
+if (!$saveres || $saveres == 0) {
+    jquit('Could not save new proof access key.');
+}
 
 // if we made it here, all was well
 $rv->success = true;
