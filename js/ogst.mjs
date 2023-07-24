@@ -467,6 +467,9 @@ ogst.assignmentcard = function(
             if (this.mycard.updatebibbuttons) {
                 this.mycard.updatebibbuttons();
             }
+            if (this.mycard.updateproofblock) {
+                this.mycard.updateproofblock();
+            }
             this.mycard.openNext();
         }
     });
@@ -1068,6 +1071,9 @@ ogst.assignmentcard = function(
                     card.filenames.push('main.md');
                     window.open(this.mylink, "_blank");
                     card.updateeditsection();
+                    if (card.updateproofblock) {
+                        card.updateproofblock();
+                    }
                 }
             });
             addelem({
@@ -1222,6 +1228,15 @@ ogst.assignmentcard = function(
         }
     });
     card.updateproofblock = function() {
+        const card=this;
+        if (card.filenames.indexOf('main.md') == -1) {
+            card.createproofsbtn.style.display = 'none';
+            card.proofstable.style.display = 'none';
+            card.proofslabel.innerHTML = '(Proofs can only be created ' +
+                'once the main document has been uploaded, converted ' +
+                '(or created) and edited.)';
+            return;
+        }
         console.log(card.proofsets);
         if (card.proofsets.length == 0) {
             console.log('TODO: no proofsets.');
