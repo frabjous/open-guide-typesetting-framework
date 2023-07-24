@@ -116,8 +116,8 @@ foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_s
             $prooffiles = scandir("$proofsdir/$proofset");
             foreach ($prooffiles as $pfile) {
                 if (substr($pfile, 0, strlen($assignment_id)+1) ==
-                    ($assignment_id + '.')) {
-                    array_push($newset->prooffiles, $pfile);
+                    ($assignment_id . '.')) {
+                    array_push($newset->outputfiles, $pfile);
                 }
             }
             foreach($proofkeys as $key => $prdata) {
