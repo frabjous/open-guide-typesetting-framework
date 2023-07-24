@@ -135,7 +135,7 @@ foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_s
                     }
                 }
             }
-            if ($newset->key != '') {
+            if ($newset->ekey != '' && $newset->akey != '') {
                 array_push(
                     $rv->{$assignment_type}->{$assignment_id}->proofsets,
                     $newset

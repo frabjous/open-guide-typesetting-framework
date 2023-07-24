@@ -60,7 +60,7 @@ require_once(dirname(__FILE__) .
     '/../open-guide-editor/open-guide-misc/libservelet.php');
 
 $opts = array(
-    "attachmentname" => $filename,
+    "attachmentname" => basename($filename),
     "download" => true,
     "filename" => $fullfilename
 );
