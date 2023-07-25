@@ -493,13 +493,14 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
 
         <footer class="container-fluid">
             <p><small>The Open Guide Typesetting Framework is Copyright
-            2023 © <a href="https://people.umass.edu/klement">Kevin C.
-            Klement</a>. This is free software, which can be redistributed
-            and/or modified under the terms of the
-            <a href="https://www.gnu.org/licenses/gpl.html">GNU General
-            Public License (GPL), version 3</a>. See the <a
-            href="https://github.com/frabjous/open-guide-typesetting-framework">
-            project github page</a> for more information.</small></p>
+            2023 © <a href="https://people.umass.edu/klement" 
+            target="_blank">Kevin C. Klement</a>. This is free software,
+            which can be redistributed and/or modified under the terms of the
+            <a href="https://www.gnu.org/licenses/gpl.html" target="_blank">
+            GNU General Public License (GPL), version 3</a>. See the <a
+            href="https://github.com/frabjous/open-guide-typesetting-framework"
+            target="_blank">project github page</a> for more information.
+            </small></p>
         </footer>
 
     </body>
