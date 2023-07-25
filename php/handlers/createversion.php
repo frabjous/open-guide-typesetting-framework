@@ -80,16 +80,21 @@ foreach($create_instructions as $instruction) {
     $res = pipe_to_command($command);
     if ($res->returnvalue != 0) {
         jquit('Error in version creation' . ((isset($instruction->outputfile)) ?
-           ' (' . $instruction->outputfile . ')' : '') . ': ' . $rv->stderr);
+           ' (' . $instruction->outputfile . ')' : '') . ': ' . $res->stderr);
     }
-    if (isset($instruction->outputfile) && file_exists($instruction->outputfile)) {
-        $moveres = rename($instruction->outputfile, "$versiondir/" .
-            $instruction->outputfile);
-        if (!$moveres) {
-            jquit('Could not move an output file into the version ' .
-                'directory. Contact your site administrator.');
+    if (isset($instruction->outputfile)) {
+        $outputfile = $instruction->outputfile;
+        $outputfile = str_replace('%projectdir%','"' . $projectdir . '"', $outputfile);
+        $outputfile = str_replace('%documentid%', $assignmentId, $outputfile);
+        $outputfile = str_replace('%version%', $version, $outputfile);
+        if (file_exists($outputfile)) {
+            $moveres = rename($outputfile, "$versiondir/$outputfile");
+            if (!$moveres) {
+                jquit('Could not move an output file into the version ' .
+                    'directory. Contact your site administrator.');
+            }
+            array_push($rv->files, $instruction->outputfile);
         }
-        array_push($rv->files, $instruction->outputfile);
     }
 }
 
