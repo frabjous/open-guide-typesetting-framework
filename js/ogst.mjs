@@ -1421,6 +1421,7 @@ ogst.assignmentcard = function(
     });
     card.pubextractdiv = addelem({
         tag: 'div',
+        classes: ['pubversionextros'],
         parent: card.pubinner
     });
     card.pubextractdiv.style.display = 'none';
@@ -1439,7 +1440,7 @@ ogst.assignmentcard = function(
                 'created) a document and have edited it.)';
             return;
         }
-        card.pubbuttondiv.style.display = 'block';
+        card.pubbuttondiv.style.display = 'grid';
         let major = 0;
         let minor = 0;
         while (( (major+1).toString() + '.0' ) in card.editions) {
@@ -1547,11 +1548,64 @@ ogst.assignmentcard = function(
                         e.preventDefault();
                     },
                     mycard: card,
-                    onclick: function(e) {
+                    myversion: version,
+                    onclick: async function(e) {
                         e.preventDefault();
                         const card = this.mycard;
-                        card.pubextractdiv.innerHTML = this.innerHTML.replace('extract ','extracting ');
                         card.pubextractdiv.style.display = 'block';
+                        card.pubextractdiv.innerHTML = this.innerHTML.replace('extract ','extracting ');
+                        card.pubextractdiv.setAttribute('aria-busy','true');
+                        const req = {
+                            postcmd: 'extractfromversion',
+                            assignmendId: card.assignmentId,
+                            assignmentType: card.assignmentType,
+                            version: this.myversion
+                        }
+                        const resp = await ogst.editorquery(req);
+                        card.pubextractdiv.removeAttribute('aria-busy');
+                        card.pubextractdiv.innerHTML = '';
+                        if (!resp) { return; }
+                        if ("extractos" in resp) {
+                            for (const extracto in resp.extractos) {
+                                const label = addelem({
+                                    tag: 'label',
+                                    parent: card.pubextractdiv,
+                                    innerHTML: extracto
+                                });
+                                const textarea = addelem({
+                                    tag: 'textarea',
+                                    value: resp.extractos[extracto],
+                                    parent: card.pubextractdiv
+                                });
+                                const copybuttondiv = addelem({
+                                    tag: 'div',
+                                    parent: card.pubextractdiv,
+                                    classes: ['copybuttondiv']
+                                });
+                                const copybutton = addelem({
+                                    tag: 'a',
+                                    href: '#',
+                                    mytextarea: textarea,
+                                    innerHTML: 'copy to clipboard',
+                                    onmousedown: function(e) {
+                                        e.preventDefault();
+                                    },
+                                    onclick: function(e) {
+                                        e.preventDefault();
+                                        this.setAttribute('aria-busy','true');
+                                        this.innerHTML = 'copying';
+                                        if (navigator?.clipboard?.writeText) {
+                                            navigator.clipboard.writeText(this.mytextarea.value);
+                                        }
+                                        setTimeout(() => {
+                                            this.removeAttribute('aria-busy');
+                                            this.innerHTML = 'copied';
+                                        }, 1500);
+                                    }
+                                });
+                                copybutton.setAttribute('role','button');
+                            }
+                        }
                     }
                 });
             }
