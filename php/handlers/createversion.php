@@ -60,7 +60,7 @@ if (!isset($project_settings->assignmentTypes->{$assignmentType}->createEdition)
 $create_instructions =
     $project_settings->assignmentTypes->{$assignmentType}->createEdition;
 
-$rv->files = array();
+$rv->versioninfo->files = array();
 
 // move into assignment directory for processing
 if (!chdir($assigndir)) {
@@ -93,13 +93,13 @@ foreach($create_instructions as $instruction) {
                 jquit('Could not move an output file into the version ' .
                     'directory. Contact your site administrator.');
             }
-            array_push($rv->files, $instruction->outputfile);
+            array_push($rv->versioninfo->files, $outputfile);
         }
     }
 }
 
 $ts = time();
-$rv->creationtime = $ts;
+$rv->versioninfo->creationtime = $ts;
 
 // if we made it here, all was well
 $rv->success = true;
