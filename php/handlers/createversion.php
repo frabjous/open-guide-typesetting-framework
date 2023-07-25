@@ -57,124 +57,44 @@ if (!isset($project_settings->assignmentTypes->{$assignmentType}->createEdition)
         'project-settings.json file.');
 }
 
-$create_instructions = 
+$create_instructions =
     $project_settings->assignmentTypes->{$assignmentType}->createEdition;
 
 $rv->files = array();
-
-foreach($create_instructions as $instruction) {
-    $command="true";
-    if (isset($instruction->command)) {
-        $command = $instruction->command;
-        $command = str_replace('%projectdir%',"'" . $projectdir . "'");
-    }
-}
-
-
-$ts = time();
-$rv->creationtime = $ts;
-
-
-
-
-// proof set is named after current timestamp
-$proofdir = $proofsdir . '/' . strval($ts);
-
-if (!mkdir($proofdir, 0755, true)) {
-    jquit('Could not create directory for proof set.');
-}
-
-$rv->proofset = new StdClass();
-$rv->proofset->settime = $ts;
-$rv->proofset->outputfiles = array();
-
-require_once(dirname(__FILE__) . '/../../open-guide-editor/php/libprocessing.php');
 
 // move into assignment directory for processing
 if (!chdir($assigndir)) {
     jquit('Could not change to appropriate directory.');
 }
 
-// process each output file
-foreach($ogesettings->routines->md as $outext => $routine) {
-    $opts = new StdClass();
-    $opts->routine = $routine;
-    $opts->rootdocument = 'main.md';
-    $opts->savedfile = 'main.md';
-    $opts->outputfile = 'main.' . $outext;
-    $cmd = fill_processing_variables($opts, false);
-    $result = pipe_to_command($cmd);
-    if ($result->returnvalue != 0) {
-        jquit('Error when processing markdown to ' . $outext . ': ' .
-            $result->stderr);
+require_once(dirname(__FILE__) . '/../../open-guide-editor/open-guide-misc/pipe.php');
+
+foreach($create_instructions as $instruction) {
+    $command="true";
+    if (isset($instruction->command)) {
+        $command = $instruction->command;
+        $command = str_replace('%projectdir%','"' . $projectdir . '"', $command);
+        $command = str_replace('%documentid%', $assignmentId, $command);
+        $command = str_replace('%version%', $version, $command);
     }
-    $prooffilename = $proofdir . '/' . $assignmentId . '.' . $outext;
-    $copyresult = copy($opts->outputfile, $prooffilename);
-    if (!$copyresult) {
-        jquit('Could not copy output file into proofs directory.');
+    $res = pipe_to_command($command);
+    if ($res->returnvalue != 0) {
+        jquit('Error in version creation' . ((isset($instruction->outputfile)) ?
+           ' (' . $instruction->outputfile . ')' : '') . ': ' . $rv->stderr);
     }
-    // convert PDF to pages
-    if ($outext == 'pdf' && file_exists($prooffilename)) {
-        $pagesdir = "$proofdir/pages";
-        if (!mkdir($pagesdir, 0755, true)) {
-            jquit('Could not create directory for pdf pages.');
+    if (isset($instruction->outputfile) && file_exists($instruction->outputfile)) {
+        $moveres = rename($instruction->outputfile, "$versiondir/" .
+            $instruction->outputfile);
+        if (!$moveres) {
+            jquit('Could not move an output file into the version ' .
+                'directory. Contact your site administrator.');
         }
-        $convresult = pipe_to_command('mutool draw -o "' .
-            $pagesdir . '/page%02d.svg" "' . $prooffilename . '"');
-        if ($convresult->returnvalue != 0) {
-            jquit('Could not convert pdf pages to images: ' .
-                $convresult->stderr);
-        }
+        array_push($rv->files, $instruction->outputfile);
     }
-    array_push($rv->proofset->outputfiles, basename($prooffilename));
-}
-// copy main file
-$mfcopyres = copy('main.md', "$proofdir/main-" . strval($ts) . '.md');
-if (!$mfcopyres) {
-    jquit('Could not make a copy of the main file.');
 }
 
-// save keys
-$keyfile = "$datadir/proofkeys.json";
-$keys = false;
-if (file_exists($keyfile)) {
-    $keys = json_decode(file_get_contents($keyfile));
-}
-if (!$keys) { $keys = new StdClass(); }
-
-$ekey = random_string(24);
-while (isset($keys->{$ekey})) {
-    $ekey = random_string(24);
-}
-$rv->proofset->ekey = $ekey;
-
-$keys->{$ekey} = new StdClass();
-$keys->{$ekey}->project = $project;
-$keys->{$ekey}->username = $username;
-$keys->{$ekey}->assignmentId = $assignmentId;
-$keys->{$ekey}->assignmentType = $assignmentType;
-$keys->{$ekey}->proofset = strval($ts);
-$keys->{$ekey}->editor = true;
-
-$akey = random_string(24);
-while (isset($keys->{$akey})) {
-    $akey = random_string(24);
-}
-$rv->proofset->akey = $akey;
-
-$keys->{$akey} = new StdClass();
-$keys->{$akey}->project = $project;
-$keys->{$akey}->username = $username;
-$keys->{$akey}->assignmentId = $assignmentId;
-$keys->{$akey}->assignmentType = $assignmentType;
-$keys->{$akey}->proofset = strval($ts);
-
-$saveres = file_put_contents($keyfile, json_encode($keys,
-    JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
-
-if (!$saveres || $saveres == 0) {
-    jquit('Could not save new proof access key.');
-}
+$ts = time();
+$rv->creationtime = $ts;
 
 // if we made it here, all was well
 $rv->success = true;
