@@ -9,7 +9,7 @@
 
 session_start();
 
-
+require_once(dirname(__FILE__) . '/proofsaccess.php');
 
 ?><!DOCTYPE html>
 <html lang="en">
