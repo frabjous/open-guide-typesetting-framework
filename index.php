@@ -314,6 +314,17 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 color: var(--primary);
                 cursor: pointer;
             }
+            section article.assignment details.ogst-assignmentblock div.pubversionextros label {
+                margin-top: 1rem;
+            }
+
+            section article.assignment details.ogst-assignmentblock div.pubversionextros textarea {
+                resize: none;
+                height: 10rem;
+            }
+            section article.assignment details.ogst-assignmentblock div.pubversionextros div.copybuttondiv {
+                text-align: right;
+            }
         </style>
         <script>
             // starting globals
