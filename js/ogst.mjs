@@ -1366,10 +1366,27 @@ ogst.assignmentcard = function(
         classes: ['grid'],
         parent: card.pubinner
     });
-    card.createpubversion = function(b) {
+    card.createpubversion = async function(b) {
         const card=this;
         if (!b?.myversion) { return; }
-        console.log('I should create version ' + b.myversion);
+        b.innerHTML = 'creating …';
+        b.setAttribute('aria-busy','true');
+        const req = {
+            postcmd: 'createversion',
+            assignmentId: card.assignmentId,
+            assignmentType: card.assignmentType,
+            version: b.myversion
+        }
+        const resp = ogst.editorquery(req);
+        b.removeAttribute('aria-busy');
+        b.innerHTML = 'create version ' + b.myversion;
+        if (!resp) { return; }
+        if ("versioninfo" in resp) {
+            card.editions[b.myversion] = resp.versioninfo;
+        }
+        if (card.updatepubblock) {
+            card.updatepubblock();
+        }
     }
     card.pubminordiv = addelem({ tag: 'div', parent: card.pubbuttondiv });
     card.pubminorbtn = addelem({
