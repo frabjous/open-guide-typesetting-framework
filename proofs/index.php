@@ -42,9 +42,14 @@ require_once(dirname(__FILE__) . '/proofsaccess.php');
             @import url('https://fonts.googleapis.com/css?family=Material+Symbols+Outlined');
             :root {
                 --font-family: 'Nunito Sans', 'Roboto', 'Noto Sans', 'TeX Gyre Heros', 'Arimo', 'Helvetica', 'Arial', sans-serif;
+                --primary: hsl(195, 90%, 32%);
+                --primary-hover: hsl(195, 90%, 42%);
+                --panelbg: rgba(89, 107, 120, 0.125);
             }
             body {
                 font-family: var(--font-family);
+                font-size: 18px;
+                background-color: white;
                 display: flex;
                 flex-direction: column;
                 align-items: stretch;
@@ -54,13 +59,30 @@ require_once(dirname(__FILE__) . '/proofsaccess.php');
             }
             header {
                 flex-shrink: 0;
+                background-color: var(--panelbg);
+                border-bottom: 1px ridge var(--primary);
             }
             main {
                 flex-grow: 1;
-                background-color: red;
+                background-color: white;
             }
             footer {
+                border-top: 1px ridge var(--primary);
+                background-color: var(--panelbg);
                 flex-shrink: 0;
+                margin: 0;
+                padding: 0.5rem 1rem 0.5rem 1rem;
+            }
+            footer p {
+                margin: 0;
+            }
+            a, a:link, a:visited {
+                text-decoration: none;
+                color: var(--primary);
+            }
+            a:hover, a:link:hover, a:visited:hover {
+                color: var(--primary-hover);
+                text-decoration: underline;
             }
         </style>
 
@@ -84,13 +106,14 @@ require_once(dirname(__FILE__) . '/proofsaccess.php');
         <main></main>
         <footer>
             <p><small>The Open Guide Typesetting Framework is Copyright
-            2023 © <a href="https://people.umass.edu/klement">Kevin C.
-            Klement</a>. This is free software, which can be redistributed
-            and/or modified under the terms of the
-            <a href="https://www.gnu.org/licenses/gpl.html">GNU General
-            Public License (GPL), version 3</a>. See the <a
-            href="https://github.com/frabjous/open-guide-typesetting-framework">
-            project github page</a> for more information.</small></p>
+            2023 © <a href="https://people.umass.edu/klement" 
+            target="_blank">Kevin C. Klement</a>. This is free software,
+            which can be redistributed and/or modified under the terms of the
+            <a href="https://www.gnu.org/licenses/gpl.html" target="_blank">
+            GNU General Public License (GPL), version 3</a>. See the <a
+            href="https://github.com/frabjous/open-guide-typesetting-framework"
+            target="_blank">project github page</a> for more information.
+            </small></p>
         </footer>
     </body>
 </html>
