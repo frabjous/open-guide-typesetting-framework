@@ -309,6 +309,7 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
                 padding-top: 1rem;
                 vertical-align: top;
             }
+            section article.assignment details.ogst-assignmentblock table.editionstable span.pubsdl,
             section article.assignment details.ogst-assignmentblock table.proofslist span.proofsdl {
                 color: var(--primary);
                 cursor: pointer;
