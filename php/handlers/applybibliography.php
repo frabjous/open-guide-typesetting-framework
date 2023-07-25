@@ -51,7 +51,6 @@ if (!file_exists($mainfile)) {
 }
 $mainmd = file_get_contents($mainfile);
 
-// TODO: put real stuff here
 require_once(dirname(__FILE__) . '/../libdocument.php');
 
 $mainmd = apply_all_bibdata($mainmd, $bibdata);
