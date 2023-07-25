@@ -39,30 +39,45 @@ if (!$assigndir) {
 
 $editionsdir = "$assigndir/editions";
 
-if (!is_dir($proofsdir) && !mkdir($proofsdir, 0755, true)) {
-    jquit('Could not find or create directory for proofs.');
+$versiondir = "$editionsdir/$version";
+
+if (is_dir($versiondir)) {
+    jquit('An edition with that version number already exists!');
 }
 
-// load oge settings so we know how to process the files
-$ogesettings_file = "$assigndir/oge-settings.json";
-
-if (!file_exists($ogesettings_file)) {
-    jquit('Could not find editor settings for processing files.');
+if (!mkdir($versiondir, 0755, true)) {
+    jquit('Could not create version directory. ' +
+        'Contact your site administrator.');
 }
 
-$ogesettings = json_decode(file_get_contents($ogesettings_file) ?? 'xx');
+$rv->versioninfo = new StdClass();
 
-if(!$ogesettings) {
-    jquit('Could not load settings for editor for processing files.');
+if (!isset($project_settings->assignmentTypes->{$assignmentType}->createEdition)) {
+    jquit('Project is not configured to create editions. Check your ' +
+        'project-settings.json file.');
 }
 
-if (!isset($ogesettings->routines->md)) {
-    jquit('No routines set for creating proofs. Check your ' .
-        'oge-settings.json file.');
+$create_instructions = 
+    $project_settings->assignmentTypes->{$assignmentType}->createEdition;
+
+$rv->files = array();
+
+foreach($create_instructions as $instruction) {
+    $command="true";
+    if (isset($instruction->command)) {
+        $command = $instruction->command;
+        $command = str_replace('%projectdir%',"'" . $projectdir . "'");
+    }
 }
+
+
+$ts = time();
+$rv->creationtime = $ts;
+
+
+
 
 // proof set is named after current timestamp
-$ts = time();
 $proofdir = $proofsdir . '/' . strval($ts);
 
 if (!mkdir($proofdir, 0755, true)) {
