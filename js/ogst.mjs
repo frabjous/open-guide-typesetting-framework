@@ -1557,7 +1557,7 @@ ogst.assignmentcard = function(
                         card.pubextractdiv.setAttribute('aria-busy','true');
                         const req = {
                             postcmd: 'extractfromversion',
-                            assignmendId: card.assignmentId,
+                            assignmentId: card.assignmentId,
                             assignmentType: card.assignmentType,
                             version: this.myversion
                         }
@@ -1586,6 +1586,7 @@ ogst.assignmentcard = function(
                                     tag: 'a',
                                     href: '#',
                                     mytextarea: textarea,
+                                    parent: copybuttondiv,
                                     innerHTML: 'copy to clipboard',
                                     onmousedown: function(e) {
                                         e.preventDefault();
@@ -1600,7 +1601,7 @@ ogst.assignmentcard = function(
                                         setTimeout(() => {
                                             this.removeAttribute('aria-busy');
                                             this.innerHTML = 'copied';
-                                        }, 1500);
+                                        }, 100);
                                     }
                                 });
                                 copybutton.setAttribute('role','button');
@@ -1660,7 +1661,10 @@ ogst.assignmentcard = function(
         card.msg.classList.remove('okmsg');
         card.msg.innerHTML = '';
     }
-
+    card.mainfilechanged = 0;
+    if ("mainfilechanged" in assignmentInfo) {
+        card.mainfilechanged = assignmentInfo.mainfilechanged;
+    }
     card.openNext = function() {
         // close all accordians
         let dd = this.getElementsByTagName('details');
@@ -1686,6 +1690,36 @@ ogst.assignmentcard = function(
         if (this.biblastapplied <= this.biblastchanged) {
             this.bibblock.setAttribute("open", "open");
             return;
+        }
+        // once we get here we work upwards towards edit document
+        let neededit = true;
+        if (this?.editions && Object.keys(this.editions).length > 0) {
+            neededit = false;
+            let ctime = 0;
+            for (const version in this.editions) {
+                if (this.editions?.creationtime > ctime) {
+                    ctime = this.editions.creationtime;
+                }
+            }
+            if (ctime != 0 && this.mainfilechanged > ctime) {
+                this.pubblock.setAttribute("open", "open");
+                return;
+            }
+        }
+        if (this?.proofsets && this.proofsets.length > 0) {
+            neededit = false;
+            let ptime = 0;
+            for (const proofset of this.proofsets) {
+                if (proofset.ts > ptime) {
+                    ptime = proofset.ts;
+                }
+            }
+            if (ptime != 0 && this.mainfilechanged > ptime) {
+                this.proofsblock.setAttribute("open", "open");
+            }
+        }
+        if (neededit) {
+            this.editblock.setAttribute("open", "open");
         }
     }
 

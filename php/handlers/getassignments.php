@@ -89,6 +89,10 @@ foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_s
             $rv->{$assignment_type}->{$assignment_id}->biblastsaved =
                 $mtime;
         }
+        if (in_array('main.md', $filenames)) {
+            $rv->{$assignment_type}->{$assignment_id}->mainfilechanged =
+                filemtime($assignment_dir . '/main.md');
+        }
         // read bibliography
         if (in_array('all-bibinfo.json', $filenames)) {
             $rv->{$assignment_type}->{$assignment_id}->bibdata = json_decode(file_get_contents(
