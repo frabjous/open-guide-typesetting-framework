@@ -35,13 +35,32 @@ require_once(dirname(__FILE__) . '/proofsaccess.php');
         <title>Page title</title>
 
         <!-- simple css framework -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+        <!--link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" -->
 
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
             @import url('https://fonts.googleapis.com/css?family=Material+Symbols+Outlined');
             :root {
                 --font-family: 'Nunito Sans', 'Roboto', 'Noto Sans', 'TeX Gyre Heros', 'Arimo', 'Helvetica', 'Arial', sans-serif;
+            }
+            body {
+                font-family: var(--font-family);
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                height: 100vh;
+                width: 100vw;
+                margin: 0;
+            }
+            header {
+                flex-shrink: 0;
+            }
+            main {
+                flex-grow: 1;
+                background-color: red;
+            }
+            footer {
+                flex-shrink: 0;
             }
         </style>
 
@@ -61,5 +80,17 @@ require_once(dirname(__FILE__) . '/proofsaccess.php');
 
     </head>
     <body>
+        <header>Here</header>
+        <main></main>
+        <footer>
+            <p><small>The Open Guide Typesetting Framework is Copyright
+            2023 © <a href="https://people.umass.edu/klement">Kevin C.
+            Klement</a>. This is free software, which can be redistributed
+            and/or modified under the terms of the
+            <a href="https://www.gnu.org/licenses/gpl.html">GNU General
+            Public License (GPL), version 3</a>. See the <a
+            href="https://github.com/frabjous/open-guide-typesetting-framework">
+            project github page</a> for more information.</small></p>
+        </footer>
     </body>
 </html>
