@@ -1439,7 +1439,7 @@ ogst.assignmentcard = function(
                 'created) a document and have edited it.)';
             return;
         }
-        card.pubbuttondiv.style.display = 'grid';
+        card.pubbuttondiv.style.display = 'block';
         let major = 0;
         let minor = 0;
         while (( (major+1).toString() + '.0' ) in card.editions) {
@@ -1477,7 +1477,6 @@ ogst.assignmentcard = function(
         card.editionstbdy.innerHTML ='';
         for (const version of editionversions) {
             const versioninfo = card.editions[version];
-            console.log(versioninfo);
             const trow = addelem({tag: 'tr', parent: card.editionstbdy});
             let ctime = 'unknown';
             if ("creationtime" in versioninfo) {
@@ -1488,6 +1487,11 @@ ogst.assignmentcard = function(
                 tag: 'td',
                 parent: trow,
                 innerHTML: '<strong>' + version + '</strong> (' + ctime + ')'
+            });
+            const ziptd = addelem({
+                tag: 'td',
+                classes: ['editiondownloads'],
+                parent: trow
             });
             const dltd = addelem({
                 tag: 'td',
@@ -1516,9 +1520,11 @@ ogst.assignmentcard = function(
                 if (ext in exticons) {
                     ic = exticons[ext];
                 }
+                let parnode = dltd;
+                if (ext == 'zip') { parnode = ziptd; };
                 const dlb = addelem({
                     tag: 'span',
-                    parent: dltd,
+                    parent: parnode,
                     classes: ['material-symbols-outlined', 'pubsdl'],
                     innerHTML: ic,
                     mycard: card,
@@ -1540,9 +1546,12 @@ ogst.assignmentcard = function(
                     onmousedowndown: function(e) {
                         e.preventDefault();
                     },
+                    mycard: card,
                     onclick: function(e) {
                         e.preventDefault();
-                        // TODO
+                        const card = this.mycard;
+                        card.pubextractdiv.innerHTML = this.innerHTML.replace('extract ','extracting ');
+                        card.pubextractdiv.style.display = 'block';
                     }
                 });
             }
