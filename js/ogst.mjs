@@ -1246,6 +1246,9 @@ ogst.assignmentcard = function(
     });
     card.updateproofblock = function() {
         const card=this;
+        if (card.updatepubblock) {
+            card.updatepubblock();
+        }
         if (card.filenames.indexOf('main.md') == -1) {
             card.createproofsbtn.style.display = 'none';
             card.proofstable.style.display = 'none';
@@ -1271,7 +1274,7 @@ ogst.assignmentcard = function(
              card.proofslabel.style.display = 'none';
             return;
         }
-        card.proofstable.style.display = 'block';
+        card.proofstable.style.display = 'table';
         card.proofslabel.style.display = 'block';
         card.proofslabel.innerHTML = 'Existing Proof Sets';
         card.proofstbdy.innerHTML = '';
@@ -1358,7 +1361,147 @@ ogst.assignmentcard = function(
         tag: 'div',
         parent: card.pubblock
     });
-
+    card.pubbuttondiv = addelem({
+        tag: 'div',
+        parent: card.pubinner
+    });
+    card.pubbuttondiv.setAttribute('role','grid');
+    card.pubminorbtn = addelem({
+        tag: 'button',
+        type: 'button',
+        parent: card.pubbuttondiv,
+        mycard: card,
+    });
+    card.pubmajorbtn = addelem({
+        tag: 'button',
+        type: 'button',
+        parent: card.pubbuttondiv,
+        mycard: card
+    });
+    card.editionslabel= addelem({
+        tag: 'div',
+        parent: card.pubinner
+    });
+    card.editionstable = addelem({
+        tag: 'table',
+        classes: ['editionstable'],
+        parent: card.pubinner
+    });
+    card.editionstbdy = addelem({
+        tag: 'tbody',
+        parent: card.editionstable
+    });
+    card.pubextractdiv = addelem({
+        tag: 'div',
+        parent: card.pubinner
+    });
+    card.pubextractdiv.style.display = 'none';
+    card.editions = {};
+    if ("editions" in assignmentInfo) {
+        card.editions = assignmentInfo.editions;
+    }
+    card.updatepubblock = function() {
+        const card=this;
+        if (card.filenames.indexOf('main.md') == -1) {
+            card.pubbuttondiv.style.display = 'none';
+            card.editionstable.style.display = 'none';
+            card.editionslabel.style.display = 'block';
+            card.editionslabel.innerHTML = '(You cannot create a ' +
+                'publication edition until you have uploaded (or ' +
+                'created) a document and have edited it.)';
+            return;
+        }
+        card.pubbuttondiv.style.display = 'block';
+        const editionversions = Object.keys(card.editions);
+        if (editionversions.length == 0) {
+            card.editionslabel.style.display = 'none';
+            card.editionstable.style.display = 'none';
+            return;
+        }
+        card.editionslabel.style.display = 'block';
+        card.editionstable.style.display = 'table';
+        card.editionslabel.innerHTML = 'Publication editions';
+        // sort editions
+        editionversions = editionversions.sort(function(a,b) {
+            const aparts = a.split('.');
+            const bparts = b.split('.');
+            if (parseInt(aparts[0]) != parseInt(bparts[0])) {
+                return parseInt(aparts[0]) - parseInt(bparts[0]);
+            }
+            return parseInt(aparts[1]) - parseInt(bparts[0]);
+        });
+        card.editionstbdy.innerHTML ='';
+        for (const version of editionversions) {
+            const versioninfo = card.editions[version];
+            const trow = addelem({tag: 'tr', parent: card.editionstbdy});
+            let ctime = 'unknown';
+            if ("creationtime" in versioninfo) {
+                ctime = (new Date(versioninfo.creationtime * 1000))
+                    .toLocaleDateString();
+            }
+            const verstd = addelem({
+                tag: 'td',
+                parent: trow,
+                innerHTML: '<strong>' + version + '</strong> (' + ctime + ')'
+            });
+            const dltd = addelem({
+                tag: 'td',
+                classes: ['editiondownloads'],
+                parent: trow
+            });
+            const extrtd = addelem({
+                tag: 'td',
+                classes: ['editionextracts'],
+                parent: trow
+            });
+            if (!("files" in versioninfo)) {
+                continue;
+            }
+            let extractlist = '';
+            for (const file of versioninfo.files) {
+                const ext = file.split('.').reverse()[0];
+                if (ext == 'txt') {
+                    if (extractlist != '') {
+                        extractlist += ', ';
+                    }
+                    extractlist += file.replace(/\.txt$/,'');
+                    continue;
+                }
+                let ic = 'download';
+                if (ext in exticons) {
+                    ic = exticons[ext];
+                }
+                const dlb = addelem({
+                    tag: 'span',
+                    parent: dltd,
+                    classes: ['material-symbols-outlined', 'pubdl'],
+                    innerHTML: ic,
+                    mycard: card,
+                    title: 'download ' + file,
+                    onclick: function() {
+                        const card = this.mycard;
+                        ogst.editordownload(card.assignmentType,
+                            card.assignmentId, 'editions/' +
+                            version + '/' + file);
+                    }
+                });
+            }
+            const extractlink = addelem({
+                tag: 'a',
+                parent: extrtd,
+                innerHTML: 'extract ' + extractlist,
+                href: '#',
+                onmousedown: function(e) {
+                    e.preventDefault();
+                },
+                onclick: function(e) {
+                    e.preventDefault();
+                    // TODO
+                }
+            });
+        }
+    }
+    card.updatepubblock();
     // should have: title (header), metadata, files/upload, bibl, proofs, publication
     // (title): identify the work, and its id
     // maybe put archive button on right of title?
