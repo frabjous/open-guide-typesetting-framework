@@ -1477,6 +1477,7 @@ ogst.assignmentcard = function(
         card.editionstbdy.innerHTML ='';
         for (const version of editionversions) {
             const versioninfo = card.editions[version];
+            console.log(versioninfo);
             const trow = addelem({tag: 'tr', parent: card.editionstbdy});
             let ctime = 'unknown';
             if ("creationtime" in versioninfo) {
@@ -1518,7 +1519,7 @@ ogst.assignmentcard = function(
                 const dlb = addelem({
                     tag: 'span',
                     parent: dltd,
-                    classes: ['material-symbols-outlined', 'pubdl'],
+                    classes: ['material-symbols-outlined', 'pubsdl'],
                     innerHTML: ic,
                     mycard: card,
                     title: 'download ' + file,
@@ -1530,19 +1531,21 @@ ogst.assignmentcard = function(
                     }
                 });
             }
-            const extractlink = addelem({
-                tag: 'a',
-                parent: extrtd,
-                innerHTML: 'extract ' + extractlist,
-                href: '#',
-                onmousedown: function(e) {
-                    e.preventDefault();
-                },
-                onclick: function(e) {
-                    e.preventDefault();
-                    // TODO
-                }
-            });
+            if (extractlist != '') {
+                const extractlink = addelem({
+                    tag: 'a',
+                    parent: extrtd,
+                    innerHTML: 'extract ' + extractlist,
+                    href: '#',
+                    onmousedowndown: function(e) {
+                        e.preventDefault();
+                    },
+                    onclick: function(e) {
+                        e.preventDefault();
+                        // TODO
+                    }
+                });
+            }
         }
     }
     card.updatepubblock();
