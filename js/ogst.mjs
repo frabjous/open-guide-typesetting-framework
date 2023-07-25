@@ -1363,20 +1363,29 @@ ogst.assignmentcard = function(
     });
     card.pubbuttondiv = addelem({
         tag: 'div',
+        classes: ['grid'],
         parent: card.pubinner
     });
-    card.pubbuttondiv.setAttribute('role','grid');
+    card.createpubversion = function(b) {
+        const card=this;
+        if (!b?.myversion) { return; }
+        console.log('I should create version ' + b.myversion);
+    }
+    card.pubminordiv = addelem({ tag: 'div', parent: card.pubbuttondiv });
     card.pubminorbtn = addelem({
         tag: 'button',
         type: 'button',
-        parent: card.pubbuttondiv,
+        parent: card.pubminordiv,
         mycard: card,
+        onclick: function() { this.mycard.createpubversion(this); }
     });
+    card.pubmajordiv = addelem({ tag: 'div', parent: card.pubbuttondiv });
     card.pubmajorbtn = addelem({
         tag: 'button',
         type: 'button',
-        parent: card.pubbuttondiv,
-        mycard: card
+        parent: card.pubmajordiv,
+        mycard: card,
+        onclick: function() { this.mycard.createpubversion(this); }
     });
     card.editionslabel= addelem({
         tag: 'div',
@@ -1411,7 +1420,23 @@ ogst.assignmentcard = function(
                 'created) a document and have edited it.)';
             return;
         }
-        card.pubbuttondiv.style.display = 'block';
+        card.pubbuttondiv.style.display = 'grid';
+        let major = 0;
+        let minor = 0;
+        while (( (major+1).toString() + '.0' ) in card.editions) {
+            major++;
+        }
+        while (( major.toString() + '.' + (minor+1).toString()) in card.editions ) {
+            minor++;
+        }
+        const nextmajor = (major+1).toString() + '.0';
+        const nextminor = major.toString() + '.' + (minor+1).toString();
+
+        card.pubminorbtn.myversion = nextminor;
+        card.pubmajorbtn.myversion = nextmajor;
+        card.pubminorbtn.innerHTML = 'create version ' + nextminor;
+        card.pubmajorbtn.innerHTML = 'create version ' + nextmajor;
+
         const editionversions = Object.keys(card.editions);
         if (editionversions.length == 0) {
             card.editionslabel.style.display = 'none';
