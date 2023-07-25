@@ -45,7 +45,15 @@ require_once(dirname(__FILE__) . '/proofsaccess.php');
             }
         </style>
 
-
+        <script>
+            window.accesskey = '<?php echo $key; ?>';
+            window.projectname = '<?php echo $project; ?>';
+            window.username = '<?php echo $username; ?>';
+            window.assignmentId = '<?php echo $assignment_id; ?>';
+            window.assignmentType = '<?php echo $assignment_type; ?>';
+            window.proofset = '<?php echo $proofset; ?>';
+            window.iseditor = <?php echo json_encode($iseditor); ?>;
+        </script>
         <!-- css file -->
         <!-- <link rel="stylesheet" type="text/css" href="/kcklib/kckdialog.css"> -->
         <!-- javascript file -->

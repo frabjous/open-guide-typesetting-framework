@@ -57,7 +57,8 @@ if (!$assigndir) {
 }
 
 if (file_exists("$assigndir/archived")) {
-    itsanogo('Document has been archived. Proofs can no longer be examined.');
+    itsanogo('Document has been archived. Proofs can no longer be ' .
+        'examined or changed.');
 }
 
 $proofdir = "$assigndir/proofs/$proofset";
