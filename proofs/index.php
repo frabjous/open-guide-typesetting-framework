@@ -11,6 +11,31 @@ session_start();
 
 require_once(dirname(__FILE__) . '/proofsaccess.php');
 
+require_once(dirname(__FILE__) . '/../php/readsettings.php');
+
+$projectsettings = get_project_settings($project);
+$title = $projectsettings->title ?? 'Open Guide';
+
+$proofdir = "$datadir/$project/$assignment_type/$assignment_id/proofs/$proofset";
+
+if (!is_dir($proofdir)) {
+    itsanogo('Proof set directory not found.');
+}
+
+$usehtml = false;
+if (file_exists("$proofdir/$assignment_id.html")) {
+    $usehtml = true;
+}
+
+$usepdf = false;
+$pdfpages = 0;
+if (file_exists("$proofdir/$assignment_id.pdf")) {
+    if (is_dir("$proofdir/pages")) {
+        $pdfpages = count(scandir("$proofdir/pages")) - 2;
+    }
+    if ($pdfpages > 0) { $usepdf = true; }
+}
+
 ?><!DOCTYPE html>
 <html lang="en">
     <head>
@@ -32,7 +57,7 @@ require_once(dirname(__FILE__) . '/proofsaccess.php');
 
         <!-- web icon -->
         <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
-        <title>Page title</title>
+        <title><?php echo $title; ?> Page Proofs</title>
 
         <!-- simple css framework -->
         <!--link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" -->
@@ -61,6 +86,7 @@ require_once(dirname(__FILE__) . '/proofsaccess.php');
                 flex-shrink: 0;
                 background-color: var(--panelbg);
                 border-bottom: 1px ridge var(--primary);
+                padding: 0.25rem 0.5rem 0.25rem 0.5rem;
             }
             main {
                 flex-grow: 1;
@@ -84,6 +110,12 @@ require_once(dirname(__FILE__) . '/proofsaccess.php');
                 color: var(--primary-hover);
                 text-decoration: underline;
             }
+            #projecthdr #projectname {
+                color: var(--primary);
+            }
+            #projecthdr #tsf {
+                float: right;
+            }
         </style>
 
         <script>
@@ -102,8 +134,18 @@ require_once(dirname(__FILE__) . '/proofsaccess.php');
 
     </head>
     <body>
-        <header>Here</header>
-        <main></main>
+        <header>
+            <div id="projecthdr">
+                <div id="tsf">
+                    typesetting framework
+                </div>
+                <div id="projectname">
+                    <?php echo $title; ?>
+                </div>
+            </div>
+        </header>
+        <main>
+        </main>
         <footer>
             <p><small>The Open Guide Typesetting Framework is Copyright
             2023 © <a href="https://people.umass.edu/klement" 
