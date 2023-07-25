@@ -58,9 +58,11 @@ const editwarnings = [
 ];
 
 const exticons = {
+    "md": "draft",
     "epub": "install_mobile",
     "html": "public",
-    "pdf": "picture_as_pdf"
+    "pdf": "picture_as_pdf",
+    "zip": "folder_zip"
 }
 
 // to save some typing
@@ -1377,7 +1379,7 @@ ogst.assignmentcard = function(
             assignmentType: card.assignmentType,
             version: b.myversion
         }
-        const resp = ogst.editorquery(req);
+        const resp = await ogst.editorquery(req);
         b.removeAttribute('aria-busy');
         b.innerHTML = 'create version ' + b.myversion;
         if (!resp) { return; }
@@ -1454,7 +1456,7 @@ ogst.assignmentcard = function(
         card.pubminorbtn.innerHTML = 'create version ' + nextminor;
         card.pubmajorbtn.innerHTML = 'create version ' + nextmajor;
 
-        const editionversions = Object.keys(card.editions);
+        let editionversions = Object.keys(card.editions);
         if (editionversions.length == 0) {
             card.editionslabel.style.display = 'none';
             card.editionstable.style.display = 'none';
