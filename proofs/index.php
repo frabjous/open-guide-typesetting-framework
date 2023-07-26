@@ -78,7 +78,10 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
                 align-items: stretch;
                 height: 100vh;
                 width: 100vw;
+                max-height: 100vh;
+                max-width: 100vw;
                 margin: 0;
+                overflow: hidden;
             }
             header {
                 flex-shrink: 0;
@@ -117,6 +120,8 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
             #commoncontainer {
                 width: 100%;
                 height: 100%;
+                max-height: 100%;
+                max-width: 100%;
                 padding: 0;
                 margin: 0;
                 overflow: auto;
@@ -158,7 +163,6 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
             ]) {
                 window[id] = document.getElementById(id);
             }
-            window.pdfparent.innerHTML = 'hello there';
         </script>
         <!-- css file -->
         <!-- <link rel="stylesheet" type="text/css" href="/kcklib/kckdialog.css"> -->
