@@ -203,7 +203,15 @@ for (const id of [
 ]) {
     w[id] = document.getElementById(id);
 }
-pdfholder.style.display = 'block';
+
+function showHolder(which) {
+    for (const x of ['pdfholder','htmlholder','instructionsholder']) {
+        w[x].style.display = 'none';
+    }
+    w[which + 'holder'].style.display = 'block'
+}
+
+
 </script>
 
 </head>
@@ -235,7 +243,6 @@ pdfholder.style.display = 'block';
                 <div id="pdfproofs">
                     <div id="pdfparent">
                         <div id="pdfpages">
-
 <?php
 if ($pdfpages != 0) {
     for ($i=1; $i<=$pdfpages; $i++) {
@@ -246,7 +253,6 @@ if ($pdfpages != 0) {
     }
 }
 ?>
-
                         </div>
                     </div>
                 </div>
