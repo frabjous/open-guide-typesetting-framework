@@ -93,6 +93,7 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
             main {
                 flex-grow: 1;
                 background-color: white;
+                height: 100%;
                 max-height: 100%;
             }
             footer {
@@ -124,22 +125,40 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
                 margin: 0;
                 height: 100%;
                 width: 100%;
+                max-height: 100%;
+                max-width: 100%;
             }
-            #pdfholder {
+            #pdfholder,
+            #htmlholder {
                 height: 100%;
                 width: 100%;
                 max-width: 100%;
+                max-height: 100%;
                 overflow: auto;
             }
             #pdfproofs {
                 background-color: #4d606d;
                 text-align: center;
+                width: 100%;
+                height: 50%;
+                max-width: 100%;
+                max-height: 100%;
+                overflow: auto;
             }
-            #pdfproofs div.pdfpage {
+            #pdfparent {
+                width: 100%;
+                overflow: auto;
+            }
+            #pdfpages {
+                display: inline-block;
+                width: 96%;
+            }
+            #pdfproofs #pdfpages div.pdfpage {
                 background-color: white;
                 display: inline-block;
                 margin-top: 1rem;
                 margin-bottom: 1rem;
+                width: 100%;
             }
             #pdfproofs div.pdfpage img {
                 width: 100%;
