@@ -227,23 +227,18 @@ function addelem(opts) {
     return elem;
 }
 
-// tests whether or not selection is backwards; modify
-function isSelectionBackwards() {
-    var backwards = false;
-    if (window.getSelection) {
-        var sel = window.getSelection();
-        if (!sel.isCollapsed) {
-            var range = document.createRange();
-            range.setStart(sel.anchorNode, sel.anchorOffset);
-            range.setEnd(sel.focusNode, sel.focusOffset);
-            backwards = range.collapsed;
-            range.detach();
-        }
-    }
-    return backwards;
-}
 
 
+/*
+let selection = window.getSelection();
+let position = selection.anchorNode.compareDocumentPosition(selection.focusNode);
+if (position & Node.DOCUMENT_POSITION_FOLLOWING)
+  alert("Left-to-right selection");
+else if (position & Node.DOCUMENT_POSITION_PRECEDING)
+  alert("Right-to-left selection");
+else
+  alert("Only one node selected");
+ */
 // show one of the three main body elements
 function showHolder(which) {
     for (const x of ['pdfholder','htmlholder','instructionsholder']) {
