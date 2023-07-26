@@ -16,7 +16,8 @@ require_once(dirname(__FILE__) . '/../php/readsettings.php');
 $projectsettings = get_project_settings($project);
 $title = $projectsettings->title ?? 'Open Guide';
 
-$proofdir = "$datadir/$project/$assignment_type/$assignment_id/proofs/$proofset";
+$proofdir = "$datadir/$project/$assignment_type" . 's' .
+    "/$assignment_id/proofs/$proofset";
 
 if (!is_dir($proofdir)) {
     itsanogo('Proof set directory not found.');
@@ -27,13 +28,10 @@ if (file_exists("$proofdir/$assignment_id.html")) {
     $usehtml = true;
 }
 
-$usepdf = false;
 $pdfpages = 0;
-if (file_exists("$proofdir/$assignment_id.pdf")) {
-    if (is_dir("$proofdir/pages")) {
-        $pdfpages = count(scandir("$proofdir/pages")) - 2;
-    }
-    if ($pdfpages > 0) { $usepdf = true; }
+if ((file_exists("$proofdir/$assignment_id.pdf")) &&
+    (is_dir("$proofdir/pages"))) {
+    $pdfpages = count(scandir("$proofdir/pages")) - 2;
 }
 
 ?><!DOCTYPE html>
@@ -116,9 +114,24 @@ if (file_exists("$proofdir/$assignment_id.pdf")) {
             #projecthdr #tsf {
                 float: right;
             }
+            #commoncontainer {
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                margin: 0;
+                overflow: auto;
+            }
+            iframe {
+                border: none;
+                width: 100%;
+                height: 99%;
+                margin: 0;
+                padding: 0;
+                background-color: white;
+            }
         </style>
 
-        <script>
+        <script type="module">
             window.accesskey = '<?php echo $key; ?>';
             window.projectname = '<?php echo $project; ?>';
             window.username = '<?php echo $username; ?>';
@@ -126,6 +139,22 @@ if (file_exists("$proofdir/$assignment_id.pdf")) {
             window.assignmentType = '<?php echo $assignment_type; ?>';
             window.proofset = '<?php echo $proofset; ?>';
             window.iseditor = <?php echo json_encode($iseditor); ?>;
+            window.usehtml = <?php echo json_encode($usehtml); ?>;
+            window.pdfpages = <?php echo strval($pdfpages); ?>;
+            for (const id of [
+                'toppanel',
+                'instructionsholder',
+                'instructions',
+                'htmlholder',
+                'htmlproofs',
+                'pdfholder',
+                'pdfproofs',
+                'pdfparent',
+                'pdfpages'
+            ]) {
+                window[id] = document.getElementById(id);
+            }
+            window.pdfparent.innerHTML = 'hello there';
         </script>
         <!-- css file -->
         <!-- <link rel="stylesheet" type="text/css" href="/kcklib/kckdialog.css"> -->
@@ -143,8 +172,28 @@ if (file_exists("$proofdir/$assignment_id.pdf")) {
                     <?php echo $title; ?>
                 </div>
             </div>
+            <div id="toppanel">
+            </div>
         </header>
         <main>
+            <div id="commoncontainer">
+                <div id="intructionsholder">
+                    <div id="instructions">
+                    </div>
+                </div>
+                <div id="htmlholder">
+                    <iframe id="htmlproofs">
+                    </iframe>
+                </div>
+                <div id="pdfholder">
+                    <div id="pdfproofs">
+                        <div id="pdfparent">
+                            <div id="pdfpages">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
         <footer>
             <p><small>The Open Guide Typesetting Framework is Copyright
