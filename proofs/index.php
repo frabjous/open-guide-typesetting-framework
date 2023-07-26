@@ -121,6 +121,10 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
                 margin: 0;
                 overflow: auto;
             }
+            #htmlholder {
+                width: 100%;
+                height: 100%;
+            }
             iframe {
                 border: none;
                 width: 100%;
@@ -168,9 +172,7 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
                 <div id="tsf">
                     typesetting framework
                 </div>
-                <div id="projectname">
-                    <?php echo $title; ?>
-                </div>
+                <div id="projectname"><?php echo $title; ?></div>
             </div>
             <div id="toppanel">
             </div>
@@ -182,13 +184,28 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
                     </div>
                 </div>
                 <div id="htmlholder">
-                    <iframe id="htmlproofs">
+                    <iframe id="htmlproofs" <?php if ($usehtml) {
+                            echo 'src="proofservelet.php?key=' .
+                            rawurlencode($key) . '&html=true"';
+                        }; ?>>
                     </iframe>
                 </div>
                 <div id="pdfholder">
                     <div id="pdfproofs">
                         <div id="pdfparent">
                             <div id="pdfpages">
+
+<?php
+    if ($pdfpages != 0) {
+        for ($i=1; $i<=$pdfpages; $i++) {
+            echo '<div class="pdfpage" id="page' . strval($i) .
+                '"><img src="proofservelet.php?key=' .
+                rawurlencode($key) . '&pdfpage=' . strval($i) .
+                '" alt="pdf page ' . strval($i) . '"></div>' . PHP_EOL;
+        }
+    }
+?>
+
                             </div>
                         </div>
                     </div>
@@ -197,7 +214,7 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
         </main>
         <footer>
             <p><small>The Open Guide Typesetting Framework is Copyright
-            2023 © <a href="https://people.umass.edu/klement" 
+            2023 © <a href="https://people.umass.edu/klement"
             target="_blank">Kevin C. Klement</a>. This is free software,
             which can be redistributed and/or modified under the terms of the
             <a href="https://www.gnu.org/licenses/gpl.html" target="_blank">
