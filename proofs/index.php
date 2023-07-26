@@ -80,6 +80,7 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
                 width: 100vw;
                 max-height: 100vh;
                 max-width: 100vw;
+                min-height: 0;
                 margin: 0;
                 overflow: hidden;
             }
@@ -92,6 +93,7 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
             main {
                 flex-grow: 1;
                 background-color: white;
+                max-height: 100%;
             }
             footer {
                 border-top: 1px ridge var(--primary);
@@ -118,25 +120,40 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
                 float: right;
             }
             #commoncontainer {
-                width: 100%;
-                height: 100%;
-                max-height: 100%;
-                max-width: 100%;
                 padding: 0;
                 margin: 0;
+                height: 100%;
+                width: 100%;
+            }
+            #pdfholder {
+                height: 100%;
+                width: 100%;
+                max-width: 100%;
                 overflow: auto;
             }
-            #htmlholder {
+            #pdfproofs {
+                background-color: #4d606d;
+                text-align: center;
+            }
+            #pdfproofs div.pdfpage {
+                background-color: white;
+                display: inline-block;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+            #pdfproofs div.pdfpage img {
                 width: 100%;
-                height: 100%;
             }
             iframe {
                 border: none;
                 width: 100%;
-                height: 99%;
+                height: 100%;
                 margin: 0;
                 padding: 0;
                 background-color: white;
+            }
+            #htmlholder, #instructionsholder {
+                display: none;
             }
         </style>
 
