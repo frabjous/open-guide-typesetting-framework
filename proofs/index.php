@@ -227,6 +227,23 @@ function addelem(opts) {
     return elem;
 }
 
+// tests whether or not selection is backwards; modify
+function isSelectionBackwards() {
+    var backwards = false;
+    if (window.getSelection) {
+        var sel = window.getSelection();
+        if (!sel.isCollapsed) {
+            var range = document.createRange();
+            range.setStart(sel.anchorNode, sel.anchorOffset);
+            range.setEnd(sel.focusNode, sel.focusOffset);
+            backwards = range.collapsed;
+            range.detach();
+        }
+    }
+    return backwards;
+}
+
+
 // show one of the three main body elements
 function showHolder(which) {
     for (const x of ['pdfholder','htmlholder','instructionsholder']) {
@@ -247,6 +264,10 @@ htmlw.onload = function() {
 if (iseditor) {
     showHolder('html');
 }
+
+// old panel has zoom -, zoom +, comment/insertion/deletion toggle,
+// PDF download, page - and page +, jump to page, and I'm done
+
 </script>
 
 </head>
