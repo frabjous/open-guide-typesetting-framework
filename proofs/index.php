@@ -180,6 +180,8 @@ iframe {
 </style>
 
 <script type="module">
+
+// initial setup
 const w = window;
 w.accesskey = '<?php echo $key; ?>';
 w.projectname = '<?php echo $project; ?>';
@@ -204,14 +206,47 @@ for (const id of [
     w[id] = document.getElementById(id);
 }
 
+// general function for adding elements
+function addelem(opts) {
+    if (!('tag' in opts)) { return; }
+    const elem = document.createElement(opts.tag);
+    if ('parent' in opts) {
+        opts.parent.appendChild(elem);
+    }
+    if ('classes' in opts) {
+        for (const cl of opts.classes) {
+            elem.classList.add(cl);
+        }
+    }
+    for (const opt in opts) {
+        if (opt == 'tag' || opt == 'parent' || opt == 'classes') {
+            continue;
+        }
+        elem[opt] = opts[opt];
+    }
+    return elem;
+}
+
+// show one of the three main body elements
 function showHolder(which) {
     for (const x of ['pdfholder','htmlholder','instructionsholder']) {
         w[x].style.display = 'none';
     }
-    w[which + 'holder'].style.display = 'block'
+    w[which + 'holder'].style.display = 'block';
 }
 
+if (htmlproofs.contentWindow) {
+    window.htmlw = htmlproofs.contentWindow;
+}
 
+const mycolor = 'cyan';
+htmlw.onload = function() {
+    window.htmld = htmlproofs.contentDocument;
+}
+
+if (iseditor) {
+    showHolder('html');
+}
 </script>
 
 </head>
