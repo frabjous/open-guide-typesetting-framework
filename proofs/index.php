@@ -309,15 +309,25 @@ body.pdf #toppanel div.pdfonly {
     display: inline-block;
 }
 
+#toppanel #rightbuttons div.downloadbutton,
 #toppanel div.pdfbuttons div.pdfbutton {
     position: relative;
     top: 0.3rem;
     font-size: 140%;
     color: var(--primary);
     cursor: pointer;
+}
+
+#toppanel #rightbuttons div.downloadbutton {
+    margin-left: 0.3rem;
+}
+
+
+#toppanel div.pdfbuttons div.pdfbutton {
     margin-right: 0.5rem;
 }
 
+#toppanel #rightbuttons div.downloadbutton:hover,
 #toppanel div.pdfbuttons div.pdfbutton:hover {
     color: var(--primary-hover);
 }
@@ -332,6 +342,8 @@ body.pdf #toppanel div.pdfonly {
 
 <script type="module">
 
+import downloadFile from '../open-guide-editor/open-guide-misc/download.mjs';
+
 // initial setup
 const w = window;
 w.accesskey = '<?php echo $key; ?>';
@@ -343,6 +355,7 @@ w.proofset = '<?php echo $proofset; ?>';
 w.iseditor = <?php echo json_encode($iseditor); ?>;
 w.usehtml = <?php echo json_encode($usehtml); ?>;
 w.pdfpp = <?php echo strval($pdfpages); ?>;
+w.downloads = <?php echo json_encode($downloads); ?>;
 for (const id of [
     'toppanel',
     'instructionsholder',
@@ -396,7 +409,37 @@ const dllabel =addelem({
     innerHTML: 'download:'
 });
 
+const exticons = {
+    "md": "draft",
+    "epub": "install_mobile",
+    "html": "public",
+    "pdf": "picture_as_pdf",
+    "zip": "folder_zip"
+}
 
+for (const file of w.downloads) {
+    const ext = file.split('.').reverse()[0];
+    let icon = 'download';
+    if (ext in exticons) {
+        icon = exticons[ext];
+    }
+    const dlbtn = addelem({
+        tag: 'div',
+        parent: rightbuttons,
+        title: 'download ' + ext + ' file',
+        myext: ext,
+        myfilename: file,
+        classes: ['downloadbutton'],
+        innerHTML: '<span class="material-symbols-outlined">' + icon +
+            '</span>',
+        onclick: function() {
+            downloadFile('proofservelet.php?download=true&ext=' +
+                encodeURIComponent(this.myext) + '&key=' +
+                encodeURIComponent(window.accesskey),
+                this.myfilename);
+        }
+    });
+}
 
 const submitbutton = addelem({
     parent: rightbuttons,
@@ -528,7 +571,16 @@ if (pdfpp > 0) {
         min: 1,
         max: pdfpp,
         placeholder: 'goto page',
-        id: 'pagejump'
+        id: 'pagejump',
+        onchange: function() {
+            const id = 'page' + this.value;
+            const page = document.getElementById(id);
+            if (page) {
+                page.scrollIntoView();
+            }
+            // clear old value
+            this.value = '';
+        }
     });
 }
 
