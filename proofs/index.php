@@ -87,7 +87,7 @@ $pdfparentstart = 1200;
     --bg: hsl(205, 20%, 94%);
     --red: #c62828;
     --purple: rgb(148,0,255);
-    --green: rgb(67,160,71,0.3);
+    --green: rgb(87,180,71,0.3);
     --pink: rgba(255,20,189,0.2);
     --bluey: rgb(10,132,255,0.3);
     --yellow: rgb(255,255,81,0.3);
@@ -302,11 +302,11 @@ body.instructions #commentselector {
     display: none;
 }
 
-body.editmode #commentselector .commenttype {
+body.editormode #toppanel div#commentselector div.commenttype {
     display: none;
 }
 
-body.editormode #commentselector .commenttype.query {
+body.editormode #toppanel div#commentselector div.commenttype.query {
     display: inline-block;
 }
 
@@ -491,6 +491,7 @@ const submitbutton = addelem({
     id: 'submitbutton'
 });
 
+// TODO: fix this
 setTimeout(() => submitbutton.classList.add('lookatme'), 4000);
 
 // view selection choices
@@ -664,6 +665,8 @@ htmlw.onload = function() {
 
 if (iseditor) {
     changeMode('html');
+} else {
+    changeMode('instructions');
 }
 
 window.pdfpages.addEventListener('keydown', function(e) {
