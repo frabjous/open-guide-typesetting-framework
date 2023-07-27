@@ -86,7 +86,7 @@ $pdfparentstart = 1200;
     --fg: hsl(205, 30%, 15%);
     --bg: hsl(205, 20%, 94%);
     --red: #c62828;
-    --purple: rgb(148,0,255);
+    --purple: rgb(148,0,255,0.3);
     --green: rgb(87,180,71,0.3);
     --pink: rgba(255,20,189,0.2);
     --bluey: rgb(10,132,255,0.3);
@@ -366,6 +366,14 @@ div.pdfpage img {
     user-drag: none;
 }
 
+div.pdfpage .pdfcommentmarker {
+    border: 0.5px solid rgba(200, 200, 200, 0.5);
+}
+
+div.pdfpage .pdfcommentmarker.drawing {
+    background-color: var(--purple);
+}
+
 </style>
 
 <script type="module">
@@ -494,33 +502,48 @@ function createPdfCommentMarker(elem) {
     marker.style.display = 'inline-block';
     w.nummarkers = w.nummarkers + 1;
     marker.style.zIndex = (w.nummarkers * 4).toString();
+    marker.updatePosition = updatePosition;
     return marker;
 }
 
 function startdraw(elem, evnt) {
     if (elem.isdrawing) { return; }
-    elem.drawingmarker = createPdfCommentMarker(elem);
-    const box = elem.drawingmarker;
-    marker.anchorPP = pointerPerc(elem, evnt);
     elem.isdrawing = true;
-    console.log(elem.id, evnt);
+    if (elem.drawingmarker) {
+        canceldraw(elem, evnt);
+    }
+    elem.drawingmarker = createPdfCommentMarker(elem);
+    const marker = elem.drawingmarker;
+    marker.classList.add('drawing');
+    marker.anchorPP = pointerPerc(elem, evnt);
+    marker.updatePosition(marker.anchorPP);
+    elem.isdrawing = true;
 }
 
 function continuedraw(elem, evnt) {
     if (!elem.isdrawing) { return; }
-    console.log(' continuing draw with ', elem.id, evnt);
+    const newPP = pointerPerc(elem, evnt);
+    elem.drawingmarker.updatePosition(newPP);
 }
 
 function canceldraw(elem, evnt) {
     if (!elem.isdrawing) { return; }
+    const marker = elem.drawingmarker;
+    marker.parentNode.removeChild(marker);
+    delete(elem.drawingmarker);
     elem.isdrawing = false;
-    console.log('draw cancelled');
 }
 
 function enddraw(elem, evnt) {
     if (!elem.isdrawing) { return; }
+    const newPP = pointerPerc(elem, evnt);
+    const anchorPP = elem.drawingmarker.anchorPP;
+    if (newPP.x == anchorPP.x || newPP.y == anchorPP.y) {
+        canceldraw(elem, evnt);
+        return;
+    }
+    elem.drawingmarker.updatePosition(newPP);
     elem.isdrawing = false;
-    console.log('ending draw', elem.id, evnt);
 }
 
 //
@@ -817,12 +840,12 @@ if (w.pdfpp > 0) {
                 enddraw(this, e);
             }
         }
-        page.onpointercancel = function(e) {
+        /*page.onpointercancel = function(e) {
             if (this.isdrawing) {
                 canceldraw(this, e);
             }
-        }
-        page.onpointerout = function(e) {
+        }*/
+        page.onpointerleave = function(e) {
             if (this.isdrawing) {
                 canceldraw(this, e);
             }
