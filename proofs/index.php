@@ -71,6 +71,13 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
     --inactive: hsl(205, 10%, 50%);
     --fg: hsl(205, 30%, 15%);
     --bg: hsl(205, 20%, 94%);
+    --red: #c62828;
+    --purple: rgb(148,0,255);
+    --green: rgb(67,160,71);
+    --pink: rgb(223,0,169);
+    --bluey: rgb(10,132,255);
+
+
 }
 body {
     font-family: var(--font-family);
@@ -229,6 +236,23 @@ body.instructions #commentselector {
     display: none;
 }
 
+#commentselector .commenttype {
+    margin-left: 0.5rem;
+    padding: 0.2rem;
+    border: 1px solid var(--inactive);
+    cursor: pointer;
+}
+
+#commentselector .commenttype:hover {
+    background-color: var(--bg);
+    border: 1px solid var(--primary-hover);
+}
+
+#commentselector .commenttype.del {
+    text-decoration: line-through;
+    text-decoration-color: var(--red);
+}
+
 </style>
 
 <script type="module">
@@ -282,6 +306,14 @@ function addelem(opts) {
 function changeMode(which) {
     document.body.classList.remove('pdf','html','instructions');
     document.body.classList.add(which);
+}
+
+toppanel.onmousedown = function(e) {
+    e.preventDefault();
+}
+
+document.getElementsByTagName("footer")[0].onmousedown = function(e) {
+    e.preventDefault();
 }
 
 // view selection choices
@@ -346,7 +378,28 @@ const commentselector = addelem({
 const commentlabel = addelem({
     parent: commentselector,
     tag: 'div',
-    innerHTML: 'comment: '
+    innerHTML: 'add: '
+});
+
+const adddel = addelem({
+    parent: commentselector,
+    tag: 'div',
+    classes: ['commenttype','del'],
+    innerHTML: 'deletion'
+});
+
+const addins = addelem({
+    parent: commentselector,
+    tag: 'div',
+    classes: ['commenttype','ins'],
+    innerHTML: 'insertion'
+});
+
+const addcomm = addelem({
+    parent: commentselector,
+    tag: 'div',
+    classes: ['commenttype','comment'],
+    innerHTML: 'comment'
 });
 
 /*
