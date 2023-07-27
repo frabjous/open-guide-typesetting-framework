@@ -297,6 +297,20 @@ body.instructions #commentselector {
     background-color: var(--yellow);
 }
 
+#commentselector .commenttype.query {
+    background-color: var(--green);
+    display: none;
+}
+
+body.editmode #commentselector .commenttype {
+    display: none;
+}
+
+body.editormode #commentselector .commenttype.query {
+    display: inline-block;
+}
+
+
 #commentselector .commenttype:hover,
 #commentselector .commenttype.del:hover,
 #commentselector .commenttype.ins:hover,
@@ -568,6 +582,14 @@ const addcomm = addelem({
     innerHTML: 'comment'
 });
 
+const addquery = addelem({
+    parent: commentselector,
+    tag: 'div',
+    classes: ['commenttype', 'query'],
+    title: ['add an editor query'],
+    innerHTML: 'query'
+});
+
 if (pdfpp > 0) {
     const pdfbuttons = addelem({
         parent: toppanel,
@@ -684,13 +706,14 @@ window.pdfpages.addEventListener('keydown', function(e) {
     }
 });
 
-// old panel has zoom -, zoom +, comment/insertion/deletion toggle,
-// PDF download, page - and page +, jump to page, and I'm done
+if (document.body.clientWidth < 1200) {
+   changeZoom('fitwidth');
+}
 
 </script>
 
 </head>
-<body>
+<body<?php if ($iseditor) { echo ' class="editormode"'; } ?>>
     <header>
         <div id="projecthdr">
             <div id="tsf">
