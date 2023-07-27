@@ -174,9 +174,21 @@ iframe {
     padding: 0;
     background-color: white;
 }
+
 #pdfholder, #htmlholder, #instructionsholder {
     display: none;
 }
+
+body.instructions #instructionsholder,
+body.html #htmlholder,
+body.pdf #pdfholder {
+    display: block;
+}
+
+#toppanel div {
+    display: inline-block;
+}
+
 </style>
 
 <script type="module">
@@ -227,7 +239,45 @@ function addelem(opts) {
     return elem;
 }
 
+// view selection choices
+const viewselector = addelem({
+    parent: toppanel,
+    tag: 'div',
+    id: 'viewselector'
+});
 
+const viewlabel = addelem({
+    parent: viewselector,
+    tag: 'div',
+    innerHTML: 'view:'
+});
+
+const instructionselect = addelem({
+    parent: viewselector,
+    tag: 'div',
+    innerHTML: 'instructions',
+    id: 'instructionselect',
+    classes: ['viewoption','instructions']
+});
+
+if (usehtml) {
+    const htmlselect = addelem({
+        parent: viewselector,
+        tag: 'div',
+        innerHTML: 'html proofs',
+        classes: ['viewoption','html']
+    });
+}
+
+console.log('pp',pdfpages);
+if (pdfpages > 0) {
+    const pdfselect = addelem({
+        parent: viewselector,
+        tag: 'div',
+        innerHTML: 'pdf proofs',
+        classes: ['viewoption','pdf']
+    });
+}
 
 /*
 let selection = window.getSelection();
@@ -240,24 +290,20 @@ else
   alert("Only one node selected");
  */
 // show one of the three main body elements
-function showHolder(which) {
-    for (const x of ['pdfholder','htmlholder','instructionsholder']) {
-        w[x].style.display = 'none';
-    }
-    w[which + 'holder'].style.display = 'block';
+function changeMode(which) {
+    document.body.classList.remove('pdf','html','instructions');
+    document.body.classList.add(which);
 }
 
 if (htmlproofs.contentWindow) {
     window.htmlw = htmlproofs.contentWindow;
 }
 
-const mycolor = 'cyan';
 htmlw.onload = function() {
-    window.htmld = htmlproofs.contentDocument;
 }
 
 if (iseditor) {
-    showHolder('html');
+    changeMode('html');
 }
 
 // old panel has zoom -, zoom +, comment/insertion/deletion toggle,
