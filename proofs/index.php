@@ -386,6 +386,7 @@ w.usehtml = <?php echo json_encode($usehtml); ?>;
 w.pdfpp = <?php echo strval($pdfpages); ?>;
 w.downloads = <?php echo json_encode($downloads); ?>;
 w.pdfzoom = <?php echo strval($pdfparentstart); ?>;
+w.nummarkers = 0;
 for (const id of [
     'toppanel',
     'instructionsholder',
@@ -456,8 +457,51 @@ function zoomInOut(inout = true) {
 
 // Functions for drawing boxes
 
+function updatePosition(pp) {
+    if (!this?.anchorPP) { return; }
+    if (!pp?.x || !pp?.y) { return; }
+    const anchorx = this.anchorPP.x;
+    const anchory = this.anchorPP.y;
+    const minx = Math.min(anchorx, pp.x);
+    const maxx = Math.max(anchorx, pp.x);
+    const miny = Math.min(anchory, pp.y);
+    const maxy = Math.max(anchory, pp.y);
+    this.style.left = minx.toString() + '%';
+    this.style.right = (100 - maxx).toString() + '%';
+    this.style.top = miny.toString() + '%';
+    this.style.bottom = (100 - maxy).toString() + '%';
+    this.wanderPP = pp;
+}
+
+function pointerPerc(elem, evnt) {
+    var bcr = elem.getBoundingClientRect();
+    var w = bcr.right - bcr.left;
+    var h = bcr.bottom - bcr.top;
+    var rx = evnt.clientX - bcr.left;
+    var ry = evnt.clientY - bcr.top;
+    var xp = (rx/w) * 100;
+    var yp = (ry/h) * 100;
+    return { x: xp, y: yp };
+}
+
+function createPdfCommentMarker(elem) {
+    const marker = addelem({
+        tag: 'div',
+        classes: ['pdfcommentmarker'],
+        parent: elem
+    });
+    marker.style.position = 'absolute';
+    marker.style.display = 'inline-block';
+    w.nummarkers = w.nummarkers + 1;
+    marker.style.zIndex = (w.nummarkers * 4).toString();
+    return marker;
+}
+
 function startdraw(elem, evnt) {
     if (elem.isdrawing) { return; }
+    elem.drawingmarker = createPdfCommentMarker(elem);
+    const box = elem.drawingmarker;
+    marker.anchorPP = pointerPerc(elem, evnt);
     elem.isdrawing = true;
     console.log(elem.id, evnt);
 }
@@ -479,12 +523,9 @@ function enddraw(elem, evnt) {
     console.log('ending draw', elem.id, evnt);
 }
 
-
-
 //
 // FILL IN THE PANEL
 //
-
 
 // we put what's on the right first to keep it up top
 const rightbuttons = addelem({
