@@ -357,6 +357,15 @@ body.pdf #toppanel div.pdfonly {
     margin-right: 0.4rem;
 }
 
+div.pdfpage {
+    position: relative;
+}
+
+div.pdfpage img {
+    user-select: none;
+    user-drag: none;
+}
+
 </style>
 
 <script type="module">
@@ -364,6 +373,7 @@ body.pdf #toppanel div.pdfonly {
 import downloadFile from '../open-guide-editor/open-guide-misc/download.mjs';
 
 // initial setup
+
 const w = window;
 w.accesskey = '<?php echo $key; ?>';
 w.projectname = '<?php echo $project; ?>';
@@ -390,6 +400,10 @@ for (const id of [
     w[id] = document.getElementById(id);
 }
 
+//
+// FUNCTIONS
+//
+
 // general function for adding elements
 function addelem(opts) {
     if (!('tag' in opts)) { return; }
@@ -411,11 +425,13 @@ function addelem(opts) {
     return elem;
 }
 
+// function for changing between modes
 function changeMode(which) {
     document.body.classList.remove('pdf','html','instructions');
     document.body.classList.add(which);
 }
 
+// two functions for changing the zoom level
 function changeZoom(inc) {
     if (inc === 'fitwidth') {
         window.pdfzoom = (document.body.clientWidth - 36);
@@ -437,6 +453,38 @@ function zoomInOut(inout = true) {
     if (!inout) { inc = (0-inc); }
     changeZoom(inc);
 }
+
+// Functions for drawing boxes
+
+function startdraw(elem, evnt) {
+    if (elem.isdrawing) { return; }
+    elem.isdrawing = true;
+    console.log(elem.id, evnt);
+}
+
+function continuedraw(elem, evnt) {
+    if (!elem.isdrawing) { return; }
+    console.log(' continuing draw with ', elem.id, evnt);
+}
+
+function canceldraw(elem, evnt) {
+    if (!elem.isdrawing) { return; }
+    elem.isdrawing = false;
+    console.log('draw cancelled');
+}
+
+function enddraw(elem, evnt) {
+    if (!elem.isdrawing) { return; }
+    elem.isdrawing = false;
+    console.log('ending draw', elem.id, evnt);
+}
+
+
+
+//
+// FILL IN THE PANEL
+//
+
 
 // we put what's on the right first to keep it up top
 const rightbuttons = addelem({
@@ -709,6 +757,38 @@ window.pdfpages.addEventListener('keydown', function(e) {
     }
 });
 
+// add listener to pdf pages
+if (w.pdfpp > 0) {
+    for (const page of pdfpages.getElementsByClassName("pdfpage")) {
+        page.isdrawing = false;
+        page.onpointerdown = function(e) {
+            if (!this.isdrawing) {
+                startdraw(this, e);
+            }
+        }
+        page.onpointermove = function(e) {
+            if (this.isdrawing) {
+                continuedraw(this, e);
+            }
+        }
+        page.onpointerup = function(e) {
+            if (this.isdrawing) {
+                enddraw(this, e);
+            }
+        }
+        page.onpointercancel = function(e) {
+            if (this.isdrawing) {
+                canceldraw(this, e);
+            }
+        }
+        page.onpointerout = function(e) {
+            if (this.isdrawing) {
+                canceldraw(this, e);
+            }
+        }
+    }
+}
+
 if (document.body.clientWidth < 1200) {
    changeZoom('fitwidth');
 }
@@ -751,7 +831,8 @@ if ($pdfpages != 0) {
         echo '<div class="pdfpage" id="page' . strval($i) .
             '"><img src="proofservelet.php?key=' .
             rawurlencode($key) . '&pdfpage=' . strval($i) .
-            '" alt="pdf page ' . strval($i) . '"></div>' . PHP_EOL;
+            '" alt="pdf page ' . strval($i) .
+            '" draggable="false"></div>' . PHP_EOL;
     }
 }
 ?>
