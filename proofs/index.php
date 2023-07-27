@@ -46,6 +46,8 @@ foreach ($files as $file) {
     }
 }
 
+$pdfparentstart = 1200;
+
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -117,6 +119,7 @@ header {
     background-color: var(--panelbg);
     border-bottom: 1px ridge var(--primary);
     padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+    user-select: none;
 }
 main {
     flex-grow: 1;
@@ -131,6 +134,7 @@ footer {
     flex-shrink: 0;
     margin: 0;
     padding: 0.5rem 1rem 0.5rem 1rem;
+    user-select: none;
 }
 footer p {
     margin: 0;
@@ -181,7 +185,7 @@ a:hover, a:link:hover, a:visited:hover {
 }
 /* pdf parent is what should grow and shrink with zoom */
 #pdfparent {
-    width: 1200px;
+    width: <?php echo strval($pdfparentstart); ?>px;
     margin: auto;
 }
 #pdfpages {
@@ -336,6 +340,7 @@ body.pdf #toppanel div.pdfonly {
     width: 5.3rem;
     padding: 0.3rem;
     text-align: center;
+    margin-right: 0.4rem;
 }
 
 </style>
@@ -356,6 +361,7 @@ w.iseditor = <?php echo json_encode($iseditor); ?>;
 w.usehtml = <?php echo json_encode($usehtml); ?>;
 w.pdfpp = <?php echo strval($pdfpages); ?>;
 w.downloads = <?php echo json_encode($downloads); ?>;
+w.pdfzoom = <?php echo strval($pdfparentstart); ?>;
 for (const id of [
     'toppanel',
     'instructionsholder',
@@ -394,6 +400,28 @@ function addelem(opts) {
 function changeMode(which) {
     document.body.classList.remove('pdf','html','instructions');
     document.body.classList.add(which);
+}
+
+function changeZoom(inc) {
+    if (inc === 'fitwidth') {
+        window.pdfzoom = (document.body.clientWidth - 36);
+    } else {
+        window.pdfzoom = window.pdfzoom + inc;
+    }
+    // don't let it disappear completely
+    if (window.pdfzoom <= 100) {
+        window.pdfzoom = 100;
+    }
+    window.pdfparent.style.width = window.pdfzoom.toString() + 'px';
+}
+
+function zoomInOut(inout = true) {
+    let inc = 200;
+    if (window.pdfzoom < 800) { inc = 100; }
+    if (window.pdfzoom > 1800) { inc = 400; }
+    if (window.pdfzoom > 2800) { inc = 800; }
+    if (!inout) { inc = (0-inc); }
+    changeZoom(inc);
 }
 
 // we put what's on the right first to keep it up top
@@ -550,19 +578,22 @@ if (pdfpp > 0) {
         parent: pdfbuttons,
         innerHTML: '<span class="material-symbols-outlined">zoom_out</span>',
         classes: ['pdfbutton'],
-        tag: 'div'
+        tag: 'div',
+        onclick: function() { zoomInOut(false); }
     });
     const fit = addelem({
         parent: pdfbuttons,
         innerHTML: '<span class="material-symbols-outlined">fit_width</span>',
         classes: ['pdfbutton'],
-        tag: 'div'
+        tag: 'div',
+        onclick: function() { changeZoom('fitwidth'); }
     });
     const zoomin = addelem({
         parent: pdfbuttons,
         innerHTML: '<span class="material-symbols-outlined">zoom_in</span>',
         classes: ['pdfbutton'],
-        tag: 'div'
+        tag: 'div',
+        onclick: function() { zoomInOut(true); }
     });
     const pagejump = addelem({
         parent: pdfbuttons,
@@ -581,6 +612,11 @@ if (pdfpp > 0) {
             // clear old value
             this.value = '';
         }
+    });
+    const oftotal = addelem({
+        parent: pdfbuttons,
+        tag: 'div',
+        innerHTML: ' / ' + pdfpp.toString()
     });
 }
 
