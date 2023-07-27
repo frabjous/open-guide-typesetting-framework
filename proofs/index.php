@@ -644,6 +644,46 @@ if (iseditor) {
     changeMode('html');
 }
 
+window.pdfpages.addEventListener('keydown', function(e) {
+    const w = this.clientWidth;
+    const h = this.clientHeight;
+    const pageamount = (h/window.pdfpp)*0.6;
+    const hamount = h/10;
+    const wamount = w/10;
+    //pageup, pagedown changes pages
+    if (e.key == 'PageDown') {
+        e.preventDefault();
+        this.scrollTop = this.scrollTop + pageamount;
+        return;
+    }
+    if (e.key == 'PageUp') {
+        e.preventDefault();
+        this.scrollTop = this.scrollTop - pageamount;
+        return;
+    }
+    // arrow up, down, etc. scrolls
+    if (e.key == 'ArrowUp') {
+        e.preventDefault();
+        this.scrollTop = this.scrollTop - hamount;
+        return;
+    }
+    if (e.key == 'ArrowDown') {
+        e.preventDefault();
+        this.scrollTop = this.scrollTop + hamount;
+        return;
+    }
+    if (e.key == 'ArrowRight') {
+        e.preventDefault();
+        this.scrollLeft = this.scrollLeft + wamount;
+        return;
+    }
+    if (e.key == 'ArrowLeft') {
+        e.preventDefault();
+        this.scrollLeft = this.scrollLeft - wamount;
+        return;
+    }
+});
+
 // old panel has zoom -, zoom +, comment/insertion/deletion toggle,
 // PDF download, page - and page +, jump to page, and I'm done
 
