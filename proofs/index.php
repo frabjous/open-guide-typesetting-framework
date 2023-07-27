@@ -270,7 +270,32 @@ body.instructions #commentselector {
     border: 1px solid var(--primary-hover);
 }
 
+body #toppanel div.pdfonly {
+    display: none;
+}
 
+body.pdf #toppanel div.pdfonly {
+    display: inline-block;
+}
+
+#toppanel div.pdfbuttons div.pdfbutton {
+    position: relative;
+    top: 0.3rem;
+    font-size: 140%;
+    color: var(--primary);
+    cursor: pointer;
+    margin-right: 0.5rem;
+}
+
+#toppanel div.pdfbuttons div.pdfbutton {
+    color: var(--primary-hover);
+}
+
+#toppanel input#pagejump {
+    width: 5.3rem;
+    padding: 0.3rem;
+    text-align: center;
+}
 
 </style>
 
@@ -325,14 +350,6 @@ function addelem(opts) {
 function changeMode(which) {
     document.body.classList.remove('pdf','html','instructions');
     document.body.classList.add(which);
-}
-
-toppanel.onmousedown = function(e) {
-    e.preventDefault();
-}
-
-document.getElementsByTagName("footer")[0].onmousedown = function(e) {
-    e.preventDefault();
 }
 
 // view selection choices
@@ -428,11 +445,34 @@ if (pdfpp > 0) {
     const pdfbuttons = addelem({
         parent: toppanel,
         tag: 'div',
-        classes: ['pdfonly']
+        classes: ['pdfbuttons','pdfonly']
+    });
+    const zoomout = addelem({
+        parent: pdfbuttons,
+        innerHTML: '<span class="material-symbols-outlined">zoom_out</span>',
+        classes: ['pdfbutton'],
+        tag: 'div'
+    });
+    const fit = addelem({
+        parent: pdfbuttons,
+        innerHTML: '<span class="material-symbols-outlined">fit_width</span>',
+        classes: ['pdfbutton'],
+        tag: 'div'
     });
     const zoomin = addelem({
         parent: pdfbuttons,
+        innerHTML: '<span class="material-symbols-outlined">zoom_in</span>',
+        classes: ['pdfbutton'],
         tag: 'div'
+    });
+    const pagejump = addelem({
+        parent: pdfbuttons,
+        tag: 'input',
+        type: 'number',
+        min: 1,
+        max: pdfpp,
+        placeholder: 'goto page',
+        id: 'pagejump'
     });
 }
 
