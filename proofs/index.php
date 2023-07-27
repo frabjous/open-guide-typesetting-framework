@@ -68,11 +68,15 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
     --primary: hsl(195, 90%, 32%);
     --primary-hover: hsl(195, 90%, 42%);
     --panelbg: rgba(89, 107, 120, 0.125);
+    --inactive: hsl(205, 10%, 50%);
+    --fg: hsl(205, 30%, 15%);
+    --bg: hsl(205, 20%, 94%);
 }
 body {
     font-family: var(--font-family);
     font-size: 18px;
-    background-color: white;
+    background-color: var(--bg);
+    color: var(--fg);
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -185,6 +189,28 @@ body.pdf #pdfholder {
     display: block;
 }
 
+#toppanel div.viewoption {
+    padding: 0.2rem 0.8rem;
+    border: 2px solid var(--inactive);
+    color: var(--inactive);
+    border-radius: 1.5rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+#toppanel div.viewoption:hover {
+    background-color: var(--bg);
+}
+
+body.instructions #toppanel div.viewoption.instructions,
+body.html #toppanel div.viewoption.html,
+body.pdf #toppanel div.viewoption.pdf {
+    color: var(--fg);
+    border: 2px solid var(--primary-hover);
+    background-color: var(--bg);
+    cursor: default;
+}
+
 #toppanel div {
     display: inline-block;
 }
@@ -203,7 +229,7 @@ w.assignmentType = '<?php echo $assignment_type; ?>';
 w.proofset = '<?php echo $proofset; ?>';
 w.iseditor = <?php echo json_encode($iseditor); ?>;
 w.usehtml = <?php echo json_encode($usehtml); ?>;
-w.pdfpages = <?php echo strval($pdfpages); ?>;
+w.pdfpp = <?php echo strval($pdfpages); ?>;
 for (const id of [
     'toppanel',
     'instructionsholder',
@@ -256,7 +282,7 @@ const instructionselect = addelem({
     parent: viewselector,
     tag: 'div',
     innerHTML: 'instructions',
-    id: 'instructionselect',
+    title: 'view instructions',
     classes: ['viewoption','instructions']
 });
 
@@ -265,16 +291,17 @@ if (usehtml) {
         parent: viewselector,
         tag: 'div',
         innerHTML: 'html proofs',
+        title: 'view html proofs',
         classes: ['viewoption','html']
     });
 }
 
-console.log('pp',pdfpages);
-if (pdfpages > 0) {
+if (pdfpp > 0) {
     const pdfselect = addelem({
         parent: viewselector,
         tag: 'div',
         innerHTML: 'pdf proofs',
+        title: 'view pdf proofs',
         classes: ['viewoption','pdf']
     });
 }
