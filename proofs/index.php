@@ -73,9 +73,10 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
     --bg: hsl(205, 20%, 94%);
     --red: #c62828;
     --purple: rgb(148,0,255);
-    --green: rgb(67,160,71);
-    --pink: rgb(223,0,169);
-    --bluey: rgb(10,132,255);
+    --green: rgb(67,160,71,0.3);
+    --pink: rgba(255,20,189,0.2);
+    --bluey: rgb(10,132,255,0.3);
+    --yellow: rgb(255,255,81,0.3);
 
 
 }
@@ -139,7 +140,6 @@ a:hover, a:link:hover, a:visited:hover {
     width: 100%;
     max-height: 100%;
     max-width: 100%;
-    overflow: auto;
 }
 #pdfholder,
 #htmlholder {
@@ -147,8 +147,12 @@ a:hover, a:link:hover, a:visited:hover {
     width: 100%;
     max-width: 100%;
     max-height: 100%;
+}
+
+#htmlholder {
     overflow: auto;
 }
+
 #pdfproofs {
     background-color: #4d606d;
     text-align: center;
@@ -156,7 +160,8 @@ a:hover, a:link:hover, a:visited:hover {
     height: 100%;
     max-width: 100%;
     max-height: 100%;
-    overflow: auto;
+    overflow-x: scroll;
+    overflow-y: auto;
 }
 /* pdf parent is what should grow and shrink with zoom */
 #pdfparent {
@@ -233,7 +238,7 @@ body.pdf #toppanel div.viewoption.pdf {
 }
 
 body.instructions #commentselector {
-    display: none;
+    visibility: hidden;
 }
 
 #commentselector .commenttype {
@@ -243,15 +248,29 @@ body.instructions #commentselector {
     cursor: pointer;
 }
 
-#commentselector .commenttype:hover {
+#commentselector .commenttype.del {
+    text-decoration: line-through;
+    text-decoration-color: var(--red);
+    background-color: var(--pink);
+}
+
+#commentselector .commenttype.ins {
+    background-color: var(--bluey);
+}
+
+#commentselector .commenttype.comment {
+    background-color: var(--yellow);
+}
+
+#commentselector .commenttype:hover,
+#commentselector .commenttype.del:hover,
+#commentselector .commenttype.ins:hover,
+#commentselector .commenttype.comment:hover {
     background-color: var(--bg);
     border: 1px solid var(--primary-hover);
 }
 
-#commentselector .commenttype.del {
-    text-decoration: line-through;
-    text-decoration-color: var(--red);
-}
+
 
 </style>
 
@@ -385,6 +404,7 @@ const adddel = addelem({
     parent: commentselector,
     tag: 'div',
     classes: ['commenttype','del'],
+    title: 'mark selection for deletion',
     innerHTML: 'deletion'
 });
 
@@ -392,6 +412,7 @@ const addins = addelem({
     parent: commentselector,
     tag: 'div',
     classes: ['commenttype','ins'],
+    title: 'mark spot for insertion',
     innerHTML: 'insertion'
 });
 
@@ -399,8 +420,21 @@ const addcomm = addelem({
     parent: commentselector,
     tag: 'div',
     classes: ['commenttype','comment'],
+    title: 'add a comment',
     innerHTML: 'comment'
 });
+
+if (pdfpp > 0) {
+    const pdfbuttons = addelem({
+        parent: toppanel,
+        tag: 'div',
+        classes: ['pdfonly']
+    });
+    const zoomin = addelem({
+        parent: pdfbuttons,
+        tag: 'div'
+    });
+}
 
 /*
 let selection = window.getSelection();
