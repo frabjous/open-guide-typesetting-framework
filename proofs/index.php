@@ -34,6 +34,18 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
     $pdfpages = count(scandir("$proofdir/pages")) - 2;
 }
 
+$files = scandir($proofdir);
+
+$downloads = array();
+
+foreach ($files as $file) {
+    if ($file == '.' || $file == '..') { continue; }
+    if (substr($file, 0, strlen($assignment_id)+1) ==
+        $assignment_id . '.') {
+        array_push($downloads, $file);
+    }
+}
+
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,9 +89,13 @@ if ((file_exists("$proofdir/$assignment_id.pdf")) &&
     --pink: rgba(255,20,189,0.2);
     --bluey: rgb(10,132,255,0.3);
     --yellow: rgb(255,255,81,0.3);
-
-
 }
+
+@keyframes showoff {
+    from {background-color: var(--yellow);}
+    to {background-color: var(--bluey);}
+}
+
 body {
     font-family: var(--font-family);
     font-size: 18px;
@@ -201,6 +217,11 @@ body.pdf #pdfholder {
     display: block;
 }
 
+#toppanel #rightbuttons {
+    float: right;
+}
+
+#toppanel #rightbuttons #submitbutton,
 #toppanel div.viewoption {
     padding: 0.2rem 0.8rem;
     border: 2px solid var(--inactive);
@@ -210,6 +231,16 @@ body.pdf #pdfholder {
     cursor: pointer;
 }
 
+#toppanel #rightbuttons #submitbutton.lookatme {
+    border: 2px solid var(--primary);
+    color: var(--fg);
+    animation-name: showoff;
+    animation-duration: 0.7s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+}
+
+#toppanel #rightbuttons #submitbutton:hover,
 #toppanel div.viewoption:hover {
     background-color: var(--bg);
     color: var(--primary);
@@ -287,7 +318,7 @@ body.pdf #toppanel div.pdfonly {
     margin-right: 0.5rem;
 }
 
-#toppanel div.pdfbuttons div.pdfbutton {
+#toppanel div.pdfbuttons div.pdfbutton:hover {
     color: var(--primary-hover);
 }
 
@@ -351,6 +382,31 @@ function changeMode(which) {
     document.body.classList.remove('pdf','html','instructions');
     document.body.classList.add(which);
 }
+
+// we put what's on the right first to keep it up top
+const rightbuttons = addelem({
+    parent: toppanel,
+    tag: 'div',
+    id: 'rightbuttons'
+});
+
+const dllabel =addelem({
+    parent: rightbuttons,
+    tag: 'div',
+    innerHTML: 'download:'
+});
+
+
+
+const submitbutton = addelem({
+    parent: rightbuttons,
+    tag: 'div',
+    innerHTML: 'submit',
+    title: 'submit changes to editors',
+    id: 'submitbutton'
+});
+
+setTimeout(() => submitbutton.classList.add('lookatme'), 4000);
 
 // view selection choices
 const viewselector = addelem({
