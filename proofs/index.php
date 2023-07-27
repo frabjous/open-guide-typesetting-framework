@@ -200,6 +200,7 @@ body.pdf #pdfholder {
 
 #toppanel div.viewoption:hover {
     background-color: var(--bg);
+    color: var(--primary);
 }
 
 body.instructions #toppanel div.viewoption.instructions,
@@ -213,6 +214,19 @@ body.pdf #toppanel div.viewoption.pdf {
 
 #toppanel div {
     display: inline-block;
+}
+
+#instructions {
+    padding: 2rem;
+}
+
+#commentselector {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+body.instructions #commentselector {
+    display: none;
 }
 
 </style>
@@ -265,6 +279,11 @@ function addelem(opts) {
     return elem;
 }
 
+function changeMode(which) {
+    document.body.classList.remove('pdf','html','instructions');
+    document.body.classList.add(which);
+}
+
 // view selection choices
 const viewselector = addelem({
     parent: toppanel,
@@ -283,7 +302,11 @@ const instructionselect = addelem({
     tag: 'div',
     innerHTML: 'instructions',
     title: 'view instructions',
-    classes: ['viewoption','instructions']
+    classes: ['viewoption','instructions'],
+    onclick: function(e) {
+        e.preventDefault();
+        changeMode('instructions');
+    }
 });
 
 if (usehtml) {
@@ -292,7 +315,11 @@ if (usehtml) {
         tag: 'div',
         innerHTML: 'html proofs',
         title: 'view html proofs',
-        classes: ['viewoption','html']
+        classes: ['viewoption','html'],
+        onclick: function(e) {
+            e.preventDefault();
+            changeMode('html');
+        }
     });
 }
 
@@ -302,9 +329,25 @@ if (pdfpp > 0) {
         tag: 'div',
         innerHTML: 'pdf proofs',
         title: 'view pdf proofs',
-        classes: ['viewoption','pdf']
+        classes: ['viewoption','pdf'],
+        onclick: function(e) {
+            e.preventDefault();
+            changeMode('pdf');
+        }
     });
 }
+
+const commentselector = addelem({
+    parent: toppanel,
+    tag: 'div',
+    id: 'commentselector'
+});
+
+const commentlabel = addelem({
+    parent: commentselector,
+    tag: 'div',
+    innerHTML: 'comment: '
+});
 
 /*
 let selection = window.getSelection();
@@ -317,10 +360,7 @@ else
   alert("Only one node selected");
  */
 // show one of the three main body elements
-function changeMode(which) {
-    document.body.classList.remove('pdf','html','instructions');
-    document.body.classList.add(which);
-}
+
 
 if (htmlproofs.contentWindow) {
     window.htmlw = htmlproofs.contentWindow;
@@ -354,6 +394,7 @@ if (iseditor) {
         <div id="commoncontainer">
             <div id="instructionsholder">
                 <div id="instructions">
+                    <h1>Instructions</h1>
                 </div>
             </div>
             <div id="htmlholder">
