@@ -221,6 +221,10 @@ body.pdf #pdfholder {
     display: block;
 }
 
+#toppanel #viewselector {
+    float: left;
+}
+
 #toppanel #rightbuttons {
     float: right;
 }
@@ -257,6 +261,10 @@ body.pdf #toppanel div.viewoption.pdf {
     border: 2px solid var(--primary-hover);
     background-color: var(--bg);
     cursor: default;
+}
+
+#toppanel {
+    text-align: center;
 }
 
 #toppanel div {
@@ -327,6 +335,11 @@ body.pdf #toppanel div.pdfonly {
     display: inline-block;
 }
 
+#toppanel div.pdfbuttons {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #toppanel #rightbuttons div.downloadbutton,
 #toppanel div.pdfbuttons div.pdfbutton {
     position: relative;
@@ -372,6 +385,16 @@ div.pdfpage .pdfcommentmarker {
 
 div.pdfpage .pdfcommentmarker.drawing {
     background-color: var(--purple);
+}
+
+div.innermarker {
+    position: relative;
+}
+
+div.commentwidget {
+    position: absolute:
+    bottom: 100%;
+    left: 0;
 }
 
 </style>
@@ -463,6 +486,49 @@ function zoomInOut(inout = true) {
     changeZoom(inc);
 }
 
+// functions for comment elements
+
+function makeCommentTypeSelector(parnode) {
+
+    const commentselector = addelem({
+        parent: parnode,
+        tag: 'div',
+        id: 'commentselector'
+    });
+
+    const commentlabel = addelem({
+        parent: commentselector,
+        tag: 'div',
+        innerHTML: 'add: '
+    });
+
+    const adddel = addelem({
+        parent: commentselector,
+        tag: 'div',
+        classes: ['commenttype','del'],
+        title: 'mark selection for deletion',
+        innerHTML: 'deletion'
+    });
+
+    const addins = addelem({
+        parent: commentselector,
+        tag: 'div',
+        classes: ['commenttype','ins'],
+        title: 'mark spot for insertion',
+        innerHTML: 'insertion'
+    });
+
+    const addcomm = addelem({
+        parent: commentselector,
+        tag: 'div',
+        classes: ['commenttype','comment'],
+        title: 'add a comment',
+        innerHTML: 'comment'
+    });
+
+    return commentselector;
+}
+
 // Functions for drawing boxes
 
 function updatePosition(pp) {
@@ -496,12 +562,14 @@ function createPdfCommentMarker(elem) {
     const marker = addelem({
         tag: 'div',
         classes: ['pdfcommentmarker'],
+        mypage: elem,
         parent: elem
     });
     marker.style.position = 'absolute';
     marker.style.display = 'inline-block';
     w.nummarkers = w.nummarkers + 1;
     marker.style.zIndex = (w.nummarkers * 4).toString();
+    marker.myzindex = (w.nummarkers * 4);
     marker.updatePosition = updatePosition;
     return marker;
 }
@@ -537,13 +605,25 @@ function canceldraw(elem, evnt) {
 function enddraw(elem, evnt) {
     if (!elem.isdrawing) { return; }
     const newPP = pointerPerc(elem, evnt);
-    const anchorPP = elem.drawingmarker.anchorPP;
+    const marker = elem.drawingmarker
+    const anchorPP = marker.anchorPP;
     if (newPP.x == anchorPP.x || newPP.y == anchorPP.y) {
         canceldraw(elem, evnt);
         return;
     }
-    elem.drawingmarker.updatePosition(newPP);
+    marker.updatePosition(newPP);
     elem.isdrawing = false;
+    const innermarker = addelem({
+        parent: marker;
+        mymarker: marker,
+        classes: ['innermarker'],
+        tag: 'div'
+    });
+    const commentwidget = addelem({
+        parent: innermarker,
+        tag: 'div',
+        classes: ['commentwidget']
+    });
 }
 
 //
@@ -658,50 +738,6 @@ if (pdfpp > 0) {
         }
     });
 }
-
-const commentselector = addelem({
-    parent: toppanel,
-    tag: 'div',
-    id: 'commentselector'
-});
-
-const commentlabel = addelem({
-    parent: commentselector,
-    tag: 'div',
-    innerHTML: 'add: '
-});
-
-const adddel = addelem({
-    parent: commentselector,
-    tag: 'div',
-    classes: ['commenttype','del'],
-    title: 'mark selection for deletion',
-    innerHTML: 'deletion'
-});
-
-const addins = addelem({
-    parent: commentselector,
-    tag: 'div',
-    classes: ['commenttype','ins'],
-    title: 'mark spot for insertion',
-    innerHTML: 'insertion'
-});
-
-const addcomm = addelem({
-    parent: commentselector,
-    tag: 'div',
-    classes: ['commenttype','comment'],
-    title: 'add a comment',
-    innerHTML: 'comment'
-});
-
-const addquery = addelem({
-    parent: commentselector,
-    tag: 'div',
-    classes: ['commenttype', 'query'],
-    title: ['add an editor query'],
-    innerHTML: 'query'
-});
 
 if (pdfpp > 0) {
     const pdfbuttons = addelem({
