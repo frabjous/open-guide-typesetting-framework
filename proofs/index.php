@@ -305,6 +305,13 @@ body.pdf #toppanel div.viewoption.pdf {
     background-color: var(--yellow);
 }
 
+.commentselector .commentselectorcancel {
+    cursor: pointer;
+    color: var(--red);
+    position: relative;
+    top: 0.4rem;
+}
+
 .commentselector .commenttype:hover,
 .commentselector .commenttype.del:hover,
 .commentselector .commenttype.ins:hover,
@@ -512,8 +519,11 @@ function makeCommentTypeSelector(parnode) {
         innerHTML: 'deletion',
         mywidget: parnode,
         onmousedown: function (e) { e.preventDefault(); },
-        onpointerdown: function (e) { e.preventDefault(); },
-            onclick: function (e) {
+        onpointerdown: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        },
+        onclick: function (e) {
             console.log("here");
             e.preventDefault();
             this.mywidget.makeType('deletion');
@@ -544,13 +554,33 @@ function makeCommentTypeSelector(parnode) {
         mywidget: parnode,
         onmousedown: function (e) {
             e.preventDefault();
-            e.stopPropagation();
         },
         onpointerdown: function (e) {
             e.preventDefault();
-            e.stopPropogation();
+            e.stopPropagation();
         },
         onclick: function (e) { this.mywidget.makeType('comment'); }
+    });
+
+    const cancx = addelem({
+        parent: commentselector,
+        tag: 'div',
+        classes: ['commentselectorcancel'],
+        title: 'cancel',
+        innerHTML: '<span class="material-symbols-outlined">close</span>',
+        mywidget: parnode,
+        onpointerdown: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        },
+        onclick: function(e) {
+            const m = this.mywidget.mymarker;
+            m.mypage.isdrawing = false;
+            if (m.mypage.drawingmarker) {
+                delete (m.mypage.drawingmarker);
+            }
+            m.parentNode.removeChild(m);
+        }
     });
 
     return commentselector;
@@ -616,7 +646,6 @@ function createPdfCommentMarker(elem) {
 }
 
 function startdraw(elem, evnt) {
-    if (elem?.hasdraw) { return; }
     if (elem.isdrawing) { return; }
     elem.isdrawing = true;
     if (elem.drawingmarker) {
@@ -628,7 +657,6 @@ function startdraw(elem, evnt) {
     marker.anchorPP = pointerPerc(elem, evnt);
     marker.updatePosition(marker.anchorPP);
     elem.isdrawing = true;
-    elem.hasdraw = true;
 }
 
 function continuedraw(elem, evnt) {
@@ -659,13 +687,19 @@ function enddraw(elem, evnt) {
     const innermarker = addelem({
         parent: marker,
         classes: ['innermarker'],
-        tag: 'div'
+        tag: 'div',
+        onpointerdown: function(e) {
+            e.stopPropagation();
+        },
     });
     const commentwidget = addelem({
         parent: innermarker,
         mymarker: marker,
         tag: 'div',
         classes: ['commentwidget'],
+        onpointerdown: function(e) {
+            e.stopPropagation();
+        },
         makeType: makeType
     });
     commentwidget.style.zIndex = (marker.myzindex + 2).toString();
