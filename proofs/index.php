@@ -275,54 +275,44 @@ body.pdf #toppanel div.viewoption.pdf {
     padding: 2rem;
 }
 
-#commentselector {
-    margin-left: 1rem;
-    margin-right: 1rem;
+.commentselector {
+    white-space: nowrap;
 }
 
-body.instructions #commentselector {
-    visibility: hidden;
+.commentselector div {
+    display: inline-block;
 }
 
-#commentselector .commenttype {
-    margin-left: 0.5rem;
+.commentselector div:first-child {
+    margin-right: 0.2rem;
+}
+
+.commentselector .commenttype {
     padding: 0.2rem;
     border: 1px solid var(--inactive);
     cursor: pointer;
+    border-radius: 0.2rem;
+    margin: 0.2rem;
 }
 
-#commentselector .commenttype.del {
+.commentselector .commenttype.del {
     text-decoration: line-through;
     text-decoration-color: var(--red);
     background-color: var(--pink);
 }
 
-#commentselector .commenttype.ins {
+.commentselector .commenttype.ins {
     background-color: var(--bluey);
 }
 
-#commentselector .commenttype.comment {
+.commentselector .commenttype.comment {
     background-color: var(--yellow);
 }
 
-#commentselector .commenttype.query {
-    background-color: var(--green);
-    display: none;
-}
-
-body.editormode #toppanel div#commentselector div.commenttype {
-    display: none;
-}
-
-body.editormode #toppanel div#commentselector div.commenttype.query {
-    display: inline-block;
-}
-
-
-#commentselector .commenttype:hover,
-#commentselector .commenttype.del:hover,
-#commentselector .commenttype.ins:hover,
-#commentselector .commenttype.comment:hover {
+.commentselector .commenttype:hover,
+.commentselector .commenttype.del:hover,
+.commentselector .commenttype.ins:hover,
+.commentselector .commenttype.comment:hover {
     background-color: var(--bg);
     border: 1px solid var(--primary-hover);
 }
@@ -387,14 +377,23 @@ div.pdfpage .pdfcommentmarker.drawing {
     background-color: var(--purple);
 }
 
+body.editormode .pdfcommentmarker.drawing {
+    background-color: var(--green);
+}
+
 div.innermarker {
     position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 div.commentwidget {
-    position: absolute:
+    position: absolute;
     bottom: 100%;
-    left: 0;
+    left: -1rem;
+    background-color: var(--bg);
+    padding: 0.5rem 2rem 0.5rem 2rem;
+    border-radius: 2rem;
 }
 
 </style>
@@ -493,7 +492,7 @@ function makeCommentTypeSelector(parnode) {
     const commentselector = addelem({
         parent: parnode,
         tag: 'div',
-        id: 'commentselector'
+        classes: ['commentselector']
     });
 
     const commentlabel = addelem({
@@ -525,6 +524,8 @@ function makeCommentTypeSelector(parnode) {
         title: 'add a comment',
         innerHTML: 'comment'
     });
+
+    commentselector.mywidget = parnode;
 
     return commentselector;
 }
@@ -614,16 +615,18 @@ function enddraw(elem, evnt) {
     marker.updatePosition(newPP);
     elem.isdrawing = false;
     const innermarker = addelem({
-        parent: marker;
-        mymarker: marker,
+        parent: marker,
         classes: ['innermarker'],
         tag: 'div'
     });
     const commentwidget = addelem({
         parent: innermarker,
+        mymarker: marker,
         tag: 'div',
         classes: ['commentwidget']
     });
+    commentwidget.style.zIndex = (marker.myzindex + 2).toString();
+    commentwidget.myselector = makeCommentTypeSelector(commentwidget);
 }
 
 //
