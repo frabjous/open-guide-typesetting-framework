@@ -283,10 +283,6 @@ body.pdf #toppanel div.viewoption.pdf {
     display: inline-block;
 }
 
-.commentselector div:first-child {
-    margin-right: 0.2rem;
-}
-
 .commentselector .commenttype {
     padding: 0.2rem;
     border: 1px solid var(--inactive);
@@ -379,6 +375,18 @@ div.pdfpage .pdfcommentmarker.drawing {
 
 body.editormode .pdfcommentmarker.drawing {
     background-color: var(--green);
+}
+
+.pdfcommentmarker.deletion {
+    background-color: var(--pink);
+}
+
+.pdfcommentmarker.insertion {
+    background-color: var(--bluey);
+}
+
+.pdfcommentmarker.comment {
+    background-color: var(--yellow);
 }
 
 div.innermarker {
@@ -492,13 +500,8 @@ function makeCommentTypeSelector(parnode) {
     const commentselector = addelem({
         parent: parnode,
         tag: 'div',
-        classes: ['commentselector']
-    });
-
-    const commentlabel = addelem({
-        parent: commentselector,
-        tag: 'div',
-        innerHTML: 'add: '
+        classes: ['commentselector'],
+        mywidget: parnode
     });
 
     const adddel = addelem({
@@ -506,7 +509,15 @@ function makeCommentTypeSelector(parnode) {
         tag: 'div',
         classes: ['commenttype','del'],
         title: 'mark selection for deletion',
-        innerHTML: 'deletion'
+        innerHTML: 'deletion',
+        mywidget: parnode,
+        onmousedown: function (e) { e.preventDefault(); },
+        onpointerdown: function (e) { e.preventDefault(); },
+            onclick: function (e) {
+            console.log("here");
+            e.preventDefault();
+            this.mywidget.makeType('deletion');
+        }
     });
 
     const addins = addelem({
@@ -514,7 +525,14 @@ function makeCommentTypeSelector(parnode) {
         tag: 'div',
         classes: ['commenttype','ins'],
         title: 'mark spot for insertion',
-        innerHTML: 'insertion'
+        innerHTML: 'insertion',
+        mywidget: parnode,
+        onmousedown: function (e) { e.preventDefault(); },
+        onpointerdown: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        },
+        onclick: function (e) { this.mywidget.makeType('insertion'); }
     });
 
     const addcomm = addelem({
@@ -522,12 +540,34 @@ function makeCommentTypeSelector(parnode) {
         tag: 'div',
         classes: ['commenttype','comment'],
         title: 'add a comment',
-        innerHTML: 'comment'
+        innerHTML: 'comment',
+        mywidget: parnode,
+        onmousedown: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        },
+        onpointerdown: function (e) {
+            e.preventDefault();
+            e.stopPropogation();
+        },
+        onclick: function (e) { this.mywidget.makeType('comment'); }
     });
 
-    commentselector.mywidget = parnode;
-
     return commentselector;
+}
+
+function makeType(ctype) {
+    const alltypes = ['drawing','deletion','query','comment','insertion'];
+    for (const thistype of alltypes) {
+        if (this?.mymarker) {
+            this?.mymarker.classList.remove(thistype);
+        }
+        this.classList.remove(thistype);
+    }
+    if (this?.mymarker) {
+        this.mymarker.classList.add(ctype);
+    }
+    this.classList.add(ctype);
 }
 
 // Functions for drawing boxes
@@ -576,6 +616,7 @@ function createPdfCommentMarker(elem) {
 }
 
 function startdraw(elem, evnt) {
+    if (elem?.hasdraw) { return; }
     if (elem.isdrawing) { return; }
     elem.isdrawing = true;
     if (elem.drawingmarker) {
@@ -587,6 +628,7 @@ function startdraw(elem, evnt) {
     marker.anchorPP = pointerPerc(elem, evnt);
     marker.updatePosition(marker.anchorPP);
     elem.isdrawing = true;
+    elem.hasdraw = true;
 }
 
 function continuedraw(elem, evnt) {
@@ -623,10 +665,15 @@ function enddraw(elem, evnt) {
         parent: innermarker,
         mymarker: marker,
         tag: 'div',
-        classes: ['commentwidget']
+        classes: ['commentwidget'],
+        makeType: makeType
     });
     commentwidget.style.zIndex = (marker.myzindex + 2).toString();
-    commentwidget.myselector = makeCommentTypeSelector(commentwidget);
+    if (!w.iseditor) {
+        commentwidget.myselector = makeCommentTypeSelector(commentwidget);
+    } else {
+        commentwidget.makeType('query');
+    }
 }
 
 //
