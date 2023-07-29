@@ -519,6 +519,7 @@ div.commentform.insertion .response {
 div.commentform div.commentformbuttons {
     display: block;
     width: 100%;
+    user-select: none;
 }
 
 div.commentform div.commentformbuttons div.commentformbutton {
@@ -751,6 +752,12 @@ async function saveComment() {
         }
     }
     this.makeSaving();
+    const resp = await jsonrequest(req);
+    if (!resp) {
+        this.makeUnsaved();
+        return;
+    }
+    this.makeSaved();
 }
 
 function makeSaved() {
@@ -762,8 +769,8 @@ function makeSaved() {
 
 function makeSaving() {
     this.classList.add('saving');
-    this.savebutton.innerHTML = '<span class="material-symbols-outlined ' +
-        'rotating">sync</span> saving';
+    this.savebutton.innerHTML = 'saving <span class="material-symbols-outlined' +
+        ' rotating">sync</span>';
 }
 
 function makeUnsaved() {
@@ -884,8 +891,8 @@ function makeCommentForm(widg, ctype, id) {
         innerHTML: 'save <span class="material-symbols-outlined">' +
         'save</span>',
         onclick: function() {
-            if (this.classList.includes('disabled')) { return; }
-            if (this.mycommentform.classList.includes('saving')) {
+            if (this.classList.contains('disabled')) { return; }
+            if (this.mycommentform.classList.contains('saving')) {
                 return;
             }
             this.mycommentform.saveComment();
