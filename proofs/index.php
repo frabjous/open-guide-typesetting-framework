@@ -1331,7 +1331,6 @@ async function submitToEditors() {
         submitbutton.classList.add('lookatme');
         return;
     }
-    console.log(resp);
     okmessage('Thank you for your comments and corrections. They have ' +
         'been submitted to the editors. You may close this window now. ' +
         'If you need to make any additional changes, you may visit this ' +
@@ -1398,7 +1397,7 @@ const submitbutton = addelem({
     classes: ['disabled'],
     updateMe: function() {
         // never change it in editor mode
-        if (w.editormode) { return; }
+        if (w.iseditor) { return; }
         let readytosubmit = w.anychangesmade;
         if (readytosubmit) {
             clearError();

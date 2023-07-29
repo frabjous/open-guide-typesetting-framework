@@ -136,8 +136,8 @@ if ($requesttype == 'submit') {
         $emailcontents .= '<p>Dear ' . $userdetails->name . ',</p>' . "\r\n";
     }
     $emailcontents .= '<p>Author comments and/corrections have been ' .
-        'submitted on the' . "\r\n" . ((isset($project_settings->title)) ?
-        $project_settings->title : 'Open Guide') . "\r\n" .
+        'submitted on the <em>' . "\r\n" . ((isset($project_settings->title)) ?
+        $project_settings->title : 'Open Guide') . '</em>' . "\r\n" .
         'typesetting framework for the proof set created on' . "\r\n" .
         nicetime(intval($proofset)) . ' for document id ' .
         '<strong>' . $assignment_id . '</strong>' . "\r\n";
@@ -177,7 +177,7 @@ if ($requesttype == 'submit') {
         foreach ($comments->{$prooftype} as $commentid => $commentinfo) {
             if (!$liststarted) {
                 $emailcontents .= '<p>Comments on ' . $prooftype .
-                    'proofs</p>' . "\r\n" . '<ol>' . "\r\n";
+                    ' proofs</p>' . "\r\n" . '<ol>' . "\r\n";
                 $liststarted = true;
             }
             $emailcontents .= '<li>';
