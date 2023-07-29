@@ -423,6 +423,12 @@ div.commentwidget.underneath {
     bottom: auto;
 }
 
+div.commentwidget.pushleft {
+    background-color: var(--bg);
+    right: -1rem;
+    left: auto;
+}
+
 div.commentwidget.selecting {
     padding: 0.5rem 2rem 0.5rem 2rem;
     border-radius: 2rem;
@@ -528,6 +534,8 @@ div.commentform br {
 
 import downloadFile from '../open-guide-editor/open-guide-misc/download.mjs';
 
+import postData from '../open-guide-editor/open-guide-misc/fetch.mjs';
+
 // initial setup
 
 const w = window;
@@ -560,6 +568,14 @@ for (const id of [
 //
 // FUNCTIONS
 //
+
+// function for making json requests to server
+
+async function jsonrequest(req) {
+    
+    const resp = await postData('jsonrequest.php?key=' +
+        encodeURIComponent(window.accesskey), req);
+}
 
 // general function for adding elements
 function addelem(opts) {
@@ -924,6 +940,9 @@ function enddraw(elem, evnt) {
     commentwidget.style.zIndex = (marker.myzindex + 2).toString();
     if (elem?.id == 'page1' & (anchorPP.y < 25 || newPP.y < 25)) {
         commentwidget.classList.add('underneath');
+    }
+    if (anchorPP.x > 80 || newPP.x > 80) {
+        commentwidget.classList.add('pushleft');
     }
     if (!w.iseditor) {
         commentwidget.myselector = makeCommentTypeSelector(commentwidget);
