@@ -866,7 +866,6 @@ function makeCommentForm(widg, ctype, id) {
         mywidget: widg,
         classes: ['commentform', ctype]
     });
-    commentform.style.zIndez = 6;
     commentform.dellabel = addelem({
         tag: 'label',
         parent: commentform,
@@ -1168,9 +1167,6 @@ function createPdfCommentMarker(elem) {
     marker.style.position = 'absolute';
     marker.style.display = 'inline-block';
     w.nummarkers = w.nummarkers + 1;
-    marker.style.zIndex = 2;
-    //marker.style.zIndex = (w.nummarkers * 4).toString();
-    marker.myzindex = (w.nummarkers * 4);
     marker.updatePosition = updatePosition;
     return marker;
 }
@@ -1212,8 +1208,6 @@ function widgify(marker, elem) {
             e.stopPropagation();
         },
     });
-    marker.innermarker.style.zIndex = 3;
-    //marker.innermarker.style.zIndex = (parseInt(marker.style.zIndex)+2).toString();
     const commentwidget = addelem({
         parent: marker.innermarker,
         mymarker: marker,
@@ -1224,8 +1218,6 @@ function widgify(marker, elem) {
         },
         makeType: makeType
     });
-    commentwidget.style.zIndex = 4;
-    //commentwidget.style.zIndex = (10000 + marker.myzindex).toString();
     const anchorPP = marker?.anchorPP ?? false;
     const newPP = marker?.wanderPP ?? false;
     if (anchorPP && newPP) {
