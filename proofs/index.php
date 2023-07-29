@@ -431,6 +431,8 @@ div.commentwidget {
     background-color: var(--bg);
     bottom: 100%;
     left: -1rem;
+    opacity: 1;
+    z-index: 200;
 }
 
 div.commentwidget.underneath {
@@ -453,6 +455,7 @@ div.commentwidget.minimized.pushleft {
     top: -0.8rem;
     bottom: auto;
     right: auto;
+    z-index: 100;
 }
 
 div.commentwidget div.minimizemarker {
