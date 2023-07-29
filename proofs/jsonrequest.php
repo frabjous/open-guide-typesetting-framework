@@ -158,7 +158,14 @@ if ($requesttype == 'submit') {
         }
     }
     $emailcontents .= '.</p>'. "\r\n";
-
+    $fp = full_path();
+    $fp = str_replace('jsonrequest.php','',$fp);
+    $editorurl = $fp . '?key=' . rawurlencode($editorkey);
+    $emailcontents .= '<p>To view the proofs with the saved comments,' .
+        "\r\n" . 'please visit this URL:</p>';
+    $emailcontents .= '<p><a href="' . $editorurl . '" target="_blank" ' .
+        "\r\n" . '>' . $editorurl . '</a></p>' . "\r\n";
+    
 }
 
 $rv->error = false;
