@@ -412,13 +412,15 @@ div.innermarker {
 
 div.commentwidget {
     position: absolute;
+    background-color: var(--bg);
     bottom: 100%;
     left: -1rem;
-    background-color: var(--bg);
 }
 
 div.commentwidget.underneath {
+    background-color: var(--bg);
     top: 100%;
+    bottom: auto;
 }
 
 div.commentwidget.selecting {
@@ -475,6 +477,15 @@ div.commentform.deletion .response,
 div.commentform.insertion .del,
 div.commentform.insertion .response {
     display: none;
+}
+
+div.commentform div.commentformbuttons div.commentformbutton {
+    color: var(--primary);
+    cursor: pointer;
+}
+
+div.commentform div.commentformbuttons div.commentformbutton.removebutton {
+    color: var(--red);
 }
 
 </style>
@@ -618,7 +629,45 @@ function makeCommentForm(widg, ctype) {
         classes: ['response'],
         parent: commentform
     });
-
+    commentform.buttons = addelem({
+        tag: 'div',
+        parent: commentform,
+        classes: ['commentformbuttons']
+    });
+    commentform.rightbuttons = addelem({
+        tag: 'div',
+        parent: commentform.buttons,
+        classes: ['commentformrightbuttons']
+    });
+    commentform.leftbuttons = addelem({
+        tag: 'div',
+        parent: commentform.buttons,
+        classes: ['commentformrightbuttons']
+    });
+    commentform.removebutton = addelem({
+        tag: 'div',
+        parent: commentform.leftbuttons,
+        title: 'delete this comment',
+        classes: ['commentformbutton', 'removebutton'],
+        innerHTML: '<span class="material-symbols-outlined">' +
+            'delete_forever</span>'
+    });
+    commentform.savebutton = addelem({
+        tag: 'div',
+        title: 'save this comment',
+        parent: commentform.rightbuttons,
+        classes: ['commentformbutton'],
+        innerHTML: 'save <span class="material-symbols-outlined">' +
+            'save</span>'
+    });
+    commentform.minimizebutton = addelem({
+        tag: 'div',
+        title: 'minimize',
+        parent: commentform.rightbuttons,
+        classes: ['commentformbutton', 'minimize'],
+        innerHTML: '<span class="material-symbols-outlined">' +
+            'expand_more</span>'
+    });
     return commentform;
 }
 
