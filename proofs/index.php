@@ -48,6 +48,13 @@ foreach ($files as $file) {
 
 $pdfparentstart = 1200;
 
+$commentsfile = "$proofdir/saved-comments.json";
+
+$commentsjson = '';
+if (file_exists($commentsfile)) {
+    $commentsjson = file_get_contents($commentsfile);
+}
+
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -438,6 +445,30 @@ div.commentwidget.pushleft {
     left: auto;
 }
 
+div.commentwidget.minimized,
+div.commentwidget.minimized.underneath,
+div.commentwidget.minimized.pushleft {
+    background-color: transparent;
+    left: -1rem;
+    top: -0.8rem;
+    bottom: auto;
+    right: auto;
+}
+
+div.commentwidget div.minimizemarker {
+    display: none;
+    color: var(--primary);
+    cursor: pointer;
+}
+
+div.commentwidget.minimized div.minimizemarker {
+    display: inline-block;
+}
+
+div.commentwidget.minimized div.minimizemarker:hover {
+    color: var(--primary-hover);
+}
+
 div.commentwidget.selecting {
     padding: 0.5rem 2rem 0.5rem 2rem;
     border-radius: 2rem;
@@ -455,6 +486,10 @@ div.commentform {
     padding: 1rem;
     border-radius: 1rem;
     text-align: left;
+}
+
+div.commentwidget.minimized div.commentform {
+    display: none;
 }
 
 div.commentform label {
@@ -607,6 +642,11 @@ w.usehtml = <?php echo json_encode($usehtml); ?>;
 w.pdfpp = <?php echo strval($pdfpages); ?>;
 w.downloads = <?php echo json_encode($downloads); ?>;
 w.pdfzoom = <?php echo strval($pdfparentstart); ?>;
+<?php if ($commentsjson && $commentsjson != '') {
+    echo 'w.savedcomments = ';
+    echo $commentsjson;
+    echo ';' . PHP_EOL;
+} ?>
 w.nummarkers = 0;
 for (const id of [
     'toppanel',
@@ -765,6 +805,7 @@ function makeSaved() {
     this.classList.remove('unsaved', 'saving');
     this.savebutton.innerHTML = '(saved)';
     this.savebutton.classList.add('disabled');
+    this.minimize(true);
 }
 
 function makeSaving() {
@@ -778,6 +819,42 @@ function makeUnsaved() {
     this.classList.add('unsaved');
     this.savebutton.innerHTML = this.savebutton.origHTML;
     this.savebutton.classList.remove('disabled');
+}
+
+function minimize(b) {
+    if (!this?.mywidget) { return; }
+    const widg = this.mywidget;
+    // minimize
+    if (b) {
+        widg.classList.add('minimized');
+        if (widg?.mymarker?.innermarker) {
+            const innermarker = widg.mymarker.innermarker;
+            innermarker.onclick = () => { this.minimize(false); }
+            innermarker.style.cursor = 'pointer';
+        }
+        if (!("minimizemarker" in widg)) {
+            widg.minimizemarker = addelem({
+                tag: 'div',
+                parent: widg,
+                mywidget: widg,
+                classes: ['minimizemarker'],
+                innerHTML:
+                    '<span class="material-symbols-outlined">comment</span>' +
+                    '<span class="material-symbols-outlined">expand_less</span>',
+                onclick: function () {
+                    this.mywidget.commentform.minimize(false);
+                }
+            });
+        }
+        return;
+    }
+    // unminimize
+    widg.classList.remove('minimized');
+    if (widg?.mymarker?.innermarker) {
+        const innermarker = widg.mymarker.innermarker;
+        innermarker.onclick = function() {};
+        innermarker.style.cursor = 'default';
+    }
 }
 
 function makeCommentForm(widg, ctype, id) {
@@ -850,7 +927,16 @@ function makeCommentForm(widg, ctype, id) {
         tag: 'input',
         type: 'checkbox',
         id: commentform.id + 'addressed',
-        parent: commentform.addressedarea
+        mycommentform: commentform,
+        parent: commentform.addressedarea,
+        onchange: function() {
+            const commentform = this.mycommentform;
+            if (this.checked) {
+                commentform.saveComment();
+            } else {
+                commentform.makeUnsaved();
+            }
+        }
     });
     commentform.addressedlabel = addelem({
         tag: 'label',
@@ -906,17 +992,27 @@ function makeCommentForm(widg, ctype, id) {
         parent: commentform.rightbuttons,
         classes: ['commentformbutton', 'minimize'],
         innerHTML: '<span class="material-symbols-outlined">' +
-            'expand_more</span>'
+            'expand_more</span>',
+            onclick: function() {
+            this.mycommentform.minimize(true);
+        }
     });
     commentform.clearer = addelem({
         tag: 'br',
         parent: commentform.buttons
     });
+    commentform.onclick = function(e) {
+        e.stopPropagation();
+    }
+    commentform.onpointerdown = function(e) {
+        e.stopPropagation();
+    }
     commentform.deleteComment = deleteComment;
     commentform.saveComment = saveComment;
     commentform.makeSaved = makeSaved;
     commentform.makeUnsaved = makeUnsaved;
     commentform.makeSaving = makeSaving;
+    commentform.minimize = minimize;
     commentform.eversaved = false;
     commentform.makeUnsaved();
     return commentform;
@@ -1116,7 +1212,7 @@ function enddraw(elem, evnt) {
     }
     marker.updatePosition(newPP);
     elem.isdrawing = false;
-    const innermarker = addelem({
+    marker.innermarker = addelem({
         parent: marker,
         classes: ['innermarker'],
         tag: 'div',
@@ -1125,7 +1221,7 @@ function enddraw(elem, evnt) {
         },
     });
     const commentwidget = addelem({
-        parent: innermarker,
+        parent: marker.innermarker,
         mymarker: marker,
         tag: 'div',
         classes: ['commentwidget','selecting'],
