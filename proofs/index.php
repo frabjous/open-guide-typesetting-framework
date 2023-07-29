@@ -400,6 +400,10 @@ body.editormode .pdfcommentmarker.drawing {
     background-color: var(--yellow);
 }
 
+.pdfcommentmarker.query {
+    background-color: var(--green);
+}
+
 div.innermarker {
     position: relative;
     width: 100%;
@@ -411,12 +415,28 @@ div.commentwidget {
     bottom: 100%;
     left: -1rem;
     background-color: var(--bg);
+}
+
+div.commentwidget.underneath {
+    top: 100%;
+}
+
+div.commentwidget.selecting {
     padding: 0.5rem 2rem 0.5rem 2rem;
     border-radius: 2rem;
 }
 
+div.commentwidget.deletion,
+div.commentwidget.insertion,
+div.commentwidget.comment,
+div.commentwidget.query {
+    border-radius: 1rem;
+}
+
 div.commentform {
-    width: 16rem;
+    width: 18rem;
+    padding: 1rem 1.5rem 1rem 1rem;
+    border-radius: 1rem;
 }
 
 div.commentform label {
@@ -427,6 +447,23 @@ div.commentform textarea {
     resize: none;
     width: 100%;
     height: 4rem;
+    font-family: var(--font-family);
+}
+
+div.commentform.query {
+    background-color: var(--green);
+}
+
+div.commentform.comment {
+    background-color: var(--yellow);
+}
+
+div.commentform.insertion {
+    background-color: var(--bluey);
+}
+
+div.commentform.deletion {
+    background-color: var(--pink);
 }
 
 div.commentform.query .ins,
@@ -683,6 +720,7 @@ function makeType(ctype) {
             delete(this.mymarker.mypage.drawingmarker);
         }
     }
+    this.classList.remove('selecting');
     this.classList.add(ctype);
     if (this?.myselector) {
         this.myselector.parentNode.removeChild(this.myselector);
@@ -787,13 +825,16 @@ function enddraw(elem, evnt) {
         parent: innermarker,
         mymarker: marker,
         tag: 'div',
-        classes: ['commentwidget'],
+        classes: ['commentwidget','selecting'],
         onpointerdown: function(e) {
             e.stopPropagation();
         },
         makeType: makeType
     });
     commentwidget.style.zIndex = (marker.myzindex + 2).toString();
+    if (elem?.id == 'page1' & (anchorPP.y < 25 || newPP.y < 25)) {
+        commentwidget.classList.add('underneath');
+    }
     if (!w.iseditor) {
         commentwidget.myselector = makeCommentTypeSelector(commentwidget);
     } else {
