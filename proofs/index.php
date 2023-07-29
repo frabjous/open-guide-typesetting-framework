@@ -757,6 +757,19 @@ async function deleteComment() {
     // remove off server
     if (this.eversaved) {
         // TODO
+        const req = {
+            requesttype: 'deletecomment',
+            commentid: this.id
+        };
+        this.removebutton.innerHTML =
+            '<span class="material-symbols-outlined rotating">sync' +
+            '</span> deleting';
+        const resp = await jsonrequest(req);
+        if (!resp) {
+            this.removebutton.innerHTML = '<span class="' +
+                'material-symbols-outlined">delete_forever</span>';
+            return;
+        }
     }
     // remove from DOM
     if (this?.mywidget?.mymarker) {
@@ -968,8 +981,12 @@ function makeCommentForm(widg, ctype, id) {
         parent: commentform.leftbuttons,
         title: 'delete this comment',
         classes: ['commentformbutton', 'removebutton'],
+        mycommentform: commentform,
         innerHTML: '<span class="material-symbols-outlined">' +
-            'delete_forever</span>'
+            'delete_forever</span>',
+        onclick: function() {
+            this.mycommentform.deleteComment();
+        }
     });
     commentform.savebutton = addelem({
         tag: 'div',
@@ -1504,11 +1521,11 @@ if (w.pdfpp > 0) {
                 enddraw(this, e);
             }
         }
-        /*page.onpointercancel = function(e) {
+        page.onpointercancel = function(e) {
             if (this.isdrawing) {
                 canceldraw(this, e);
             }
-        }*/
+        }
         page.onpointerleave = function(e) {
             if (this.isdrawing) {
                 canceldraw(this, e);

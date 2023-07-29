@@ -68,5 +68,22 @@ if ($requesttype == 'savecomment') {
     }
 }
 
+if ($requesttype == 'deletecomment') {
+    if (!isset($commentid)) {
+        jquit('ID of comment to delete not specified.');
+    }
+    $comments = read_comments();
+    if (isset($comments->pdf->{$commentid})) {
+        unset($comments->pdf->{$commentid});
+    }
+    if (isset($comments->html->{$commentid})) {
+        unset($comments->html->{$commentid});
+    }
+    $success = save_comments($comments);
+    if (!$success) {
+        jquit('Unable to save comments with this comment removed.', 500);
+    }
+}
+
 $rv->error = false;
 jsend();
