@@ -90,6 +90,7 @@ if ($requesttype == 'deletecomment') {
 }
 
 if ($requesttype == 'submit') {
+    // determine editor details
     require_once(dirname(__FILE__) . '/../php/libauthentication.php');
     $users = load_users($project);
     if (!isset($users->{$username})) {
@@ -101,16 +102,62 @@ if ($requesttype == 'submit') {
         jquit('Could not find editor’s email address.', 500);
     }
     $email = $userdetails->email;
+    // try to read metadata
+    $metadata = new StdClass();
+    if (file_exists("$assigndir/metadata.json")) {
+        $possmeta = json_decode(file_get_contents("$assigndir/metadata.json"));
+        if ($possmeta) {
+            $metadata = $possmeta;
+        }
+    }
+    // try to find matching accesskey
+    $editorkey = '';
+    foreach ($keys as $posskey => $posskeyinfo) {
+        if (($posskeyinfo->project == $project) &&
+            ($posskeyinfo->username == $username) &&
+            ($posskeyinfo->assignmentId == $assignment_id) &&
+            ($posskeyinfo->assignmentType == $assignmentType) &&
+            ($posskeyinfo->proofset == $proofset) &&
+            (isset($posskeyinfo->editor) && $posskeyinfo->editor)) {
+            $editorkey = $posskey;
+            break;
+        }
+    }
+    if ($editorkey == '') {
+        jquit('Could not find corresponding access key for editor.');
+    }
     require_once(dirname(__FILE__) . '/../php/libemail.php');
     $comments = read_comments();
     $emailcontents = '';
     if (isset($userdetails->name)) {
         $emailcontents .= '<p>Dear ' . $userdetails->name . ',</p>' . "\r\n";
     }
-    $emailcontents .= '<p>Comments have been saved on the ' .
-        ((isset($project_settings->title)) ? $project_settings->title :
-        'Open Guide') . ' typesetting framework for the proof set ' +
-        'created at ' . nicetime(intval($proofset)) .
+    $emailcontents .= '<p>Author comments and/corrections have been ' +
+        'saved on the' . "\r\n" . ((isset($project_settings->title)) ?
+        $project_settings->title : 'Open Guide') . "\r\n" .
+        'typesetting framework for the proof set created on' . "\r\n" .
+        nicetime(intval($proofset)) . ' for document id ' .
+        '<strong>' . $assignment_id . '</strong>' . "\r\n";
+    if (isset($metadata->title)) {
+        $emailcontents .= ' — “' . str_replace('&', '&amp;',
+            $metadata->title) . '”' . "\r\n";
+    }
+    if (isset($metadata->author)) {
+        $emailcontents .= ' by ';
+        foreach($metadata->author as $i => $authordetails) {
+            if (isset($authordetails->name)) {
+                if ($i > 0) {
+                    if ($i < (count($metadata->author) - 1)) {
+                        $emailcontents .= ', ';
+                    } else {
+                        $emailcontents .= ' and ';
+                    }
+                }
+                $emailcontents .= $authordetails->name;
+            }
+        }
+    }
+    $emailcontents .= '.</p>'. "\r\n";
 
 }
 
