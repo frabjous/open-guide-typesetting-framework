@@ -1316,16 +1316,21 @@ async function submitToEditors() {
     submitbutton.classList.remove('lookatme');
     submitbutton.classList.add('submitting');
     const req = {
-        requesttype = 'submit'
+        requesttype: 'submit'
     }
     submitbutton.innerHTML = '<span class="material-symbols-outlined ' +
         'rotating">sync</span> submitting …'
     const resp = await jsonrequest(req);
     submitbutton.classList.remove('submitting');
     submitbutton.innerHTML = 'submit';
-    if (resp) { w.anychangesmade = false; }
-    submitbutton.updateMe();
-    if (!resp) { return; }
+    if (resp) {
+        w.anychangesmade = false;
+        submitbutton.updateMe();
+    }
+    if (!resp) {
+        submitbutton.classList.add('lookatme');
+        return;
+    }
     okmessage('Thank you for your comments and corrections. They have ' +
         'been submitted to the editors. You may close this window now. ' +
         'If you need to make any additional changes, you may visit this ' +
@@ -1395,7 +1400,7 @@ const submitbutton = addelem({
         if (w.editormode) { return; }
         let readytosubmit = w.anychangesmade;
         if (readytosubmit) {
-            clearmessage();
+            clearError();
             const uu = document.getElementsByClassName("unsaved");
             if (uu.length > 0) {
                 readytosubmit = false
@@ -1419,6 +1424,8 @@ const submitbutton = addelem({
     },
     onclick: function() {
         if (this.classList.contains('disabled')) { return; }
+        if (this.classList.contains('submitting')) { return; }
+        submitToEditors();
     }
 });
 
