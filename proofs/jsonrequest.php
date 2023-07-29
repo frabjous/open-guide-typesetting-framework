@@ -26,6 +26,10 @@ $proofdir = "$datadir/$project/$assignment_type" . 's' .
 
 $commentsfile = "$proofdir/saved-comments.json";
 
+function nicetime($ts) {
+    return date('d M Y H:i:s', $ts);
+}
+
 function new_comments() {
     $comments = new StdClass();
     $comments->pdf = new StdClass();
@@ -86,7 +90,28 @@ if ($requesttype == 'deletecomment') {
 }
 
 if ($requesttype == 'submit') {
-    
+    require_once(dirname(__FILE__) . '/../php/libauthentication.php');
+    $users = load_users($project);
+    if (!isset($users->{$username})) {
+        jquit('Could not find information about editor who created ' +
+            'the proofs', 500);
+    }
+    $userdetails = $users->{$username};
+    if (!isset($userdetails->email)) {
+        jquit('Could not find editor’s email address.', 500);
+    }
+    $email = $userdetails->email;
+    require_once(dirname(__FILE__) . '/../php/libemail.php');
+    $comments = read_comments();
+    $emailcontents = '';
+    if (isset($userdetails->name)) {
+        $emailcontents .= '<p>Dear ' . $userdetails->name . ',</p>' . "\r\n";
+    }
+    $emailcontents .= '<p>Comments have been saved on the ' .
+        ((isset($project_settings->title)) ? $project_settings->title :
+        'Open Guide') . ' typesetting framework for the proof set ' +
+        'created at ' . nicetime(intval($proofset)) .
+
 }
 
 $rv->error = false;
