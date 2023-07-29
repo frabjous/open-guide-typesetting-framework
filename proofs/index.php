@@ -866,6 +866,7 @@ function makeCommentForm(widg, ctype, id) {
         mywidget: widg,
         classes: ['commentform', ctype]
     });
+    commentform.style.zIndez = 6;
     commentform.dellabel = addelem({
         tag: 'label',
         parent: commentform,
@@ -1167,7 +1168,8 @@ function createPdfCommentMarker(elem) {
     marker.style.position = 'absolute';
     marker.style.display = 'inline-block';
     w.nummarkers = w.nummarkers + 1;
-    marker.style.zIndex = (w.nummarkers * 4).toString();
+    marker.style.zIndex = 2;
+    //marker.style.zIndex = (w.nummarkers * 4).toString();
     marker.myzindex = (w.nummarkers * 4);
     marker.updatePosition = updatePosition;
     return marker;
@@ -1210,6 +1212,8 @@ function widgify(marker, elem) {
             e.stopPropagation();
         },
     });
+    marker.innermarker.style.zIndex = 3;
+    //marker.innermarker.style.zIndex = (parseInt(marker.style.zIndex)+2).toString();
     const commentwidget = addelem({
         parent: marker.innermarker,
         mymarker: marker,
@@ -1220,7 +1224,8 @@ function widgify(marker, elem) {
         },
         makeType: makeType
     });
-    commentwidget.style.zIndex = (marker.myzindex + 2).toString();
+    commentwidget.style.zIndex = 4;
+    //commentwidget.style.zIndex = (10000 + marker.myzindex).toString();
     const anchorPP = marker?.anchorPP ?? false;
     const newPP = marker?.wanderPP ?? false;
     if (anchorPP && newPP) {
@@ -1246,6 +1251,7 @@ function enddraw(elem, evnt) {
     marker.updatePosition(newPP);
     elem.isdrawing = false;
     marker.commentwidget = widgify(marker, elem);
+    const commentwidget = marker.commentwidget;
     if (!w.iseditor) {
         commentwidget.myselector = makeCommentTypeSelector(commentwidget);
     } else {
@@ -1525,14 +1531,33 @@ if (document.body.clientWidth < 1200) {
 if (("savedcomments" in w) && ("pdf" in w.savedcomments)) {
     for (const commentid in w.savedcomments.pdf) {
         const commentinfo = w.savedcomments.pdf[commentid];
-        if (!commentinfo?.page) { return; }
+        if (!commentinfo?.page) { continue; }
         const page = document.getElementById(commentinfo.page);
-        if (!page) { return; }
+        if (!page) { continue; }
         const marker = createPdfCommentMarker(page);
         marker.anchorPP = commentinfo.anchorPP ?? { x: 0, y: 0 };
         marker.updatePosition(commentinfo.wanderPP ?? { x: 10, y: 10 });
         marker.commentwidget = widgify(marker, page);
-        
+        if (!commentinfo?.commenttype) { continue; }
+        marker.commentwidget.makeType(commentinfo.commenttype, commentid);
+        if (!marker.commentwidget.commentform) { continue; }
+        const commentform = marker.commentwidget.commentform;
+        // restore input fields
+        for (const x of ['comment','ins','del','response']) {
+            if (x in commentinfo) {
+                commentform[x + 'input'].value = commentinfo[x];
+            }
+        }
+        // restore check box
+        commentform.addressedcb.checked = (("hasbeenaddressed" in commentinfo)
+            && (commentinfo.hasbeenaddressed));
+        commentform.makeSaved();
+        // even saved queries should start open for non-editors
+        if (commentinfo?.commentype == 'query' &&
+            commentform.responseinput.value == '' &&
+            (!window.iseditor)) {
+            commentform.minimize(false);
+        }
     }
 }
 
