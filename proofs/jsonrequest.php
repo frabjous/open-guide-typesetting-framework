@@ -43,6 +43,30 @@ function read_comments() {
     return $comments;
 }
 
+function save_comments($comments) {
+    global $commentsfile;
+    $saveresult = file_put_contents($commentsfile,
+        json_encode($comments, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES)
+    );
+    return (!!$saveresult);
+}
+
+if ($requesttype == 'savecomment') {
+    if (!isset($commentinfo)) {
+        jquit('Request to save comment received without info about comment.');
+    }
+    if (!isset($commentinfo->id)) {
+        jquit('Request to save comment received without comment id.');
+    }
+    $comments = read_comments();
+    if (isset($commentinfo->page)) {
+        $comments->pdf->{$commentinfo->id} = $commentinfo;
+    }
+    $success = save_comments($comments);
+    if (!$success) {
+        jquit('Unable to save comments.', 500);
+    }
+}
+
 $rv->error = false;
 jsend();
-
