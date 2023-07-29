@@ -268,6 +268,11 @@ body.pdf #pdfholder {
     animation-iteration-count: infinite;
 }
 
+#toppanel #rightbuttons #submitbutton.submitting {
+    border: 2px solid var(--primary);
+    color: var(--fg);
+}
+
 #toppanel #rightbuttons #submitbutton.lookatme:hover,
 #toppanel div.viewoption:hover {
     background-color: var(--bg);
@@ -636,6 +641,11 @@ div#errormessage > span {
     color: var(--red);
 }
 
+div#errormessage.okmsg {
+    border: 2px solid var(--primary);
+    background-color: var(--panelbg);
+}
+
 </style>
 
 <script type="module">
@@ -687,17 +697,27 @@ for (const id of [
 // functions for making json requests to server
 
 function clearError() {
+    errormessage.classList.remove('okmsg');
     errormessage.style.display = 'none';
 }
 
 function reportError(msg) {
     changeMode('instructions');
+    errormessage.classList.remove('okmsg');
     errormessage.style.display = 'block';
     errormessage.innerHTML =
         '<span>Error when interacting with server.</span> (' + msg +
         ') Check your internet connection. If the problem persists, ' +
         ' consult your ' + ((window.iseditor) ? 'site administrator' :
         'editor') + '.';
+    errormessage.scrollIntoView();
+}
+
+function okmessage(msg) {
+    changeMode('instructions');
+    errormessage.style.display = 'block';
+    errormessage.classList.add('okmsg');
+    errormessage.innerHTML = msg;
     errormessage.scrollIntoView();
 }
 
@@ -790,7 +810,7 @@ async function deleteComment() {
         const m = this.mywidget.mymarker;
         m.parentNode.removeChild(m);
     }
-    w.submitButton.updateMe();
+    w.submitbutton.updateMe();
 }
 
 async function saveComment() {
@@ -852,6 +872,9 @@ function makeUnsaved() {
     this.classList.add('unsaved');
     this.savebutton.innerHTML = this.savebutton.origHTML;
     this.savebutton.classList.remove('disabled');
+    if (w?.submitbutton?.updateMe) {
+        w.submitbutton.updateMe();
+    }
 }
 
 function minimize(b) {
@@ -1288,6 +1311,27 @@ function enddraw(elem, evnt) {
     }
 }
 
+// Function for submitting changes
+async function submitToEditors() {
+    submitbutton.classList.remove('lookatme');
+    submitbutton.classList.add('submitting');
+    const req = {
+        requesttype = 'submit'
+    }
+    submitbutton.innerHTML = '<span class="material-symbols-outlined ' +
+        'rotating">sync</span> submitting …'
+    const resp = await jsonrequest(req);
+    submitbutton.classList.remove('submitting');
+    submitbutton.innerHTML = 'submit';
+    if (resp) { w.anychangesmade = false; }
+    submitbutton.updateMe();
+    if (!resp) { return; }
+    okmessage('Thank you for your comments and corrections. They have ' +
+        'been submitted to the editors. You may close this window now. ' +
+        'If you need to make any additional changes, you may visit this ' +
+        'page with the same URL, add more comments, and resubmit.');
+}
+
 //
 // FILL IN THE PANEL
 //
@@ -1351,6 +1395,7 @@ const submitbutton = addelem({
         if (w.editormode) { return; }
         let readytosubmit = w.anychangesmade;
         if (readytosubmit) {
+            clearmessage();
             const uu = document.getElementsByClassName("unsaved");
             if (uu.length > 0) {
                 readytosubmit = false
