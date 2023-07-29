@@ -437,7 +437,7 @@ div.commentwidget.query {
 
 div.commentform {
     width: 18rem;
-    padding: 1rem 1.5rem 1rem 1rem;
+    padding: 1rem;
     border-radius: 1rem;
 }
 
@@ -448,6 +448,7 @@ div.commentform label {
 div.commentform textarea {
     resize: none;
     width: 100%;
+    box-sizing: border-box;
     height: 4rem;
     font-family: var(--font-family);
 }
@@ -479,13 +480,46 @@ div.commentform.insertion .response {
     display: none;
 }
 
+div.commentform div.commentformbuttons {
+    display: block;
+    width: 100%;
+}
+
 div.commentform div.commentformbuttons div.commentformbutton {
     color: var(--primary);
+    display: inline-block;
     cursor: pointer;
+}
+
+div.commentform div.commentformbuttons div.commentformbutton:hover {
+    color: var(--primary-hover);
+}
+
+div.commentform div.commentformbuttons div.commentformbutton span.material-symbols-outlined {
+    position: relative;
+    top: 0.3rem;
 }
 
 div.commentform div.commentformbuttons div.commentformbutton.removebutton {
     color: var(--red);
+}
+
+div.commentform.unsaved div.commentformbuttons div.commentformbutton.minimize {
+    display: none;
+}
+
+div.commentform div.commentformbuttons div.commentformrightbuttons {
+    float: right;
+    display: inline-block;
+}
+
+div.commentform div.commentformbuttons div.commentformleftbuttons {
+    float: left;
+    display: inline-block;
+}
+
+div.commentform br {
+    clear: both;
 }
 
 </style>
@@ -583,7 +617,7 @@ function makeCommentForm(widg, ctype) {
     const commentform = addelem({
         tag: 'div',
         parent: widg,
-        classes: ['commentform', ctype]
+        classes: ['commentform', 'unsaved', ctype]
     });
     commentform.dellabel = addelem({
         tag: 'label',
@@ -618,6 +652,9 @@ function makeCommentForm(widg, ctype) {
         classes: ['comment'],
         parent: commentform
     });
+    if (!window.iseditor) {
+        commentform.commentinput.readOnly = true;
+    }
     commentform.responselabel = addelem({
         tag: 'label',
         classes: ['response'],
@@ -642,7 +679,7 @@ function makeCommentForm(widg, ctype) {
     commentform.leftbuttons = addelem({
         tag: 'div',
         parent: commentform.buttons,
-        classes: ['commentformrightbuttons']
+        classes: ['commentformleftbuttons']
     });
     commentform.removebutton = addelem({
         tag: 'div',
@@ -667,6 +704,10 @@ function makeCommentForm(widg, ctype) {
         classes: ['commentformbutton', 'minimize'],
         innerHTML: '<span class="material-symbols-outlined">' +
             'expand_more</span>'
+    });
+    commentform.clearer = addelem({
+        tag: 'br',
+        parent: commentform.buttons
     });
     return commentform;
 }
