@@ -305,6 +305,10 @@ body.pdf #toppanel div.viewoption.pdf {
     background-color: var(--yellow);
 }
 
+.commentselector .commenttype.query {
+    background-color: var(--green);
+}
+
 .commentselector .commentselectorcancel {
     cursor: pointer;
     color: var(--red);
@@ -524,7 +528,6 @@ function makeCommentTypeSelector(parnode) {
             e.stopPropagation();
         },
         onclick: function (e) {
-            console.log("here");
             e.preventDefault();
             this.mywidget.makeType('deletion');
         }
@@ -590,14 +593,23 @@ function makeType(ctype) {
     const alltypes = ['drawing','deletion','query','comment','insertion'];
     for (const thistype of alltypes) {
         if (this?.mymarker) {
-            this?.mymarker.classList.remove(thistype);
+            this.mymarker.classList.remove(thistype);
         }
         this.classList.remove(thistype);
     }
     if (this?.mymarker) {
         this.mymarker.classList.add(ctype);
+        // detach it as the drawing marker so it is not overwritten
+        if (this.mymarker?.mypage?.drawingmarker) {
+            delete(this.mymarker.mypage.drawingmarker);
+        }
     }
     this.classList.add(ctype);
+    if (this?.myselector) {
+        this.myselector.parentNode.removeChild(this.myselector);
+        delete(this.myselector);
+    }
+    this.commentform = makeCommentForm(this);
 }
 
 // Functions for drawing boxes
