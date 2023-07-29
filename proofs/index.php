@@ -1331,6 +1331,7 @@ async function submitToEditors() {
         submitbutton.classList.add('lookatme');
         return;
     }
+    console.log(resp);
     okmessage('Thank you for your comments and corrections. They have ' +
         'been submitted to the editors. You may close this window now. ' +
         'If you need to make any additional changes, you may visit this ' +

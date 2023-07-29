@@ -311,6 +311,7 @@ if (isset($_GET["newpwd"]) && isset($_GET["user"])) {
             }
             section article.assignment details.ogst-assignmentblock table.editionstable span.pubsdl,
             section article.assignment details.ogst-assignmentblock table.proofslist span.proofsdl {
+                user-select: none;
                 color: var(--primary);
                 cursor: pointer;
             }
