@@ -94,7 +94,7 @@ if ($requesttype == 'submit') {
     require_once(dirname(__FILE__) . '/../php/libauthentication.php');
     $users = load_users($project);
     if (!isset($users->{$username})) {
-        jquit('Could not find information about editor who created ' +
+        jquit('Could not find information about editor who created ' .
             'the proofs', 500);
     }
     $userdetails = $users->{$username};
@@ -116,7 +116,7 @@ if ($requesttype == 'submit') {
         if (($posskeyinfo->project == $project) &&
             ($posskeyinfo->username == $username) &&
             ($posskeyinfo->assignmentId == $assignment_id) &&
-            ($posskeyinfo->assignmentType == $assignmentType) &&
+            ($posskeyinfo->assignmentType == $assignment_type) &&
             ($posskeyinfo->proofset == $proofset) &&
             (isset($posskeyinfo->editor) && $posskeyinfo->editor)) {
             $editorkey = $posskey;
@@ -129,11 +129,14 @@ if ($requesttype == 'submit') {
     require_once(dirname(__FILE__) . '/../php/libemail.php');
     $comments = read_comments();
     $emailcontents = '';
+    $subject = 'Proof comments submitted on the ' . ((isset($project_settings->title)) ?
+        $project_settings->title : 'Open Guide') . ' typesetting framework ' .
+        '(' . $assignment_id . ')';
     if (isset($userdetails->name)) {
         $emailcontents .= '<p>Dear ' . $userdetails->name . ',</p>' . "\r\n";
     }
-    $emailcontents .= '<p>Author comments and/corrections have been ' +
-        'saved on the' . "\r\n" . ((isset($project_settings->title)) ?
+    $emailcontents .= '<p>Author comments and/corrections have been ' .
+        'submitted on the' . "\r\n" . ((isset($project_settings->title)) ?
         $project_settings->title : 'Open Guide') . "\r\n" .
         'typesetting framework for the proof set created on' . "\r\n" .
         nicetime(intval($proofset)) . ' for document id ' .
@@ -177,19 +180,42 @@ if ($requesttype == 'submit') {
                     'proofs</p>' . "\r\n" . '<ol>' . "\r\n";
                 $liststarted = true;
             }
-            $emailcontents . = '<li>';
+            $emailcontents .= '<li>';
             if (isset($commentinfo->page)) {
                 $emailcontents .= '<strong>' . str_replace('page', 'page ',
                     $commentinfo->page) . '</strong><br>' . "\r\n";
             }
             //TODO: something htmlish
-            
-            $emailcontents . = '</li>' . "\r\n";
+            if (isset($commentinfo->del)) {
+                $emailcontents .= 'Deleted text: ' . htmlspecialchars(
+                    $commentinfo->del) . '<br>' . "\r\n";
+            }
+            if (isset($commentinfo->ins)) {
+                $emailcontents .= 'Inserted text: ' . htmlspecialchars(
+                    $commentinfo->ins) . '<br>' . "\r\n";
+            }
+            if (isset($commentinfo->comment)) {
+                $label = 'Comment: ';
+                if (isset($commentinfo->commenttype) && 
+                    $commentinfo->commenttype == 'query') {
+                    $label = 'Query: ';
+                }
+                $emailcontents .= $label . htmlspecialchars(
+                    $commentinfo->comment) . '<br> ' . "\r\n";
+            }
+            if (isset($commentinfo->response)) {
+                $emailcontents .= 'Response: ' . htmlspecialchars(
+                    $commentinfo->response) . '<br>' . "\r\n";
+            }
+            $emailcontents .= '</li>' . "\r\n";
         }
         if ($liststarted) {
             $emailcontents .= '</ol>' . "\r\n";
         }
-
+    }
+    $emailresult = send_email($email, $subject, $emailcontents);
+    if (!$emailresult) {
+        jquit('Unable to email editors. Please contact them directly.');
     }
 }
 
