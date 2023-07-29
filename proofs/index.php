@@ -415,6 +415,31 @@ div.commentwidget {
     border-radius: 2rem;
 }
 
+div.commentform {
+    width: 16rem;
+}
+
+div.commentform label {
+    display: block;
+}
+
+div.commentform textarea {
+    resize: none;
+    width: 100%;
+    height: 4rem;
+}
+
+div.commentform.query .ins,
+div.commentform.query .del,
+div.commentform.comment .del,
+div.commentform.comment .response,
+div.commentform.comment .ins,
+div.commentform.deletion .response,
+div.commentform.insertion .del,
+div.commentform.insertion .response {
+    display: none;
+}
+
 </style>
 
 <script type="module">
@@ -505,6 +530,60 @@ function zoomInOut(inout = true) {
 }
 
 // functions for comment elements
+
+function makeCommentForm(widg, ctype) {
+    const commentform = addelem({
+        tag: 'div',
+        parent: widg,
+        classes: ['commentform', ctype]
+    });
+    commentform.dellabel = addelem({
+        tag: 'label',
+        parent: commentform,
+        classes: ['del'],
+        innerHTML: 'text to remove'
+    });
+    commentform.delinput = addelem({
+        tag: 'textarea',
+        classes: ['del'],
+        parent: commentform
+    });
+    commentform.inslabel = addelem({
+        tag: 'label',
+        parent: commentform,
+        classes: ['ins'],
+        innerHTML: 'text to insert'
+    });
+    commentform.insinput = addelem({
+        tag: 'textarea',
+        classes: ['ins'],
+        parent: commentform
+    });
+    commentform.commentlabel = addelem({
+        tag: 'label',
+        parent: commentform,
+        classes: ['comment'],
+        innerHTML: ((ctype == 'query') ? 'query' : 'comment')
+    });
+    commentform.commentinput = addelem({
+        tag: 'textarea',
+        classes: ['comment'],
+        parent: commentform
+    });
+    commentform.responselabel = addelem({
+        tag: 'label',
+        classes: ['response'],
+        parent: commentform,
+        innerHTML: 'response'
+    });
+    commentform.responseinput = addelem({
+        tag: 'textarea',
+        classes: ['response'],
+        parent: commentform
+    });
+
+    return commentform;
+}
 
 function makeCommentTypeSelector(parnode) {
 
@@ -609,7 +688,7 @@ function makeType(ctype) {
         this.myselector.parentNode.removeChild(this.myselector);
         delete(this.myselector);
     }
-    this.commentform = makeCommentForm(this);
+    this.commentform = makeCommentForm(this, ctype);
 }
 
 // Functions for drawing boxes
