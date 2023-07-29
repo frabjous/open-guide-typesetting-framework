@@ -445,10 +445,31 @@ div.commentform {
     width: 18rem;
     padding: 1rem;
     border-radius: 1rem;
+    text-align: left;
 }
 
 div.commentform label {
     display: block;
+}
+
+div.commentformaddressedarea {
+    display: none;
+}
+
+body.editormode div.commentform div.commentformaddressedarea {
+    display: block;
+    width: 100%;
+    text-align: left;
+}
+
+body.editormode div.commentform div.commentformaddressedarea input {
+    height: 1.2rem; width: 1.2rem;
+    margin: 0;
+}
+
+div.commentform label.commentformaddressedlabel {
+    padding-left: 0.5rem;
+    display: inline;
 }
 
 div.commentform textarea {
@@ -665,10 +686,16 @@ function zoomInOut(inout = true) {
 
 // functions for comment elements
 
-function makeCommentForm(widg, ctype) {
+function saveComment() {
+    const req = {};
+    
+}
+
+function makeCommentForm(widg, ctype, id) {
     const commentform = addelem({
         tag: 'div',
         parent: widg,
+        id: id,
         classes: ['commentform', 'unsaved', ctype]
     });
     commentform.dellabel = addelem({
@@ -718,6 +745,24 @@ function makeCommentForm(widg, ctype) {
         classes: ['response'],
         parent: commentform
     });
+    commentform.addressedarea = addelem({
+        tag: 'div',
+        parent: commentform,
+        classes: ['commentformaddressedarea']
+    });
+    commentform.addressedcb = addelem({
+        tag: 'input',
+        type: 'checkbox',
+        id: commentform.id + 'addressed',
+        parent: commentform.addressedarea
+    });
+    commentform.addressedlabel = addelem({
+        tag: 'label',
+        htmlFor: commentform.id + 'addressed',
+        parent: commentform.addressedarea,
+        classes: ['commentformaddressedlabel'],
+        innerHTML: 'has been addressed'
+    });
     commentform.buttons = addelem({
         tag: 'div',
         parent: commentform,
@@ -749,6 +794,7 @@ function makeCommentForm(widg, ctype) {
         innerHTML: 'save <span class="material-symbols-outlined">' +
             'save</span>'
     });
+    commentform.savebutton.origHTML = commentform.savebutton.innerHTML;
     commentform.minimizebutton = addelem({
         tag: 'div',
         title: 'minimize',
@@ -761,6 +807,7 @@ function makeCommentForm(widg, ctype) {
         tag: 'br',
         parent: commentform.buttons
     });
+    commentform.saveComment = saveComment;
     return commentform;
 }
 
@@ -868,12 +915,10 @@ function makeType(ctype, id = false) {
         this.myselector.parentNode.removeChild(this.myselector);
         delete(this.myselector);
     }
-    this.commentform = makeCommentForm(this, ctype);
-    if (id) {
-        this.commentform.id = id;
-    } else {
-        this.commentform.id = 'comment' + ((new Date()).getTime().toString());
+    if (!id) {
+        id = 'comment' + ((new Date()).getTime().toString());
     }
+    this.commentform = makeCommentForm(this, ctype, id);
 }
 
 // Functions for drawing boxes
