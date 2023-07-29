@@ -252,19 +252,23 @@ body.pdf #pdfholder {
     color: var(--inactive);
     border-radius: 1.5rem;
     margin-left: 0.5rem;
+}
+
+#toppanel div.viewoption {
     cursor: pointer;
 }
 
 #toppanel #rightbuttons #submitbutton.lookatme {
     border: 2px solid var(--primary);
     color: var(--fg);
+    cursor: pointer;
     animation-name: showoff;
     animation-duration: 0.7s;
     animation-direction: alternate;
     animation-iteration-count: infinite;
 }
 
-#toppanel #rightbuttons #submitbutton:hover,
+#toppanel #rightbuttons #submitbutton.lookatme:hover,
 #toppanel div.viewoption:hover {
     background-color: var(--bg);
     color: var(--primary);
@@ -660,6 +664,7 @@ w.pdfzoom = <?php echo strval($pdfparentstart); ?>;
     echo ';' . PHP_EOL;
 } ?>
 w.nummarkers = 0;
+w.anychangesmade = false;
 for (const id of [
     'toppanel',
     'instructionsholder',
@@ -785,6 +790,7 @@ async function deleteComment() {
         const m = this.mywidget.mymarker;
         m.parentNode.removeChild(m);
     }
+    w.submitButton.updateMe();
 }
 
 async function saveComment() {
@@ -822,7 +828,9 @@ async function saveComment() {
         this.makeUnsaved();
         return;
     }
+    w.anychangesmade = true;
     this.makeSaved();
+    w.submitbutton.updateMe();
 }
 
 function makeSaved() {
@@ -1333,12 +1341,41 @@ const submitbutton = addelem({
     parent: rightbuttons,
     tag: 'div',
     innerHTML: 'submit',
-    title: 'submit changes to editors',
-    id: 'submitbutton'
+    tooltip : 'submit changes to editor',
+    title: ((w.iseditor) ? '(button for author use only)' :
+        '(no changes to submit)'),
+    id: 'submitbutton',
+    classes: ['disabled'],
+    updateMe: function() {
+        // never change it in editor mode
+        if (w.editormode) { return; }
+        let readytosubmit = w.anychangesmade;
+        if (readytosubmit) {
+            const uu = document.getElementsByClassName("unsaved");
+            if (uu.length > 0) {
+                readytosubmit = false
+            }
+            // TODO: htmlcomments
+        }
+        if (readytosubmit) {
+            this.classList.remove('disabled');
+            this.classList.add('lookatme');
+            this.title = this.tooltip;
+        } else {
+            this.classList.add('disabled');
+            this.classList.remove('lookatme');
+            if (w.anychangesmade) {
+                this.title = 'please save any open comments before ' +
+                    'submititng';
+            } else {
+                this.title = '(no changes to submit)'
+            }
+        }
+    },
+    onclick: function() {
+        if (this.classList.contains('disabled')) { return; }
+    }
 });
-
-// TODO: fix this
-setTimeout(() => submitbutton.classList.add('lookatme'), 4000);
 
 // view selection choices
 const viewselector = addelem({
