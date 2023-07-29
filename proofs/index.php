@@ -1201,17 +1201,7 @@ function canceldraw(elem, evnt) {
     elem.isdrawing = false;
 }
 
-function enddraw(elem, evnt) {
-    if (!elem.isdrawing) { return; }
-    const newPP = pointerPerc(elem, evnt);
-    const marker = elem.drawingmarker
-    const anchorPP = marker.anchorPP;
-    if (newPP.x == anchorPP.x || newPP.y == anchorPP.y) {
-        canceldraw(elem, evnt);
-        return;
-    }
-    marker.updatePosition(newPP);
-    elem.isdrawing = false;
+function widgify(marker, elem) {
     marker.innermarker = addelem({
         parent: marker,
         classes: ['innermarker'],
@@ -1231,12 +1221,31 @@ function enddraw(elem, evnt) {
         makeType: makeType
     });
     commentwidget.style.zIndex = (marker.myzindex + 2).toString();
-    if (elem?.id == 'page1' & (anchorPP.y < 25 || newPP.y < 25)) {
-        commentwidget.classList.add('underneath');
+    const anchorPP = marker?.anchorPP ?? false;
+    const newPP = marker?.wanderPP ?? false;
+    if (anchorPP && newPP) {
+        if (elem?.id == 'page1' & (anchorPP.y < 25 || newPP.y < 25)) {
+            commentwidget.classList.add('underneath');
+        }
+        if (anchorPP.x > 80 || newPP.x > 80) {
+            commentwidget.classList.add('pushleft');
+        }
     }
-    if (anchorPP.x > 80 || newPP.x > 80) {
-        commentwidget.classList.add('pushleft');
+    return commentwidget;
+}
+
+function enddraw(elem, evnt) {
+    if (!elem.isdrawing) { return; }
+    const newPP = pointerPerc(elem, evnt);
+    const marker = elem.drawingmarker
+    const anchorPP = marker.anchorPP;
+    if (newPP.x == anchorPP.x || newPP.y == anchorPP.y) {
+        canceldraw(elem, evnt);
+        return;
     }
+    marker.updatePosition(newPP);
+    elem.isdrawing = false;
+    marker.commentwidget = widgify(marker, elem);
     if (!w.iseditor) {
         commentwidget.myselector = makeCommentTypeSelector(commentwidget);
     } else {
@@ -1509,6 +1518,22 @@ if (w.pdfpp > 0) {
 
 if (document.body.clientWidth < 1200) {
    changeZoom('fitwidth');
+}
+
+// restore pdf comments
+
+if (("savedcomments" in w) && ("pdf" in w.savedcomments)) {
+    for (const commentid in w.savedcomments.pdf) {
+        const commentinfo = w.savedcomments.pdf[commentid];
+        if (!commentinfo?.page) { return; }
+        const page = document.getElementById(commentinfo.page);
+        if (!page) { return; }
+        const marker = createPdfCommentMarker(page);
+        marker.anchorPP = commentinfo.anchorPP ?? { x: 0, y: 0 };
+        marker.updatePosition(commentinfo.wanderPP ?? { x: 10, y: 10 });
+        marker.commentwidget = widgify(marker, page);
+        
+    }
 }
 
 </script>
