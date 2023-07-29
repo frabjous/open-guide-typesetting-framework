@@ -528,6 +528,18 @@ div.commentform br {
     clear: both;
 }
 
+div#errormessage {
+    display: none;
+    background-color: var(--pink);
+    padding: 0.5rem;
+    border: 2px solid var(--red);
+    color: var(--fg);
+}
+
+div#errormessage > span {
+    color: var(--red);
+}
+
 </style>
 
 <script type="module">
@@ -555,6 +567,7 @@ for (const id of [
     'toppanel',
     'instructionsholder',
     'instructions',
+    'errormessage',
     'htmlholder',
     'htmlproofs',
     'pdfholder',
@@ -569,12 +582,35 @@ for (const id of [
 // FUNCTIONS
 //
 
-// function for making json requests to server
+// functions for making json requests to server
+
+function clearError() {
+    errormessage.style.display = 'none';
+}
+
+function reportError(msg) {
+    changeMode('instructions');
+    errormessage.style.display = 'block';
+    errormessage.innerHTML =
+        '<span>Error when interacting with server.</span> (' + msg +
+        ') Check your internet connection. If the problem persists, ' +
+        ' consult your ' + ((window.iseditor) ? 'site administrator' :
+        'editor') + '.';
+    errormessage.scrollIntoView();
+}
 
 async function jsonrequest(req) {
-    
+    clearError();
     const resp = await postData('jsonrequest.php?key=' +
         encodeURIComponent(window.accesskey), req);
+    if ((!("respObj" in resp)) || resp.respObj?.error || resp.error) {
+        let msg = ((resp?.errMsg) ? resp.errMsg + ' ' : '') +
+            ((resp?.respObj?.errMsg) ? resp.respObj.errMsg : '');
+        if (msg == '') { msg = 'unknown error'; }
+        reportError(msg);
+        return false;
+    }
+    return resp.respObj;
 }
 
 // general function for adding elements
@@ -811,7 +847,7 @@ function makeCommentTypeSelector(parnode) {
     return commentselector;
 }
 
-function makeType(ctype) {
+function makeType(ctype, id = false) {
     const alltypes = ['drawing','deletion','query','comment','insertion'];
     for (const thistype of alltypes) {
         if (this?.mymarker) {
@@ -833,6 +869,11 @@ function makeType(ctype) {
         delete(this.myselector);
     }
     this.commentform = makeCommentForm(this, ctype);
+    if (id) {
+        this.commentform.id = id;
+    } else {
+        this.commentform.id = 'comment' + ((new Date()).getTime().toString());
+    }
 }
 
 // Functions for drawing boxes
@@ -1236,6 +1277,7 @@ if (document.body.clientWidth < 1200) {
         <div id="commoncontainer">
             <div id="instructionsholder">
                 <div id="instructions">
+                    <div id="errormessage"></div>
                     <h1>Instructions</h1>
                 </div>
             </div>
