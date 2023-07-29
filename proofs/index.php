@@ -589,6 +589,15 @@ div.commentform div.commentformbuttons div.commentformbutton span.material-symbo
     top: 0.3rem;
 }
 
+div.commentform.query div.commentformbuttons div.commentformbutton.removebutton {
+    display: none;
+}
+
+body.editormode div.commentform.query div.commentformbuttons div.commentformbutton.removebutton {
+    display: inline-block;
+}
+
+
 div.commentform div.commentformbuttons div.commentformbutton.removebutton {
     color: var(--red);
 }
@@ -915,7 +924,7 @@ function makeCommentForm(widg, ctype, id) {
         classes: ['comment'],
         parent: commentform
     });
-    if (!window.iseditor) {
+    if (ctype == 'query' && !window.iseditor) {
         commentform.commentinput.readOnly = true;
     }
     commentform.responselabel = addelem({
