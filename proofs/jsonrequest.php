@@ -85,5 +85,9 @@ if ($requesttype == 'deletecomment') {
     }
 }
 
+if ($requesttype == 'submit') {
+    
+}
+
 $rv->error = false;
 jsend();
