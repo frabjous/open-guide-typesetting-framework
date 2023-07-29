@@ -104,7 +104,7 @@ $pdfparentstart = 1200;
 }
 
 .rotating {
-    animation: spin 3s infinite linear;
+    animation: spin 1.8s infinite linear;
 }
 
 body {
@@ -531,6 +531,20 @@ div.commentform div.commentformbuttons div.commentformbutton:hover {
     color: var(--primary-hover);
 }
 
+div.commentform div.commentformbuttons div.commentformbutton.disabled:hover,
+div.commentform div.commentformbuttons div.commentformbutton.disabled {
+    cursor: default;
+    color: var(--disabled);
+}
+
+div.commentform.saving div.commentformbuttons div.commentformbutton.savebutton {
+    cursor: default;
+}
+
+div.commentform.saving div.commentformbuttons div.commentformbutton.savebutton:hover {
+    color: var(--primary);
+}
+
 div.commentform div.commentformbuttons div.commentformbutton span.material-symbols-outlined {
     position: relative;
     top: 0.3rem;
@@ -695,9 +709,26 @@ function zoomInOut(inout = true) {
 
 // functions for comment elements
 
-function saveComment() {
-    const req = {};
-    const req.commentinfo = {};
+async function deleteComment() {
+    // remove off server
+    if (this.eversaved) {
+        // TODO
+    }
+    // remove from DOM
+    if (this?.mywidget?.mymarker) {
+        const m = this.mywidget.mymarker;
+        m.parentNode.removeChild(m);
+    }
+}
+
+async function saveComment() {
+    const req = {
+        requesttype: 'savecomment',
+        commentinfo: {
+            id: this.id,
+            commenttype: this.mytype
+        }
+    };
     for (const x of ['del','ins','comment','response']) {
         const inp = this[x+'input'];
         if (inp && inp.value != '') {
@@ -709,31 +740,37 @@ function saveComment() {
     }
     if (this?.mywidget?.mymarker) {
         const marker = this.mywidget.mymarker;
-        if (marker.?anchorPP) {
-            req.commentinfo.anchorPP = marker.anchorPP.
+        if (marker?.mypage) {
+            req.commentinfo.page = marker?.mypage.id;
         }
-        if (marker.?wanderPP) {
+        if (marker?.anchorPP) {
+            req.commentinfo.anchorPP = marker.anchorPP;
+        }
+        if (marker?.wanderPP) {
             req.commentinfo.wanderPP = marker.wanderPP;
         }
     }
-
+    this.makeSaving();
 }
 
 function makeSaved() {
-    this.classList.remove('unsaved');
+    this.eversaved = true;
+    this.classList.remove('unsaved', 'saving');
     this.savebutton.innerHTML = '(saved)';
-    this.savebutton.disabled = true;
+    this.savebutton.classList.add('disabled');
 }
 
 function makeSaving() {
+    this.classList.add('saving');
     this.savebutton.innerHTML = '<span class="material-symbols-outlined ' +
         'rotating">sync</span> saving';
 }
 
 function makeUnsaved() {
+    this.classList.remove('saving');
     this.classList.add('unsaved');
     this.savebutton.innerHTML = this.savebutton.origHTML;
-    this.savebutton.disabled = false;
+    this.savebutton.classList.remove('disabled');
 }
 
 function makeCommentForm(widg, ctype, id) {
@@ -741,6 +778,7 @@ function makeCommentForm(widg, ctype, id) {
         tag: 'div',
         parent: widg,
         id: id,
+        mytype: ctype,
         mywidget: widg,
         classes: ['commentform', ctype]
     });
@@ -791,6 +829,11 @@ function makeCommentForm(widg, ctype, id) {
         classes: ['response'],
         parent: commentform
     });
+    for (const x of ['del','ins','comment','response']) {
+        commentform[x+'input'].oninput = () => {
+            if (commentform.makeUnsaved) { commentform.makeUnsaved(); }
+        }
+    }
     commentform.addressedarea = addelem({
         tag: 'div',
         parent: commentform,
@@ -836,14 +879,23 @@ function makeCommentForm(widg, ctype, id) {
         tag: 'div',
         title: 'save this comment',
         parent: commentform.rightbuttons,
-        classes: ['commentformbutton'],
+        mycommentform: commentform,
+        classes: ['commentformbutton','savebutton'],
         innerHTML: 'save <span class="material-symbols-outlined">' +
-            'save</span>'
+        'save</span>',
+        onclick: function() {
+            if (this.classList.includes('disabled')) { return; }
+            if (this.mycommentform.classList.includes('saving')) {
+                return;
+            }
+            this.mycommentform.saveComment();
+        }
     });
     commentform.savebutton.origHTML = commentform.savebutton.innerHTML;
     commentform.minimizebutton = addelem({
         tag: 'div',
         title: 'minimize',
+        mycommentform: commentform,
         parent: commentform.rightbuttons,
         classes: ['commentformbutton', 'minimize'],
         innerHTML: '<span class="material-symbols-outlined">' +
@@ -853,10 +905,12 @@ function makeCommentForm(widg, ctype, id) {
         tag: 'br',
         parent: commentform.buttons
     });
+    commentform.deleteComment = deleteComment;
     commentform.saveComment = saveComment;
-    commentform.makeSaved= makeSaved;
+    commentform.makeSaved = makeSaved;
     commentform.makeUnsaved = makeUnsaved;
     commentform.makeSaving = makeSaving;
+    commentform.eversaved = false;
     commentform.makeUnsaved();
     return commentform;
 }
