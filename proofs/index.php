@@ -98,6 +98,15 @@ $pdfparentstart = 1200;
     to {background-color: var(--bluey);}
 }
 
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+
+.rotating {
+    animation: spin 3s infinite linear;
+}
+
 body {
     font-family: var(--font-family);
     font-size: 18px;
@@ -688,7 +697,43 @@ function zoomInOut(inout = true) {
 
 function saveComment() {
     const req = {};
-    
+    const req.commentinfo = {};
+    for (const x of ['del','ins','comment','response']) {
+        const inp = this[x+'input'];
+        if (inp && inp.value != '') {
+            req.commentinfo[x] = inp.value;
+        }
+    }
+    if (this.addressedcb && this.addressedcb.checked) {
+        req.commentinfo.hasbeenaddressed = true;
+    }
+    if (this?.mywidget?.mymarker) {
+        const marker = this.mywidget.mymarker;
+        if (marker.?anchorPP) {
+            req.commentinfo.anchorPP = marker.anchorPP.
+        }
+        if (marker.?wanderPP) {
+            req.commentinfo.wanderPP = marker.wanderPP;
+        }
+    }
+
+}
+
+function makeSaved() {
+    this.classList.remove('unsaved');
+    this.savebutton.innerHTML = '(saved)';
+    this.savebutton.disabled = true;
+}
+
+function makeSaving() {
+    this.savebutton.innerHTML = '<span class="material-symbols-outlined ' +
+        'rotating">sync</span> saving';
+}
+
+function makeUnsaved() {
+    this.classList.add('unsaved');
+    this.savebutton.innerHTML = this.savebutton.origHTML;
+    this.savebutton.disabled = false;
 }
 
 function makeCommentForm(widg, ctype, id) {
@@ -696,7 +741,8 @@ function makeCommentForm(widg, ctype, id) {
         tag: 'div',
         parent: widg,
         id: id,
-        classes: ['commentform', 'unsaved', ctype]
+        mywidget: widg,
+        classes: ['commentform', ctype]
     });
     commentform.dellabel = addelem({
         tag: 'label',
@@ -808,6 +854,10 @@ function makeCommentForm(widg, ctype, id) {
         parent: commentform.buttons
     });
     commentform.saveComment = saveComment;
+    commentform.makeSaved= makeSaved;
+    commentform.makeUnsaved = makeUnsaved;
+    commentform.makeSaving = makeSaving;
+    commentform.makeUnsaved();
     return commentform;
 }
 
