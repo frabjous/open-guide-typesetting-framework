@@ -165,7 +165,32 @@ if ($requesttype == 'submit') {
         "\r\n" . 'please visit this URL:</p>';
     $emailcontents .= '<p><a href="' . $editorurl . '" target="_blank" ' .
         "\r\n" . '>' . $editorurl . '</a></p>' . "\r\n";
-    
+    $emailcontents .= "<p>A summary of the comments left is below.</p>\r\n";
+    foreach(array('html','pdf') as $prooftype) {
+        if (!isset($comments->{$prooftype})) {
+            continue;
+        }
+        $liststarted = false;
+        foreach ($comments->{$prooftype} as $commentid => $commentinfo) {
+            if (!$liststarted) {
+                $emailcontents .= '<p>Comments on ' . $prooftype .
+                    'proofs</p>' . "\r\n" . '<ol>' . "\r\n";
+                $liststarted = true;
+            }
+            $emailcontents . = '<li>';
+            if (isset($commentinfo->page)) {
+                $emailcontents .= '<strong>' . str_replace('page', 'page ',
+                    $commentinfo->page) . '</strong><br>' . "\r\n";
+            }
+            //TODO: something htmlish
+            
+            $emailcontents . = '</li>' . "\r\n";
+        }
+        if ($liststarted) {
+            $emailcontents .= '</ol>' . "\r\n";
+        }
+
+    }
 }
 
 $rv->error = false;
