@@ -1694,6 +1694,7 @@ htmld.body.addEventListener('keydown', (e) => {
         (e.key == 'Backspace' || e.key == 'Delete') ||
         (e.ctrlKey && (e.key == 'x' || e.key == 'X' || e.key == 'v' || e.key == 'V')) ||
         (e.shiftKey && e.key == 'Insert') ||
+        (e.key == 'Enter') ||
         (e.keyCode > 128)
     ) {
         e.preventDefault();
@@ -1708,8 +1709,10 @@ htmld.body.addEventListener('cut', (e) => {
     e.preventDefault();
 });
 
-htmld.body.addEventListener('input', (e) => {
+// context menus sometimes have their own way of deleting
+htmld.body.addEventListener('contextmenu', (e) => {
     e.preventDefault();
+    return false;
 });
 
 // add listener for selection
