@@ -1342,7 +1342,6 @@ async function submitToEditors() {
 //
 
 function htmlSelectionChange(e) {
-    if (htmlw.isselectchanging) { return; }
     const selection = htmlw.getSelection();
     console.log(selection);
     const position = selection.anchorNode.compareDocumentPosition(
@@ -1366,6 +1365,8 @@ function htmlSelectionChange(e) {
         endnode = selection.anchorNode;
         endnodeoffset = selection.anchorOffset;
     }
+    /*
+    if (firstnode?.tagName) { return; }
     let parNode = firstnode.parentNode;
     if (!parNode) { return; }
     let beforespan = addelem({
@@ -1384,8 +1385,10 @@ function htmlSelectionChange(e) {
         tag: 'span',
         innerHTML: firstnode.textContent.substring(firstnodeoffset)
     });
+    parNode.insertBefore(afterspan, firstnode);
     console.log("more");
     parNode.removeChild(firstnode);
+    */
 }
 
 //
