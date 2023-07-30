@@ -639,6 +639,17 @@ function makeCommentForm(widg, ctype, id) {
         id: id,
         mytype: ctype,
         mywidget: widg,
+        onpointerdown: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        },
+        onpointerup: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        },
+        onkeydown: function(e) {
+            e.forcethrough = true;
+        },
         classes: ['commentform', ctype]
     });
     commentform.dellabel = addelem({
@@ -949,9 +960,6 @@ function makeHtmlType(ctype, id = false) {
         }
         let ctypetagtype = 'span';
         let ctypeclasses = [ id + '-change', 'ogstchange' ];
-        if (ctype == 'insertion') {
-            ctypetagtype = 'ins';
-        }
         if (ctype == 'deletion') {
             ctypetagtype = 'del';
         }
@@ -973,7 +981,6 @@ function makeHtmlType(ctype, id = false) {
             fnMid = fnTC.substring(minoffset,maxoffset);
             fnPost = fnTC.substring(maxoffset);
         }
-        console.log(fnTC, fnPre, fnMid, fnPost);
         const parNode = firstnode.parentNode;
         if (fnPre != '') {
             const preNode = addelem({
@@ -1050,7 +1057,7 @@ function makeHtmlType(ctype, id = false) {
                 innerHTML: tTC
             });
             const tparNode = t.parentNode;
-            tparNode.inertBefore(repNode, t);
+            tparNode.insertBefore(repNode, t);
             tparNode.removeChild(t);
         }
         selection.collapse(null);
@@ -1623,6 +1630,7 @@ function setUpHtml() {
     htmld.body.setAttribute('spellcheck',false);
     // prevent actual editing?
     htmld.body.addEventListener('keydown', (e) => {
+        if (e.forcethrough) { return true; }
         if (
             ((!e.metaKey && !e.ctrlKey && !e.altKey) && (e.key.length == 1)) ||
             (e.key == 'Backspace' || e.key == 'Delete') ||

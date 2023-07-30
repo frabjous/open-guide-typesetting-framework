@@ -32,10 +32,13 @@
 }
 
 .proofsetaddition {
+    all: unset;
     font-family: var(--ogstfont-family);
     font-size: 18px;
     background-color: var(--ogstbg);
     color: var(--ogstfg);
+    font-weight: normal;
+    font-style: normal;
 }
 
 .commentselectorholder {
@@ -73,6 +76,11 @@
 
 .commentselector .commenttype.ins {
     background-color: var(--ogstbluey);
+    display: none;
+}
+
+.commentselectorholder.noselection .commentselector .commenttype.ins {
+    display: inline-block;
 }
 
 .commentselector .commenttype.comment {
@@ -306,5 +314,24 @@ div.commentform div.commentformbuttons div.commentformleftbuttons {
 
 div.commentform br {
     clear: both;
+}
+
+.ogstchange.ogstquery {
+    background-color: var(--ogstgreen);
+}
+
+.ogstchange.ogstcomment: {
+    background-color: var(--ogstyellow);
+}
+
+del.ogstchange {
+    background-color: var(--ogstpink);
+}
+
+ins.ogstchange {
+    background-color: var(--ogstbluey);
+    text-decoration: line-through;
+    text-decoration-color: var(--ogstred);
+    text-decoration-thickness: 0.1em;
 }
 
