@@ -1338,6 +1338,15 @@ async function submitToEditors() {
 }
 
 //
+// HTML functions
+//
+
+function htmlSelectionChange(e) {
+    const sel = htmlw.getSelection();
+    console.log(sel);
+}
+
+//
 // FILL IN THE PANEL
 //
 
@@ -1534,36 +1543,9 @@ if (pdfpp > 0) {
     });
 }
 
-/*
-let selection = window.getSelection();
-let position = selection.anchorNode.compareDocumentPosition(selection.focusNode);
-if (position & Node.DOCUMENT_POSITION_FOLLOWING)
-  alert("Left-to-right selection");
-else if (position & Node.DOCUMENT_POSITION_PRECEDING)
-  alert("Right-to-left selection");
-else
-  alert("Only one node selected");
- */
-// show one of the three main body elements
-
-
-if (htmlproofs.contentWindow) {
-    window.htmlw = htmlproofs.contentWindow;
-}
-
-if (htmlproofs.contentDocument) {
-    window.htmld = htmlproofs.contentDocument;
-}
-
-console.log(htmld);
-
-htmld.body.setAttribute('contenteditable',true);
-
-if (iseditor) {
-    changeMode('html');
-} else {
-    changeMode('instructions');
-}
+//
+// SET UP PDF LISTENERS
+//
 
 window.pdfpages.addEventListener('keydown', function(e) {
     const w = this.clientWidth;
@@ -1605,7 +1587,7 @@ window.pdfpages.addEventListener('keydown', function(e) {
     }
 });
 
-// add listener to pdf pages
+// listener for creating pdf boxes
 if (w.pdfpp > 0) {
     for (const page of pdfpages.getElementsByClassName("pdfpage")) {
         page.isdrawing = false;
@@ -1637,12 +1619,7 @@ if (w.pdfpp > 0) {
     }
 }
 
-if (document.body.clientWidth < 1200) {
-   changeZoom('fitwidth');
-}
-
 // restore pdf comments
-
 if (("savedcomments" in w) && ("pdf" in w.savedcomments)) {
     for (const commentid in w.savedcomments.pdf) {
         const commentinfo = w.savedcomments.pdf[commentid];
@@ -1675,6 +1652,57 @@ if (("savedcomments" in w) && ("pdf" in w.savedcomments)) {
         }
     }
 }
+
+// set pdf zoom level
+if (document.body.clientWidth < 1200) {
+   changeZoom('fitwidth');
+}
+
+/*
+let selection = window.getSelection();
+let position = selection.anchorNode.compareDocumentPosition(selection.focusNode);
+if (position & Node.DOCUMENT_POSITION_FOLLOWING)
+  alert("Left-to-right selection");
+else if (position & Node.DOCUMENT_POSITION_PRECEDING)
+  alert("Right-to-left selection");
+else
+  alert("Only one node selected");
+ */
+// show one of the three main body elements
+
+//
+// SET UP HTML PROOFS
+//
+
+window.htmlw = {}; window.htmld = {};
+
+if (htmlproofs.contentWindow) {
+    window.htmlw = htmlproofs.contentWindow;
+}
+
+if (htmlproofs.contentDocument) {
+    window.htmld = htmlproofs.contentDocument;
+}
+
+// make editable
+htmld.body.setAttribute('contenteditable',true);
+
+htmld.body.addEventListener('keydown', (e) => {
+    if (e.key.length == 1) {
+        console.log('prevented');
+        e.preventDefault();
+    }
+});
+
+// add listener for selection
+htmld.onselectionchange = htmlSelectionChange;
+
+if (iseditor) {
+    changeMode('html');
+} else {
+    changeMode('instructions');
+}
+
 
 </script>
 
