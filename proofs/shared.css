@@ -154,10 +154,17 @@ div.commentwidget.minimized.pushleft {
     z-index: 100;
 }
 
+div.htmlcommentmarker div.commentwidget.minimized,
+div.htmlcommentmarker div.commentwidget.minimized.underneath,
+div.htmlcommentmarker div.commentwidget.minimized.pushleft {
+    top: -1.5rem;
+}
+
 div.commentwidget div.minimizemarker {
     display: none;
     color: var(--ogstprimary);
     cursor: pointer;
+    white-space: nowrap;
 }
 
 div.commentwidget.minimized div.minimizemarker {

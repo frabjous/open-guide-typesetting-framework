@@ -1023,6 +1023,14 @@ function makeHtmlType(ctype, id = false) {
             });
             parNode.insertBefore(midNode, firstnode);
         }
+        if (firstnode == endnode) {
+            marker.commentwidget.insertionpoint = addelem({
+                tag: 'ins',
+                classes: ctypeclasses
+            });
+            parNode.insertBefore(marker.commentwidget.insertionpoint,
+                firstnode);
+        }
         if (fnPost != '') {
             let posttagt = 'span';
             let postclasses = [id + '-change'];
@@ -1052,6 +1060,12 @@ function makeHtmlType(ctype, id = false) {
                 });
                 eparNode.insertBefore(epreNode, endnode);
             }
+            marker.commentwidget.insertionpoint = addelem({
+                tag: 'ins',
+                classes: ctypeclasses
+            });
+            eparNode.insertBefore(marker.commentwidget.insertionpoint,
+                endnode);
             if (enPost != '') {
                 const epostNode = addelem({
                     classes: [id +'-change'],
@@ -1066,15 +1080,21 @@ function makeHtmlType(ctype, id = false) {
         if (htmlw.commentselectorholder) {
             htmlw.commentselectorholder.style.display = 'none'
         }
+        marker.classList.add(ctype);
+        if (marker?.commentwidget) {
+            marker.commentwidget.classList.add(ctype);
+            marker.commentwidget.commentform = makeCommentForm(
+                marker.commentwidget, ctype, id);
+            if (ctype == 'deletion' && deltext != '') {
+                const delinput = marker.commentwidget.commentform.delinput;
+                delinput.value = deltext;
+                delinput.readOnly = true;
+            }
+        }
     } else {
         // TODO: restore version
     }
-    marker.classList.add(ctype);
-    if (marker?.commentwidget) {
-        marker.commentwidget.classList.add(ctype);
-        marker.commentwidget.commentform = makeCommentForm(
-            marker.commentwidget, ctype, id);
-    }
+
 }
 
 function makePdfType(ctype, id = false) {
