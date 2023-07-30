@@ -1342,8 +1342,25 @@ async function submitToEditors() {
 //
 
 function htmlSelectionChange(e) {
-    const sel = htmlw.getSelection();
-    console.log(sel);
+    const selection = htmlw.getSelection();
+    console.log(selection);
+    const position = selection.anchorNode.compareDocumentPosition(
+            selection.focusNode);
+    let anchorfirst;
+    let onlyoneselected = false;
+    if (position && Node.DOCUMENT_POSITION_FOLLOWING) {
+        anchorfirst = true;
+    } else if (position && Node.DOCUMENT_POSITION_PRECEDING) {
+        anchorfirst = false;
+    } else {
+        onlyoneselected = true;
+    }
+    let firstnode = selection.anchorNode;
+    if (!anchorfirst) {
+        firstnode = selection.focusNode;
+    }
+    console.log(firstnode.innerText);
+    console.log(firstnode.parentNode);
 }
 
 //
@@ -1658,18 +1675,6 @@ if (document.body.clientWidth < 1200) {
    changeZoom('fitwidth');
 }
 
-/*
-let selection = window.getSelection();
-let position = selection.anchorNode.compareDocumentPosition(selection.focusNode);
-if (position & Node.DOCUMENT_POSITION_FOLLOWING)
-  alert("Left-to-right selection");
-else if (position & Node.DOCUMENT_POSITION_PRECEDING)
-  alert("Right-to-left selection");
-else
-  alert("Only one node selected");
- */
-// show one of the three main body elements
-
 //
 // SET UP HTML PROOFS
 //
@@ -1718,6 +1723,7 @@ htmld.body.addEventListener('contextmenu', (e) => {
 // add listener for selection
 htmld.onselectionchange = htmlSelectionChange;
 
+// show one of the three main body elements
 if (iseditor) {
     changeMode('html');
 } else {
