@@ -38,6 +38,13 @@
     color: var(--ogstfg);
 }
 
+.commentselectorholder {
+    display: inline-block;
+    position: absolute;
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+}
+
 .commentselector {
     white-space: nowrap;
 }
@@ -58,6 +65,10 @@
     text-decoration: line-through;
     text-decoration-color: var(--ogstred);
     background-color: var(--ogstpink);
+}
+
+.commentselectorholder.noselection .commentselector .commenttype.del {
+    display: none;
 }
 
 .commentselector .commenttype.ins {

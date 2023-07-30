@@ -804,7 +804,15 @@ function makeCommentTypeSelector(parnode) {
         parent: parnode,
         tag: 'div',
         classes: ['commentselector'],
-        mywidget: parnode
+        mywidget: parnode,
+        onpointerdown: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        },
+        onpointerup: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
     });
 
     const adddel = addelem({
@@ -1063,7 +1071,6 @@ async function submitToEditors() {
 
 function htmlSelectionChange(e) {
     const selection = htmlw.getSelection();
-    console.log(selection);
     const position = selection.anchorNode.compareDocumentPosition(
             selection.focusNode);
     let anchorfirst;
@@ -1085,9 +1092,22 @@ function htmlSelectionChange(e) {
         endnode = selection.anchorNode;
         endnodeoffset = selection.anchorOffset;
     }
-    if (!htmlw.commentselector) {
-        htmlw.commentselector = makeCommentTypeSelector(htmld.body);
+    if (!htmlw.commentselectorholder) {
+        htmlw.commentselectorholder = addelem({
+            tag: 'div',
+            classes: ['commentselectorholder','proofsetaddition'],
+            parent: htmld.body
+        });
     }
+    if (!htmlw.commentselector) {
+        htmlw.commentselector = makeCommentTypeSelector(
+            htmlw.commentselectorholder
+        );
+    }
+    htmlw.commentselectorholder.style.left =
+        (e.layerX - 20).toString() + 'px';
+    htmlw.commentselectorholder.style.top =
+        (e.layerY - 60).toString() + 'px';
     /*
     if (firstnode?.tagName) { return; }
     let parNode = firstnode.parentNode;
@@ -1473,7 +1493,9 @@ function setUpHtml() {
     });
 
     // add listener for selection
-    htmld.onselectionchange = htmlSelectionChange;
+    //htmld.onselectionchange = htmlSelectionChange;
+
+    htmld.onpointerup = htmlSelectionChange;
 
     // apply editormode to html body
     if (document.body.classList.contains('editormode')) {
