@@ -865,6 +865,27 @@ function makeCommentTypeSelector(parnode) {
         onclick: function (e) { this.mywidget.makeType('comment'); }
     });
 
+    if (window.iseditor) {
+        const addquery = addelem({
+            parent: commentselector,
+            tag: 'div',
+            classes: ['commenttype','query'],
+            title: 'add a query',
+            innerHTML: 'query',
+            mywidget: parnode,
+            onmousedown: function (e) {
+                e.preventDefault();
+            },
+            onpointerdown: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            },
+            onclick: function (e) {
+                this.mywidget.makeType('query');
+            }
+        });
+    }
+
     const cancx = addelem({
         parent: commentselector,
         tag: 'div',
@@ -877,12 +898,18 @@ function makeCommentTypeSelector(parnode) {
             e.stopPropagation();
         },
         onclick: function(e) {
-            const m = this.mywidget.mymarker;
-            m.mypage.isdrawing = false;
-            if (m.mypage.drawingmarker) {
-                delete (m.mypage.drawingmarker);
+            const m = this.mywidget?.mymarker;
+            if (m) {
+                m.mypage.isdrawing = false;
+                if (m.mypage.drawingmarker) {
+                    delete (m.mypage.drawingmarker);
+                }
+                m.parentNode.removeChild(m);
+                return;
             }
-            m.parentNode.removeChild(m);
+            if (this.mywidget.classList.contains('commentselectorholder')) {
+                this.mywidget.style.display = 'none';
+            }
         }
     });
 
@@ -1104,10 +1131,18 @@ function htmlSelectionChange(e) {
             htmlw.commentselectorholder
         );
     }
+    htmlw.commentselectorholder.style.display = 'inline-block';
     htmlw.commentselectorholder.style.left =
         (e.layerX - 20).toString() + 'px';
     htmlw.commentselectorholder.style.top =
-        (e.layerY - 60).toString() + 'px';
+        (e.layerY - 65).toString() + 'px';
+    if (selection.isCollapsed) {
+        htmlw.commentselectorholder.classList.add("noselection");
+    } else {
+        htmlw.commentselectorholder.classList.remove("noselection");
+    }
+    htmlw.commentselectorholder.myselection = selection;
+    htmlw.commentselectorholder.makeType = makeType;
     /*
     if (firstnode?.tagName) { return; }
     let parNode = firstnode.parentNode;
@@ -1460,7 +1495,7 @@ function setUpHtml() {
     if (htmlproofs.contentDocument) {
         window.htmld = htmlproofs.contentDocument;
     }
-    if (!htmld) { console.log('bad'); return; }
+    if (!htmld) { return; }
 
     // make editable
     htmld.body.setAttribute('contenteditable',true);
