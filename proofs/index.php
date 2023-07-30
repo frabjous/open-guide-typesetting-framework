@@ -916,30 +916,33 @@ function makeCommentTypeSelector(parnode) {
 }
 
 function makeHtmlType(ctype, id = false) {
+    if (!id) {
+        id = 'comment' + ((new Date()).getTime().toString());
+    }
     const selection = this?.myselection;
-    if (!selection) { return; }
-    const position = selection.anchorNode.compareDocumentPosition(
-            selection.focusNode);
-    let anchorfirst;
-    let onlyoneselected = false;
-    if (position && Node.DOCUMENT_POSITION_FOLLOWING) {
-        anchorfirst = true;
-    } else if (position && Node.DOCUMENT_POSITION_PRECEDING) {
-        anchorfirst = false;
-    } else {
-        onlyoneselected = true;
-    }
-    let firstnodeoffset = selection.anchorOffet;
-    let firstnode = selection.anchorNode;
-    let endnode = selection.focusNode;
-    let endnodeoffset = selection.focusOffet;
-    if (!anchorfirst) {
-        firstnode = selection.focusNode;
-        firstnodeoffset = selection.focusOffset;
-        endnode = selection.anchorNode;
-        endnodeoffset = selection.anchorOffset;
-    }
-    
+    if (selection) {
+        const position = selection.anchorNode.compareDocumentPosition(
+                selection.focusNode);
+        let anchorfirst;
+        let onlyoneselected = false;
+        if (position && Node.DOCUMENT_POSITION_FOLLOWING) {
+            anchorfirst = true;
+        } else if (position && Node.DOCUMENT_POSITION_PRECEDING) {
+            anchorfirst = false;
+        } else {
+            onlyoneselected = true;
+        }
+        let firstnodeoffset = selection.anchorOffet;
+        let firstnode = selection.anchorNode;
+        let endnode = selection.focusNode;
+        let endnodeoffset = selection.focusOffet;
+        if (!anchorfirst) {
+            firstnode = selection.focusNode;
+            firstnodeoffset = selection.focusOffset;
+            endnode = selection.anchorNode;
+            endnodeoffset = selection.anchorOffset;
+        }
+    }    
     
 }
 
@@ -1122,6 +1125,18 @@ async function submitToEditors() {
 //
 // HTML functions
 //
+
+function getTextNodes(e) {
+    const rv = [];
+    for (let node=e.firstChild; node; node=node.nextSibling) {
+        if (node.nodeType == 3) {
+            rv.push(node);
+        } else {
+            rv.concat(getTextNodes(node));
+        }
+    }
+    return rv;
+}
 
 function htmlSelectionChange(e) {
     const selection = htmlw.getSelection();
