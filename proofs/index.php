@@ -948,10 +948,10 @@ function makeHtmlType(ctype, id = false) {
         } else {
             onlyoneselected = true;
         }
-        let firstnodeoffset = selection.anchorOffet;
+        let firstnodeoffset = selection.anchorOffset;
         let firstnode = selection.anchorNode;
         let endnode = selection.focusNode;
-        let endnodeoffset = selection.focusOffet;
+        let endnodeoffset = selection.focusOffset;
         if (!anchorfirst) {
             firstnode = selection.focusNode;
             firstnodeoffset = selection.focusOffset;
@@ -969,6 +969,22 @@ function makeHtmlType(ctype, id = false) {
         if (ctype == 'comment') {
             ctypeclasses.push('ogstcomment');
         }
+        // handle other nodes
+        let tt = getTextNodes(htmld.body);
+        tt = tt.filter((t) => (selection.containsNode(t)));
+        tt = tt.filter((t) => (t != firstnode && t != endnode));
+        for (const t of tt) {
+            const tTC = t.textContent;
+            const repNode = addelem({
+                tag: ctypetagtype,
+                classes: ctypeclasses,
+                innerHTML: tTC
+            });
+            const tparNode = t.parentNode;
+            tparNode.insertBefore(repNode, t);
+            tparNode.removeChild(t);
+        }
+
         // handle first node
         const fnTC = firstnode.textContent;
         let fnPre = fnTC.substring(0, firstnodeoffset);
@@ -1026,7 +1042,7 @@ function makeHtmlType(ctype, id = false) {
         if (firstnode != endnode) {
             const enTC = endnode.textContent;
             const enPre = enTC.substring(0, endnodeoffset);
-            let enPost = enTC.substring(endnodeoffset);
+            const enPost = enTC.substring(endnodeoffset);
             const eparNode = endnode.parentNode;
             if (enPre != '') {
                 const epreNode = addelem({
@@ -1045,20 +1061,6 @@ function makeHtmlType(ctype, id = false) {
                 eparNode.insertBefore(epostNode, endnode);
             }
             eparNode.removeChild(endnode);
-        }
-        let tt = getTextNodes(htmld.body);
-        tt = tt.filter((t) => (selection.containsNode(t)));
-        tt = tt.filter((t) => (t != firstnode && t != endnode));
-        for (const t of tt) {
-            const tTC = t.textContent;
-            const repNode = addelem({
-                tag: ctypetagtype,
-                classes: ctypeclasses,
-                innerHTML: tTC
-            });
-            const tparNode = t.parentNode;
-            tparNode.insertBefore(repNode, t);
-            tparNode.removeChild(t);
         }
         selection.collapse(null);
         if (htmlw.commentselectorholder) {
@@ -1623,7 +1625,7 @@ function setUpHtml() {
     if (htmlproofs.contentDocument) {
         window.htmld = htmlproofs.contentDocument;
     }
-    if (!htmld) { return; }
+    if (!htmld.body) { return; }
 
     // make editable
     htmld.body.setAttribute('contenteditable',true);
