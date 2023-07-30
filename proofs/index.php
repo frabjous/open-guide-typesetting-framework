@@ -943,7 +943,7 @@ function makeHtmlType(ctype, id = false) {
             endnodeoffset = selection.anchorOffset;
         }
         let ctypetagtype = 'span';
-        let ctypeclasses = [ id+'-change', 'ogstchange' ];
+        let ctypeclasses = [ id + '-change', 'ogstchange' ];
         if (ctype == 'insertion') {
             ctypetagtype = 'ins';
         }
@@ -956,7 +956,7 @@ function makeHtmlType(ctype, id = false) {
         if (ctype == 'comment') {
             ctypeclasses.push('ogstcomment');
         }
-        if (ctype == 
+        // handle first node
         const fnTC = firstnode.textContent;
         const fnPre = fnTC.substring(0, firstnodeoffset);
         let fnMid = '';
@@ -969,15 +969,82 @@ function makeHtmlType(ctype, id = false) {
         if (fnPre != '') {
             const preNode = addelem({
                 tag: 'span',
-                innerHTML: fnPre
+                innerHTML: fnPre,
+                classes: [id + '-change']
             });
             parNode.insertBefore(preNode, firstnode);
         }
+        const marker = addelem({
+            tag: 'div',
+            classes: ['htmlcommentmarker'],
+        });
+        parNode.insertBefore(marker, firstnode);
+        const innermarker = addelem({
+            tag 'div',
+            parent: marker
+        });
+        if (fnMid != '') {
+            const midNode = addelem({
+                tag: ctypetagtype,
+                classes: ctypeclasses,
+                innerHTML: fnMid,
+            });
+            parNode.insertBefore(midNode, firstnode);
+        }
+        if (fnPost != '') {
+            let posttagt = 'span';
+            let postclasses = [id + '-change'];
+            if (firstnode != endnode) {
+                posttagt = ctypetagtype;
+                postclasses = ctypeclasses;
+            }
+            const postNode = addelem({
+                tag: posttagt,
+                classes: postclasses,
+                innerHTML: fnPost
+            });
+            parNode.insertBefore(postNode, firstnode);
+        }
+        parNode.removeChild(firstnode);
+        // handle last node
+        if (firstnode != endnode) {
+            const enTC = endnode.textContent;
+            const enPre = enTC.substring(0, endnodeoffset);
+            let enPost = enTC.substring(endnodeoffset);
+            const eparNode = endnode.parentNode;
+            if (enPre != '') {
+                const epreNode = addelem({
+                    tag: ctypetagtype,
+                    innerHTML: enPre,
+                    classes: ctypeclasses
+                });
+                eparNode.insertBefore(epreNode, endnode);
+            }
+            if (enPost != '') {
+                const epostNode = addelem({
+                    classes: [id +'-change'],
+                    tag: 'span',
+                    innerHTML: enPost
+                });
+                eparNode.insertBefore(epostNode, endnode);
+            }
+            eparNode.removeChild(endnode);
+        }
         let tt = getTextNodes(htmld.body);
         tt = tt.filter((t) => (selection.containsNode(t)));
-
+        tt = tt.filter((t) => (t != firstnode && t != lastnode));
+        for (const t of tt) {
+            const tTC = t.textContent;
+            const repNode = addelem({
+                tag: ctypetagtype,
+                classes: ctypeclasses,
+                innerHTML = tTC
+            });
+            const tparNode = t.parentNode;
+            tparNode.inertBefore(repNode, t);
+            tparNode.removeChild(t);
+        }
     }
-    
 }
 
 function makePdfType(ctype, id = false) {
