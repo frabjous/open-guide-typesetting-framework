@@ -79,46 +79,15 @@ if (file_exists($commentsfile)) {
 <title><?php echo $title; ?> Page Proofs</title>
 
 <!-- simple css framework -->
-<!--link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" -->
+<link rel="stylesheet" type="text/css" href="shared.css">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Material+Symbols+Outlined');
-:root {
-    --font-family: 'Nunito Sans', 'Roboto', 'Noto Sans', 'TeX Gyre Heros', 'Arimo', 'Helvetica', 'Arial', sans-serif;
-    --primary: hsl(195, 90%, 32%);
-    --primary-hover: hsl(195, 90%, 42%);
-    --panelbg: rgba(89, 107, 120, 0.125);
-    --inactive: hsl(205, 10%, 50%);
-    --fg: hsl(205, 30%, 15%);
-    --bg: hsl(205, 20%, 94%);
-    --red: #c62828;
-    --purple: rgb(148,0,255,0.3);
-    --green: rgb(87,180,71,0.3);
-    --pink: rgba(255,20,189,0.2);
-    --bluey: rgb(10,132,255,0.3);
-    --yellow: rgb(255,255,81,0.3);
-}
-
-@keyframes showoff {
-    from {background-color: var(--yellow);}
-    to {background-color: var(--bluey);}
-}
-
-@keyframes spin {
-    from {transform:rotate(0deg);}
-    to {transform:rotate(360deg);}
-}
-
-.rotating {
-    animation: spin 1.8s infinite linear;
-}
 
 body {
-    font-family: var(--font-family);
+    font-family: var(--ogstfont-family);
     font-size: 18px;
-    background-color: var(--bg);
-    color: var(--fg);
+    background-color: var(--ogstbg);
+    color: var(--ogstfg);
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -132,8 +101,8 @@ body {
 }
 header {
     flex-shrink: 0;
-    background-color: var(--panelbg);
-    border-bottom: 1px ridge var(--primary);
+    background-color: var(--ogstpanelbg);
+    border-bottom: 1px ridge var(--ogstprimary);
     padding: 0.25rem 0.5rem 0.25rem 0.5rem;
     user-select: none;
 }
@@ -145,8 +114,8 @@ main {
     min-height: 0px;
 }
 footer {
-    border-top: 1px ridge var(--primary);
-    background-color: var(--panelbg);
+    border-top: 1px ridge var(--ogstprimary);
+    background-color: var(--ogstpanelbg);
     flex-shrink: 0;
     margin: 0;
     padding: 0.5rem 1rem 0.5rem 1rem;
@@ -157,14 +126,14 @@ footer p {
 }
 a, a:link, a:visited {
     text-decoration: none;
-    color: var(--primary);
+    color: var(--ogstprimary);
 }
 a:hover, a:link:hover, a:visited:hover {
-    color: var(--primary-hover);
+    color: var(--ogstprimary-hover);
     text-decoration: underline;
 }
 #projecthdr #projectname {
-    color: var(--primary);
+    color: var(--ogstprimary);
 }
 #projecthdr #tsf {
     float: right;
@@ -248,8 +217,8 @@ body.pdf #pdfholder {
 #toppanel #rightbuttons #submitbutton,
 #toppanel div.viewoption {
     padding: 0.2rem 0.8rem;
-    border: 2px solid var(--inactive);
-    color: var(--inactive);
+    border: 2px solid var(--ogstinactive);
+    color: var(--ogstinactive);
     border-radius: 1.5rem;
     margin-left: 0.5rem;
 }
@@ -259,8 +228,8 @@ body.pdf #pdfholder {
 }
 
 #toppanel #rightbuttons #submitbutton.lookatme {
-    border: 2px solid var(--primary);
-    color: var(--fg);
+    border: 2px solid var(--ogstprimary);
+    color: var(--ogstfg);
     cursor: pointer;
     animation-name: showoff;
     animation-duration: 0.7s;
@@ -269,22 +238,22 @@ body.pdf #pdfholder {
 }
 
 #toppanel #rightbuttons #submitbutton.submitting {
-    border: 2px solid var(--primary);
-    color: var(--fg);
+    border: 2px solid var(--ogstprimary);
+    color: var(--ogstfg);
 }
 
 #toppanel #rightbuttons #submitbutton.lookatme:hover,
 #toppanel div.viewoption:hover {
-    background-color: var(--bg);
-    color: var(--primary);
+    background-color: var(--ogstbg);
+    color: var(--ogstprimary);
 }
 
 body.instructions #toppanel div.viewoption.instructions,
 body.html #toppanel div.viewoption.html,
 body.pdf #toppanel div.viewoption.pdf {
-    color: var(--fg);
-    border: 2px solid var(--primary-hover);
-    background-color: var(--bg);
+    color: var(--ogstfg);
+    border: 2px solid var(--ogstprimary-hover);
+    background-color: var(--ogstbg);
     cursor: default;
 }
 
@@ -298,55 +267,6 @@ body.pdf #toppanel div.viewoption.pdf {
 
 #instructions {
     padding: 2rem;
-}
-
-.commentselector {
-    white-space: nowrap;
-}
-
-.commentselector div {
-    display: inline-block;
-}
-
-.commentselector .commenttype {
-    padding: 0.2rem;
-    border: 1px solid var(--inactive);
-    cursor: pointer;
-    border-radius: 0.2rem;
-    margin: 0.2rem;
-}
-
-.commentselector .commenttype.del {
-    text-decoration: line-through;
-    text-decoration-color: var(--red);
-    background-color: var(--pink);
-}
-
-.commentselector .commenttype.ins {
-    background-color: var(--bluey);
-}
-
-.commentselector .commenttype.comment {
-    background-color: var(--yellow);
-}
-
-.commentselector .commenttype.query {
-    background-color: var(--green);
-}
-
-.commentselector .commentselectorcancel {
-    cursor: pointer;
-    color: var(--red);
-    position: relative;
-    top: 0.4rem;
-}
-
-.commentselector .commenttype:hover,
-.commentselector .commenttype.del:hover,
-.commentselector .commenttype.ins:hover,
-.commentselector .commenttype.comment:hover {
-    background-color: var(--bg);
-    border: 1px solid var(--primary-hover);
 }
 
 body #toppanel div.pdfonly {
@@ -367,7 +287,7 @@ body.pdf #toppanel div.pdfonly {
     position: relative;
     top: 0.3rem;
     font-size: 140%;
-    color: var(--primary);
+    color: var(--ogstprimary);
     cursor: pointer;
 }
 
@@ -382,7 +302,7 @@ body.pdf #toppanel div.pdfonly {
 
 #toppanel #rightbuttons div.downloadbutton:hover,
 #toppanel div.pdfbuttons div.pdfbutton:hover {
-    color: var(--primary-hover);
+    color: var(--ogstprimary-hover);
 }
 
 #toppanel input#pagejump {
@@ -406,244 +326,44 @@ div.pdfpage .pdfcommentmarker {
 }
 
 div.pdfpage .pdfcommentmarker.drawing {
-    background-color: var(--purple);
+    background-color: var(--ogstpurple);
 }
 
 body.editormode .pdfcommentmarker.drawing {
-    background-color: var(--green);
+    background-color: var(--ogstgreen);
 }
 
 .pdfcommentmarker.deletion {
-    background-color: var(--pink);
+    background-color: var(--ogstpink);
 }
 
 .pdfcommentmarker.insertion {
-    background-color: var(--bluey);
+    background-color: var(--ogstbluey);
 }
 
 .pdfcommentmarker.comment {
-    background-color: var(--yellow);
+    background-color: var(--ogstyellow);
 }
 
 .pdfcommentmarker.query {
-    background-color: var(--green);
-}
-
-div.innermarker {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-div.commentwidget {
-    position: absolute;
-    background-color: var(--bg);
-    bottom: 100%;
-    left: -1rem;
-    opacity: 1;
-    z-index: 200;
-}
-
-div.commentwidget.underneath {
-    background-color: var(--bg);
-    top: 100%;
-    bottom: auto;
-}
-
-div.commentwidget.pushleft {
-    background-color: var(--bg);
-    right: -1rem;
-    left: auto;
-}
-
-div.commentwidget.minimized,
-div.commentwidget.minimized.underneath,
-div.commentwidget.minimized.pushleft {
-    background-color: transparent;
-    left: -1rem;
-    top: -0.8rem;
-    bottom: auto;
-    right: auto;
-    z-index: 100;
-}
-
-div.commentwidget div.minimizemarker {
-    display: none;
-    color: var(--primary);
-    cursor: pointer;
-}
-
-div.commentwidget.minimized div.minimizemarker {
-    display: inline-block;
-}
-
-div.commentwidget.minimized div.minimizemarker:hover {
-    color: var(--primary-hover);
-}
-
-div.commentwidget.selecting {
-    padding: 0.5rem 2rem 0.5rem 2rem;
-    border-radius: 2rem;
-}
-
-div.commentwidget.deletion,
-div.commentwidget.insertion,
-div.commentwidget.comment,
-div.commentwidget.query {
-    border-radius: 1rem;
-}
-
-div.commentform {
-    width: 18rem;
-    padding: 1rem;
-    border-radius: 1rem;
-    text-align: left;
-}
-
-div.commentwidget.minimized div.commentform {
-    display: none;
-}
-
-div.commentform label {
-    display: block;
-}
-
-div.commentformaddressedarea {
-    display: none;
-}
-
-body.editormode div.commentform div.commentformaddressedarea {
-    display: block;
-    width: 100%;
-    text-align: left;
-}
-
-body.editormode div.commentform div.commentformaddressedarea input {
-    height: 1.2rem; width: 1.2rem;
-    margin: 0;
-}
-
-div.commentform label.commentformaddressedlabel {
-    padding-left: 0.5rem;
-    display: inline;
-}
-
-div.commentform textarea {
-    resize: none;
-    width: 100%;
-    box-sizing: border-box;
-    height: 4rem;
-    font-family: var(--font-family);
-}
-
-div.commentform.query {
-    background-color: var(--green);
-}
-
-div.commentform.comment {
-    background-color: var(--yellow);
-}
-
-div.commentform.insertion {
-    background-color: var(--bluey);
-}
-
-div.commentform.deletion {
-    background-color: var(--pink);
-}
-
-div.commentform.query .ins,
-div.commentform.query .del,
-div.commentform.comment .del,
-div.commentform.comment .response,
-div.commentform.comment .ins,
-div.commentform.deletion .response,
-div.commentform.insertion .del,
-div.commentform.insertion .response {
-    display: none;
-}
-
-div.commentform div.commentformbuttons {
-    display: block;
-    width: 100%;
-    user-select: none;
-}
-
-div.commentform div.commentformbuttons div.commentformbutton {
-    color: var(--primary);
-    display: inline-block;
-    cursor: pointer;
-}
-
-div.commentform div.commentformbuttons div.commentformbutton:hover {
-    color: var(--primary-hover);
-}
-
-div.commentform div.commentformbuttons div.commentformbutton.disabled:hover,
-div.commentform div.commentformbuttons div.commentformbutton.disabled {
-    cursor: default;
-    color: var(--disabled);
-}
-
-div.commentform.saving div.commentformbuttons div.commentformbutton.savebutton {
-    cursor: default;
-}
-
-div.commentform.saving div.commentformbuttons div.commentformbutton.savebutton:hover {
-    color: var(--primary);
-}
-
-div.commentform div.commentformbuttons div.commentformbutton span.material-symbols-outlined {
-    position: relative;
-    top: 0.3rem;
-}
-
-div.commentform.query div.commentformbuttons div.commentformbutton.removebutton {
-    display: none;
-}
-
-body.editormode div.commentform.query div.commentformbuttons div.commentformbutton.removebutton {
-    display: inline-block;
-}
-
-
-div.commentform div.commentformbuttons div.commentformbutton.removebutton {
-    color: var(--red);
-}
-
-div.commentform.unsaved div.commentformbuttons div.commentformbutton.minimize {
-    display: none;
-}
-
-div.commentform div.commentformbuttons div.commentformrightbuttons {
-    float: right;
-    display: inline-block;
-}
-
-div.commentform div.commentformbuttons div.commentformleftbuttons {
-    float: left;
-    display: inline-block;
-}
-
-div.commentform br {
-    clear: both;
+    background-color: var(--ogstgreen);
 }
 
 div#errormessage {
     display: none;
-    background-color: var(--pink);
+    background-color: var(--ogstpink);
     padding: 0.5rem;
-    border: 2px solid var(--red);
-    color: var(--fg);
+    border: 2px solid var(--ogstred);
+    color: var(--ogstfg);
 }
 
 div#errormessage > span {
-    color: var(--red);
+    color: var(--ogstred);
 }
 
 div#errormessage.okmsg {
-    border: 2px solid var(--primary);
-    background-color: var(--panelbg);
+    border: 2px solid var(--ogstprimary);
+    background-color: var(--ogstpanelbg);
 }
 
 </style>
@@ -1712,51 +1432,75 @@ if (document.body.clientWidth < 1200) {
 
 window.htmlw = {}; window.htmld = {};
 
-if (htmlproofs.contentWindow) {
-    window.htmlw = htmlproofs.contentWindow;
-}
-
-if (htmlproofs.contentDocument) {
-    window.htmld = htmlproofs.contentDocument;
-}
-
-// make editable
-htmld.body.setAttribute('contenteditable',true);
-
-// prevent actual editing?
-htmld.body.addEventListener('keydown', (e) => {
-    if (
-        ((!e.metaKey && !e.ctrlKey && !e.altKey) && (e.key.length == 1)) ||
-        (e.key == 'Backspace' || e.key == 'Delete') ||
-        (e.ctrlKey && (e.key == 'x' || e.key == 'X' || e.key == 'v' || e.key == 'V')) ||
-        (e.shiftKey && e.key == 'Insert') ||
-        (e.key == 'Enter') ||
-        (e.keyCode > 128)
-    ) {
-        e.preventDefault();
+function setUpHtml() {
+    if (htmlproofs.contentWindow) {
+        window.htmlw = htmlproofs.contentWindow;
     }
-});
 
-htmld.body.addEventListener('paste', (e) => {
-    e.preventDefault();
-});
+    if (htmlproofs.contentDocument) {
+        window.htmld = htmlproofs.contentDocument;
+    }
+    if (!htmld) { console.log('bad'); return; }
 
-htmld.body.addEventListener('cut', (e) => {
-    e.preventDefault();
-});
+    // make editable
+    htmld.body.setAttribute('contenteditable',true);
+    // prevent actual editing?
+    htmld.body.addEventListener('keydown', (e) => {
+        if (
+            ((!e.metaKey && !e.ctrlKey && !e.altKey) && (e.key.length == 1)) ||
+            (e.key == 'Backspace' || e.key == 'Delete') ||
+            (e.ctrlKey && (e.key == 'x' || e.key == 'X' || e.key == 'v' || e.key == 'V')) ||
+            (e.shiftKey && e.key == 'Insert') ||
+            (e.key == 'Enter') ||
+            (e.keyCode > 128)
+        ) {
+            e.preventDefault();
+        }
+    });
 
-// context menus sometimes have their own way of deleting
-htmld.body.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    return false;
-});
+    htmld.body.addEventListener('paste', (e) => {
+        e.preventDefault();
+    });
 
-// add listener for selection
-htmld.onselectionchange = htmlSelectionChange;
+    htmld.body.addEventListener('cut', (e) => {
+        e.preventDefault();
+    });
+
+    // context menus sometimes have their own way of deleting
+    htmld.body.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        return false;
+    });
+
+    // add listener for selection
+    htmld.onselectionchange = htmlSelectionChange;
+
+    // apply editormode to html body
+    if (document.body.classList.contains('editormode')) {
+        htmld.body.classList.add('editormode');
+    }
+
+    // load CSS
+    addelem({
+        tag: 'link',
+        rel: 'stylesheet',
+        type: 'text/css',
+        href: 'shared.css',
+        parent: htmld.head
+    });
+
+}
+
+setUpHtml();
+htmlproofs.onload = setUpHtml;
 
 // show one of the three main body elements
 if (iseditor) {
-    changeMode('html');
+    if (w.usehtml) {
+        changeMode('html');
+    } else {
+        changeMode('pdf');
+    }
 } else {
     changeMode('instructions');
 }
