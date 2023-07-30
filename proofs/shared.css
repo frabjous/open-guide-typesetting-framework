@@ -83,6 +83,12 @@
     background-color: var(--ogstgreen);
 }
 
+body.editormode .commentselector .commenttype.ins,
+body.editormode .commentselector .commenttype.del,
+body.editormode .commentselector .commenttype.comment {
+    display: none;
+}
+
 .commentselector .commentselectorcancel {
     cursor: pointer;
     color: var(--ogstred);

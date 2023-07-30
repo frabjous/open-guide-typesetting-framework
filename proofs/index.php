@@ -916,7 +916,35 @@ function makeCommentTypeSelector(parnode) {
     return commentselector;
 }
 
-function makeType(ctype, id = false) {
+function makeHtmlType(ctype, id = false) {
+    const selection = this?.myselection;
+    if (!selection) { return; }
+    const position = selection.anchorNode.compareDocumentPosition(
+            selection.focusNode);
+    let anchorfirst;
+    let onlyoneselected = false;
+    if (position && Node.DOCUMENT_POSITION_FOLLOWING) {
+        anchorfirst = true;
+    } else if (position && Node.DOCUMENT_POSITION_PRECEDING) {
+        anchorfirst = false;
+    } else {
+        onlyoneselected = true;
+    }
+    let firstnodeoffset = selection.anchorOffet;
+    let firstnode = selection.anchorNode;
+    let endnode = selection.focusNode;
+    let endnodeoffset = selection.focusOffet;
+    if (!anchorfirst) {
+        firstnode = selection.focusNode;
+        firstnodeoffset = selection.focusOffset;
+        endnode = selection.anchorNode;
+        endnodeoffset = selection.anchorOffset;
+    }
+
+    
+}
+
+function makePdfType(ctype, id = false) {
     const alltypes = ['drawing','deletion','query','comment','insertion'];
     for (const thistype of alltypes) {
         if (this?.mymarker) {
@@ -1031,7 +1059,7 @@ function widgify(marker, elem) {
         onpointerdown: function(e) {
             e.stopPropagation();
         },
-        makeType: makeType
+        makeType: makePdfType
     });
     const anchorPP = marker?.anchorPP ?? false;
     const newPP = marker?.wanderPP ?? false;
@@ -1098,33 +1126,15 @@ async function submitToEditors() {
 
 function htmlSelectionChange(e) {
     const selection = htmlw.getSelection();
-    const position = selection.anchorNode.compareDocumentPosition(
-            selection.focusNode);
-    let anchorfirst;
-    let onlyoneselected = false;
-    if (position && Node.DOCUMENT_POSITION_FOLLOWING) {
-        anchorfirst = true;
-    } else if (position && Node.DOCUMENT_POSITION_PRECEDING) {
-        anchorfirst = false;
-    } else {
-        onlyoneselected = true;
-    }
-    let firstnodeoffset = selection.anchorOffet;
-    let firstnode = selection.anchorNode;
-    let endnode = selection.focusNode;
-    let endnodeoffset = selection.focusOffet;
-    if (!anchorfirst) {
-        firstnode = selection.focusNode;
-        firstnodeoffset = selection.focusOffset;
-        endnode = selection.anchorNode;
-        endnodeoffset = selection.anchorOffset;
-    }
+    // don't let it work outside of a text block
+    if (selection.anchorNode?.tagName) { return; }
     if (!htmlw.commentselectorholder) {
         htmlw.commentselectorholder = addelem({
             tag: 'div',
             classes: ['commentselectorholder','proofsetaddition'],
             parent: htmld.body
         });
+        htmlw.commentselectorholder.setAttribute('spellcheck','false');
     }
     if (!htmlw.commentselector) {
         htmlw.commentselector = makeCommentTypeSelector(
@@ -1142,7 +1152,7 @@ function htmlSelectionChange(e) {
         htmlw.commentselectorholder.classList.remove("noselection");
     }
     htmlw.commentselectorholder.myselection = selection;
-    htmlw.commentselectorholder.makeType = makeType;
+    htmlw.commentselectorholder.makeType = makeHtmlType;
     /*
     if (firstnode?.tagName) { return; }
     let parNode = firstnode.parentNode;
