@@ -104,84 +104,8 @@ body.editormode .commentselector .commenttype.comment {
     border: 1px solid var(--ogstprimary-hover);
 }
 
-body #toppanel div.pdfonly {
-    display: none;
-}
-
-body.pdf #toppanel div.pdfonly {
+div.htmlcommentmarker {
     display: inline-block;
-}
-
-#toppanel div.pdfbuttons {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#toppanel #rightbuttons div.downloadbutton,
-#toppanel div.pdfbuttons div.pdfbutton {
-    position: relative;
-    top: 0.3rem;
-    font-size: 140%;
-    color: var(--ogstprimary);
-    cursor: pointer;
-}
-
-#toppanel #rightbuttons div.downloadbutton {
-    margin-left: 0.3rem;
-}
-
-
-#toppanel div.pdfbuttons div.pdfbutton {
-    margin-right: 0.5rem;
-}
-
-#toppanel #rightbuttons div.downloadbutton:hover,
-#toppanel div.pdfbuttons div.pdfbutton:hover {
-    color: var(--ogstprimary-hover);
-}
-
-#toppanel input#pagejump {
-    width: 5.3rem;
-    padding: 0.3rem;
-    text-align: center;
-    margin-right: 0.4rem;
-}
-
-div.pdfpage {
-    position: relative;
-}
-
-div.pdfpage img {
-    user-select: none;
-    user-drag: none;
-}
-
-div.pdfpage .pdfcommentmarker {
-    border: 0.5px solid rgba(200, 200, 200, 0.5);
-}
-
-div.pdfpage .pdfcommentmarker.drawing {
-    background-color: var(--ogstpurple);
-}
-
-body.editormode .pdfcommentmarker.drawing {
-    background-color: var(--ogstgreen);
-}
-
-.pdfcommentmarker.deletion {
-    background-color: var(--ogstpink);
-}
-
-.pdfcommentmarker.insertion {
-    background-color: var(--ogstbluey);
-}
-
-.pdfcommentmarker.comment {
-    background-color: var(--ogstyellow);
-}
-
-.pdfcommentmarker.query {
-    background-color: var(--ogstgreen);
 }
 
 div.innermarker {
