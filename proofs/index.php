@@ -1687,11 +1687,29 @@ if (htmlproofs.contentDocument) {
 // make editable
 htmld.body.setAttribute('contenteditable',true);
 
+// prevent actual editing?
 htmld.body.addEventListener('keydown', (e) => {
-    if (e.key.length == 1) {
-        console.log('prevented');
+    if (
+        ((!e.metaKey && !e.ctrlKey && !e.altKey) && (e.key.length == 1)) ||
+        (e.key == 'Backspace' || e.key == 'Delete') ||
+        (e.ctrlKey && (e.key == 'x' || e.key == 'X' || e.key == 'v' || e.key == 'V')) ||
+        (e.shiftKey && e.key == 'Insert') ||
+        (e.keyCode > 128)
+    ) {
         e.preventDefault();
     }
+});
+
+htmld.body.addEventListener('paste', (e) => {
+    e.preventDefault();
+});
+
+htmld.body.addEventListener('cut', (e) => {
+    e.preventDefault();
+});
+
+htmld.body.addEventListener('input', (e) => {
+    e.preventDefault();
 });
 
 // add listener for selection
