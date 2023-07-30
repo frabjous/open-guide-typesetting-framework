@@ -942,7 +942,41 @@ function makeHtmlType(ctype, id = false) {
             endnode = selection.anchorNode;
             endnodeoffset = selection.anchorOffset;
         }
-    }    
+        let ctypetagtype = 'span';
+        let ctypeclasses = [ id+'-change', 'ogstchange' ];
+        if (ctype == 'insertion') {
+            ctypetagtype = 'ins';
+        }
+        if (ctype == 'deletion') {
+            ctypetagtype = 'del';
+        }
+        if (ctype == 'query') {
+            ctypeclasses.push('ogstquery');
+        }
+        if (ctype == 'comment') {
+            ctypeclasses.push('ogstcomment');
+        }
+        if (ctype == 
+        const fnTC = firstnode.textContent;
+        const fnPre = fnTC.substring(0, firstnodeoffset);
+        let fnMid = '';
+        let fnPost = fnTC.substring(firstnodeoffset);
+        if (onlyoneselected) {
+            fnMid = fnTC.substring(firstnodeoffset,endnodeoffset);
+            fnPost = fnTC.substring(endnodeoffset);
+        }
+        const parNode = firstnode.parentNode;
+        if (fnPre != '') {
+            const preNode = addelem({
+                tag: 'span',
+                innerHTML: fnPre
+            });
+            parNode.insertBefore(preNode, firstnode);
+        }
+        let tt = getTextNodes(htmld.body);
+        tt = tt.filter((t) => (selection.containsNode(t)));
+
+    }
     
 }
 
@@ -1126,13 +1160,13 @@ async function submitToEditors() {
 // HTML functions
 //
 
-function getTextNodes(e) {
-    const rv = [];
-    for (let node=e.firstChild; node; node=node.nextSibling) {
+function getTextNodes(node) {
+    let rv = [];
+    for (node=node.firstChild; node; node=node.nextSibling) {
         if (node.nodeType == 3) {
             rv.push(node);
         } else {
-            rv.concat(getTextNodes(node));
+            rv = rv.concat(getTextNodes(node));
         }
     }
     return rv;
