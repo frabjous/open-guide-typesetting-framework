@@ -320,18 +320,18 @@ div.commentform br {
     background-color: var(--ogstgreen);
 }
 
-.ogstchange.ogstcomment: {
+.ogstchange.ogstcomment {
     background-color: var(--ogstyellow);
 }
 
 del.ogstchange {
     background-color: var(--ogstpink);
+    text-decoration: line-through;
+    text-decoration-color: var(--ogstred);
+    text-decoration-thickness: 0.1em;
 }
 
 ins.ogstchange {
     background-color: var(--ogstbluey);
-    text-decoration: line-through;
-    text-decoration-color: var(--ogstred);
-    text-decoration-thickness: 0.1em;
 }
 
