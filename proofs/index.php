@@ -920,7 +920,12 @@ function makeHtmlType(ctype, id = false) {
         id = 'comment' + ((new Date()).getTime().toString());
     }
     const selection = this?.myselection;
+    let deltext = '';
+    let marker = {};
     if (selection) {
+        if (selection.toString() != '') {
+            deltext = selection.toString();
+        }
         const position = selection.anchorNode.compareDocumentPosition(
                 selection.focusNode);
         let anchorfirst;
@@ -974,15 +979,12 @@ function makeHtmlType(ctype, id = false) {
             });
             parNode.insertBefore(preNode, firstnode);
         }
-        const marker = addelem({
+        marker = addelem({
             tag: 'div',
-            classes: ['htmlcommentmarker'],
+            classes: ['htmlcommentmarker','proofsetaddition'],
         });
         parNode.insertBefore(marker, firstnode);
-        const innermarker = addelem({
-            tag 'div',
-            parent: marker
-        });
+        widgify(marker, {});
         if (fnMid != '') {
             const midNode = addelem({
                 tag: ctypetagtype,
@@ -1044,6 +1046,7 @@ function makeHtmlType(ctype, id = false) {
             tparNode.inertBefore(repNode, t);
             tparNode.removeChild(t);
         }
+        selection.collapse();
     }
 }
 
