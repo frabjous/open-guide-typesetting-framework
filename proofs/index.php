@@ -510,7 +510,6 @@ function zoomInOut(inout = true) {
 async function deleteComment() {
     // remove off server
     if (this.eversaved) {
-        // TODO
         const req = {
             requesttype: 'deletecomment',
             commentid: this.id
@@ -940,7 +939,7 @@ function makeHtmlType(ctype, id = false) {
         endnode = selection.anchorNode;
         endnodeoffset = selection.anchorOffset;
     }
-
+    
     
 }
 
@@ -1134,7 +1133,6 @@ function htmlSelectionChange(e) {
             classes: ['commentselectorholder','proofsetaddition'],
             parent: htmld.body
         });
-        htmlw.commentselectorholder.setAttribute('spellcheck','false');
     }
     if (!htmlw.commentselector) {
         htmlw.commentselector = makeCommentTypeSelector(
@@ -1153,30 +1151,6 @@ function htmlSelectionChange(e) {
     }
     htmlw.commentselectorholder.myselection = selection;
     htmlw.commentselectorholder.makeType = makeHtmlType;
-    /*
-    if (firstnode?.tagName) { return; }
-    let parNode = firstnode.parentNode;
-    if (!parNode) { return; }
-    let beforespan = addelem({
-        tag: 'span',
-        innerHTML: firstnode.textContent.substring(0, firstnodeoffset)
-    });
-    console.log("here");
-    parNode.insertBefore(beforespan, firstnode);
-    htmlw.selectionmarker = addelem({
-        tag: 'span',
-        classes: ['htmlcommentmarker']
-    });
-    console.log("there");
-    parNode.insertBefore(htmlw.selectionmarker, firstnode);
-    let afterspan = addelem({
-        tag: 'span',
-        innerHTML: firstnode.textContent.substring(firstnodeoffset)
-    });
-    parNode.insertBefore(afterspan, firstnode);
-    console.log("more");
-    parNode.removeChild(firstnode);
-    */
 }
 
 //
@@ -1509,6 +1483,7 @@ function setUpHtml() {
 
     // make editable
     htmld.body.setAttribute('contenteditable',true);
+    htmld.body.setAttribute('spellcheck',false);
     // prevent actual editing?
     htmld.body.addEventListener('keydown', (e) => {
         if (
