@@ -1365,6 +1365,9 @@ function htmlSelectionChange(e) {
         endnode = selection.anchorNode;
         endnodeoffset = selection.anchorOffset;
     }
+    if (!htmlw.commentselector) {
+        htmlw.commentselector = makeCommentTypeSelector(htmld.body);
+    }
     /*
     if (firstnode?.tagName) { return; }
     let parNode = firstnode.parentNode;
