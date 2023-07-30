@@ -1342,6 +1342,7 @@ async function submitToEditors() {
 //
 
 function htmlSelectionChange(e) {
+    if (htmlw.isselectchanging) { return; }
     const selection = htmlw.getSelection();
     console.log(selection);
     const position = selection.anchorNode.compareDocumentPosition(
@@ -1355,12 +1356,36 @@ function htmlSelectionChange(e) {
     } else {
         onlyoneselected = true;
     }
+    let firstnodeoffset = selection.anchorOffet;
     let firstnode = selection.anchorNode;
+    let endnode = selection.focusNode;
+    let endnodeoffset = selection.focusOffet;
     if (!anchorfirst) {
         firstnode = selection.focusNode;
+        firstnodeoffset = selection.focusOffset;
+        endnode = selection.anchorNode;
+        endnodeoffset = selection.anchorOffset;
     }
-    console.log(firstnode.innerText);
-    console.log(firstnode.parentNode);
+    let parNode = firstnode.parentNode;
+    if (!parNode) { return; }
+    let beforespan = addelem({
+        tag: 'span',
+        innerHTML: firstnode.textContent.substring(0, firstnodeoffset)
+    });
+    console.log("here");
+    parNode.insertBefore(beforespan, firstnode);
+    htmlw.selectionmarker = addelem({
+        tag: 'span',
+        classes: ['htmlcommentmarker']
+    });
+    console.log("there");
+    parNode.insertBefore(htmlw.selectionmarker, firstnode);
+    let afterspan = addelem({
+        tag: 'span',
+        innerHTML: firstnode.textContent.substring(firstnodeoffset)
+    });
+    console.log("more");
+    parNode.removeChild(firstnode);
 }
 
 //
