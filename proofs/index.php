@@ -963,13 +963,17 @@ function makeHtmlType(ctype, id = false) {
         }
         // handle first node
         const fnTC = firstnode.textContent;
-        const fnPre = fnTC.substring(0, firstnodeoffset);
+        let fnPre = fnTC.substring(0, firstnodeoffset);
         let fnMid = '';
         let fnPost = fnTC.substring(firstnodeoffset);
         if (onlyoneselected) {
-            fnMid = fnTC.substring(firstnodeoffset,endnodeoffset);
-            fnPost = fnTC.substring(endnodeoffset);
+            const minoffset = Math.min(firstnodeoffset, endnodeoffset);
+            const maxoffset = Math.max(firstnodeoffset, endnodeoffset);
+            fnPre = fnTC.substring(0, minoffset);
+            fnMid = fnTC.substring(minoffset,maxoffset);
+            fnPost = fnTC.substring(maxoffset);
         }
+        console.log(fnTC, fnPre, fnMid, fnPost);
         const parNode = firstnode.parentNode;
         if (fnPre != '') {
             const preNode = addelem({
@@ -981,10 +985,13 @@ function makeHtmlType(ctype, id = false) {
         }
         marker = addelem({
             tag: 'div',
-            classes: ['htmlcommentmarker','proofsetaddition'],
+            classes: ['htmlcommentmarker','proofsetaddition',
+                id+'-marker'],
         });
         parNode.insertBefore(marker, firstnode);
-        widgify(marker, {});
+        marker.commentwidget = widgify(marker, {});
+        marker.commentwidget.classList.remove('selecting');
+        marker.commentwidget.makeType = function() {};
         if (fnMid != '') {
             const midNode = addelem({
                 tag: ctypetagtype,
@@ -1034,19 +1041,30 @@ function makeHtmlType(ctype, id = false) {
         }
         let tt = getTextNodes(htmld.body);
         tt = tt.filter((t) => (selection.containsNode(t)));
-        tt = tt.filter((t) => (t != firstnode && t != lastnode));
+        tt = tt.filter((t) => (t != firstnode && t != endnode));
         for (const t of tt) {
             const tTC = t.textContent;
             const repNode = addelem({
                 tag: ctypetagtype,
                 classes: ctypeclasses,
-                innerHTML = tTC
+                innerHTML: tTC
             });
             const tparNode = t.parentNode;
             tparNode.inertBefore(repNode, t);
             tparNode.removeChild(t);
         }
-        selection.collapse();
+        selection.collapse(null);
+        if (htmlw.commentselectorholder) {
+            htmlw.commentselectorholder.style.display = 'none'
+        }
+    } else {
+        // TODO: restore version
+    }
+    marker.classList.add(ctype);
+    if (marker?.commentwidget) {
+        marker.commentwidget.classList.add(ctype);
+        marker.commentwidget.commentform = makeCommentForm(
+            marker.commentwidget, ctype, id);
     }
 }
 
