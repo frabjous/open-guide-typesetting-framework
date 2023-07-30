@@ -1551,8 +1551,13 @@ if (htmlproofs.contentWindow) {
     window.htmlw = htmlproofs.contentWindow;
 }
 
-htmlw.onload = function() {
+if (htmlproofs.contentDocument) {
+    window.htmld = htmlproofs.contentDocument;
 }
+
+console.log(htmld);
+
+htmld.body.setAttribute('contenteditable',true);
 
 if (iseditor) {
     changeMode('html');
