@@ -942,6 +942,14 @@ function makeHtmlType(ctype, id = false) {
             endnode = selection.anchorNode;
             endnodeoffset = selection.anchorOffset;
         }
+        let str = '';
+        let tt = getTextNodes(htmld.body);
+        tt = tt.filter((t) => (selection.containsNode(t)));
+        console.log(tt);
+        for (const n of tt) {
+            str += n.textContent;
+        }
+        console.log(str);
     }    
     
 }
@@ -1126,13 +1134,13 @@ async function submitToEditors() {
 // HTML functions
 //
 
-function getTextNodes(e) {
-    const rv = [];
-    for (let node=e.firstChild; node; node=node.nextSibling) {
+function getTextNodes(node) {
+    let rv = [];
+    for (node=node.firstChild; node; node=node.nextSibling) {
         if (node.nodeType == 3) {
             rv.push(node);
         } else {
-            rv.concat(getTextNodes(node));
+            rv = rv.concat(getTextNodes(node));
         }
     }
     return rv;
