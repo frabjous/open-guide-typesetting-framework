@@ -560,6 +560,10 @@ async function saveComment() {
             req.commentinfo[x] = inp.value;
         }
     }
+    if (this?.mywidget?.insertionpoint) {
+        this.mywidget.insertionpoint.innerHTML =
+            this.insinput.value;
+    }
     if (this.addressedcb && this.addressedcb.checked) {
         req.commentinfo.hasbeenaddressed = true;
     }
@@ -575,6 +579,38 @@ async function saveComment() {
             req.commentinfo.wanderPP = marker.wanderPP;
         }
     }
+    if (this.ishtml) {
+        req.bodyhtml = htmld.body.outerHTML;
+    }
+    let wherefound = this;
+    while (wherefound && (wherefound.parentNode != htmld.body)) {
+        wherefound = wherefound.parentNode;
+    }
+    // try to find good determination of position in document
+    const bodychildren = {};
+    for (const child of htmld.body.childNodes) {
+        if (child.tagName) {
+            const tagname = child.tagName.toLowerCase();
+            if (!(tagname in bodychildren)) {
+                bodychildren[tagname] = 0;
+            }
+            if (tagname == 'h1') {
+                for (const tname in bodychildren) {
+                    if (tname != 'h1') {
+                        bodychildren[tname] = 0;
+                    }
+                }
+            }
+            bodychildren[tagname] = bodychildren[tagname] + 1;
+            if (child == wherefound) {
+                req.commentinfo.topleveltag = tagname;
+                req.commentinfo.position = bodychildren[tagname];
+                req.commentinfo.section = (bodychildren['h1'] ?? 0);
+                break;
+            }
+        }
+    }
+    console.log(req);
     this.makeSaving();
     const resp = await jsonrequest(req);
     if (!resp) {
