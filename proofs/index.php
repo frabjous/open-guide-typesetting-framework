@@ -654,8 +654,44 @@ function minimize(b) {
         widg.classList.add('minimized');
         if (widg?.mymarker?.innermarker) {
             const innermarker = widg.mymarker.innermarker;
-            innermarker.onclick = () => { this.minimize(false); }
+            innermarker.onclick = (e) => {
+                this.minimize(false);
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            innermarker.onpointerdown = (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            innermarker.onpointerup = (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+            }
             innermarker.style.cursor = 'pointer';
+        }
+        if (this.ishtml) {
+            let chch = htmld.getElementsByClassName(this.id + '-change');
+            if (chch) {
+                for (const ch of chch) {
+                    if (!(ch.classList.contains('ogstchange'))) {
+                        continue;
+                    }
+                    ch.onclick = ((e) => {
+                        this.minimize(false);
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                    ch.onpointerdown = ((e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                    ch.onpointerup = ((e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                    ch.style.cursor = 'pointer';
+                }
+            }
         }
         if (!("minimizemarker" in widg)) {
             widg.minimizemarker = addelem({
@@ -677,8 +713,22 @@ function minimize(b) {
     widg.classList.remove('minimized');
     if (widg?.mymarker?.innermarker) {
         const innermarker = widg.mymarker.innermarker;
-        innermarker.onclick = function() {};
+        innermarker.onclick = (e) => (true);
+        innermarker,onpointerdown = (e) => (true);
+        innermarker,onpointerup = (e) => (true);
         innermarker.style.cursor = 'default';
+    }
+    if (this.ishtml) {
+    let chch = htmld.getElementsByClassName(this.id + '-change');
+        if (chch) {
+            for (const ch of chch) {
+                if (!(ch.classList.contains("ogstchange"))) { continue; }
+                chch.onclick = ((e) => (true));
+                chch.onpointerdown = ((e) => (true));
+                chch.onpointerup = ((e) => (true));
+                ch.style.cursor = 'default';
+            }
+        }
     }
 }
 
@@ -1075,10 +1125,10 @@ function makeHtmlType(ctype, id = false) {
             classes: ['htmlcommentmarker','proofsetaddition',
                 id+'-marker'],
         });
+        marker.setAttribute('commenteditable',false);
         parNode.insertBefore(marker, firstnode);
         marker.commentwidget = widgify(marker, {});
         if (this.classList.contains('noselection')) {
-            console.log("here");
             marker.visiblemarker = addelem({
                 tag: 'div',
                 classes: ['visiblemarker', ctype, id+'-visiblemarker'],
@@ -1381,6 +1431,7 @@ function htmlSelectionChange(e) {
             classes: ['commentselectorholder','proofsetaddition'],
             parent: htmld.body
         });
+        htmlw.commentselectorholder.setAttribute('contenteditable',false);
     }
     if (!htmlw.commentselector) {
         htmlw.commentselector = makeCommentTypeSelector(
