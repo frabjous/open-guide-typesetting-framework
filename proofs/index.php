@@ -797,6 +797,7 @@ function makeCommentForm(widg, ctype, id) {
     commentform.onpointerdown = function(e) {
         e.stopPropagation();
     }
+    commentform.setAttribute('contenteditable',false);
     commentform.deleteComment = deleteComment;
     commentform.saveComment = saveComment;
     commentform.makeSaved = makeSaved;
@@ -824,6 +825,7 @@ function makeCommentTypeSelector(parnode) {
             e.stopPropagation();
         }
     });
+    commentselector.setAttribute('contenteditable',false);
 
     const adddel = addelem({
         parent: commentselector,
@@ -1083,6 +1085,7 @@ function makeHtmlType(ctype, id = false) {
         marker.classList.add(ctype);
         if (marker?.commentwidget) {
             marker.commentwidget.classList.add(ctype);
+            marker.commentwidget.ishtml = true;
             marker.commentwidget.commentform = makeCommentForm(
                 marker.commentwidget, ctype, id);
             if (ctype == 'deletion' && deltext != '') {
