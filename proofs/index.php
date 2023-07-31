@@ -686,7 +686,18 @@ function makeCommentForm(widg, ctype, id) {
     commentform.insinput = addelem({
         tag: 'textarea',
         classes: ['ins'],
-        parent: commentform
+        parent: commentform,
+        mycommentform: commentform,
+        oninput: function(e) {
+            const commentform = this.mycommentform;
+            if (commentform.makeUnsaved) {
+                commentform.makeUnsaved();
+            }
+            // fill in insertion block
+            if (commentform?.mywidget?.insertionpoint) {
+                commentform.mywidget.insertionpoint.innerHTML = this.value;
+            }
+        }
     });
     commentform.commentlabel = addelem({
         tag: 'label',
@@ -713,7 +724,7 @@ function makeCommentForm(widg, ctype, id) {
         classes: ['response'],
         parent: commentform
     });
-    for (const x of ['del','ins','comment','response']) {
+    for (const x of ['del','comment','response']) {
         commentform[x+'input'].oninput = () => {
             if (commentform.makeUnsaved) { commentform.makeUnsaved(); }
         }
@@ -1707,8 +1718,6 @@ function setUpHtml() {
     });
 
     // add listener for selection
-    //htmld.onselectionchange = htmlSelectionChange;
-
     htmld.onpointerup = htmlSelectionChange;
 
     // apply editormode to html body
