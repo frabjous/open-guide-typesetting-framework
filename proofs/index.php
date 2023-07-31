@@ -507,7 +507,21 @@ function zoomInOut(inout = true) {
 
 // functions for comment elements
 
+function purgeTraces() {
+    const id = this.id;
+    const tt = htmld.getElementsByClassName(id + '-change');
+    while (tt.length > 0) {
+        const t = tt[tt.length - 1];
+        let rep = htmld.createTextNode(t.innerText);
+        t.parentNode.insertBefore(rep,t);
+        t.parentNode.removeChild(t);
+    }
+}
+
 async function deleteComment() {
+    if (this.ishtml) {
+        this.purgeTraces();
+    }
     // remove off server
     if (this.eversaved) {
         const req = {
@@ -803,6 +817,7 @@ function makeCommentForm(widg, ctype, id) {
     commentform.makeSaved = makeSaved;
     commentform.makeUnsaved = makeUnsaved;
     commentform.makeSaving = makeSaving;
+    commentform.purgeTraces = purgeTraces;
     commentform.minimize = minimize;
     commentform.eversaved = false;
     commentform.makeUnsaved();
@@ -1015,6 +1030,11 @@ function makeHtmlType(ctype, id = false) {
         });
         parNode.insertBefore(marker, firstnode);
         marker.commentwidget = widgify(marker, {});
+        const yloc = parseInt(htmlw?.commentselectorholder?.style?.top);
+        console.log('yloc',yloc);
+        if ((yloc > 0) && (yloc < 350)) {
+            marker.commentwidget.classList.add("underneath");
+        }
         marker.commentwidget.classList.remove('selecting');
         marker.commentwidget.makeType = function() {};
         if (fnMid != '') {
@@ -1085,7 +1105,6 @@ function makeHtmlType(ctype, id = false) {
         marker.classList.add(ctype);
         if (marker?.commentwidget) {
             marker.commentwidget.classList.add(ctype);
-            marker.commentwidget.ishtml = true;
             marker.commentwidget.commentform = makeCommentForm(
                 marker.commentwidget, ctype, id);
             if (ctype == 'deletion' && deltext != '') {
@@ -1093,6 +1112,7 @@ function makeHtmlType(ctype, id = false) {
                 delinput.value = deltext;
                 delinput.readOnly = true;
             }
+            marker.commentwidget.commentform.ishtml = true;
         }
     } else {
         // TODO: restore version
