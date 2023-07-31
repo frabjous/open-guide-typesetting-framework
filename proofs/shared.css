@@ -123,6 +123,25 @@ div.innermarker {
     height: 100%;
 }
 
+div.visiblemarker {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    z-index: 50;
+    display: inline-block;
+    left: -10px;
+    top: -20px;
+}
+
+div.visiblemarker.query {
+    background-color: var(--ogstgreen);
+}
+
+div.visiblemarker.comment {
+    background-color: var(--ogstyellow);
+}
+
 div.commentwidget {
     position: absolute;
     background-color: var(--ogstbg);
@@ -165,6 +184,7 @@ div.commentwidget div.minimizemarker {
     display: none;
     color: var(--ogstprimary);
     cursor: pointer;
+    user-select: none;
     white-space: nowrap;
 }
 
