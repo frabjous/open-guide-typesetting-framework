@@ -92,6 +92,7 @@
 }
 
 body.editormode .commentselector .commenttype.ins,
+body.editormode .commentselectorholder.noselection .commentselector .commenttype.ins,
 body.editormode .commentselector .commenttype.del,
 body.editormode .commentselector .commenttype.comment {
     display: none;
