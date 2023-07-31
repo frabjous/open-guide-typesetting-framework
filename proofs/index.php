@@ -1031,9 +1031,14 @@ function makeHtmlType(ctype, id = false) {
         parNode.insertBefore(marker, firstnode);
         marker.commentwidget = widgify(marker, {});
         const yloc = parseInt(htmlw?.commentselectorholder?.style?.top);
-        console.log('yloc',yloc);
         if ((yloc > 0) && (yloc < 350)) {
             marker.commentwidget.classList.add("underneath");
+        }
+        const xloc = parseInt(htmlw?.commentselectorholder?.style?.left);
+        const sw = htmld.body.clientWidth;
+        console.log(sw, 'vs', xloc);
+        if ((xloc+80) > sw) {
+            marker.commentwidget.classList.add("pushleft");
         }
         marker.commentwidget.classList.remove('selecting');
         marker.commentwidget.makeType = function() {};
