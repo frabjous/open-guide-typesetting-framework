@@ -1077,6 +1077,14 @@ function makeHtmlType(ctype, id = false) {
         });
         parNode.insertBefore(marker, firstnode);
         marker.commentwidget = widgify(marker, {});
+        if (this.classList.contains('noselection')) {
+            console.log("here");
+            marker.visiblemarker = addelem({
+                tag: 'div',
+                classes: ['visiblemarker', ctype, id+'-visiblemarker'],
+                parent: marker.innermarker
+            });
+        }
         const yloc = marker.offsetTop;
         if ((yloc > 0) && (yloc < 350)) {
             marker.commentwidget.classList.add("underneath");
