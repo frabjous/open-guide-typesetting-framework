@@ -509,6 +509,10 @@ function zoomInOut(inout = true) {
 
 function purgeTraces() {
     const id = this.id;
+    if (this?.mywidget?.insertionpoint) {
+        const ip = this.mywidget.insertionpoint;
+        ip.parentNode.removeChild(ip);
+    }
     const tt = htmld.getElementsByClassName(id + '-change');
     while (tt.length > 0) {
         const t = tt[tt.length - 1];
