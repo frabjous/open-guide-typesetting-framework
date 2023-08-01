@@ -1754,7 +1754,7 @@ if (("savedcomments" in w) && ("pdf" in w.savedcomments)) {
             && (commentinfo.hasbeenaddressed));
         commentform.makeSaved();
         // even saved queries should start open for non-editors
-        if (commentinfo?.commentype == 'query' &&
+        if (commentinfo?.commenttype == 'query' &&
             commentform.responseinput.value == '' &&
             (!window.iseditor)) {
             commentform.minimize(false);
@@ -1782,6 +1782,47 @@ function setUpHtml() {
         window.htmld = htmlproofs.contentDocument;
     }
     if (!htmld.body) { return; }
+
+    // remove any old commentselector
+    const hh = htmd.getElementsByClassName("commentselectorholder");
+    if (hh) { for (const h of hh) { h.parentNode.removeChild(h); } };
+
+    // fix old comments
+    if (("savedcomments" in w) && ("html" in w.savedcomments)) {
+        for (const commentid in w.savedcomments.html) {
+            const commentinfo = w.savedcomments.html[commentid];
+            const marker = htmld.getElementById(commentid + "-marker");
+            if (!marker) { continue; }
+            const vv = marker.getElementsByClassName("visiblemarker");
+            const hasvm = (vv && vv.length> 0);
+            // clear it out
+            marker.innerHTML = '';
+            marker.hasvm = hasvm;
+            marker.makeType = makeHtmlType;
+            marker.makeType(commentinfo.commenttype, commentid);
+            if (!marker.commentwidget.commentform) { continue; }
+            const commentform = marker.commentwidget.commentform;
+            // restore values
+            for (const x of ['comment', 'ins', 'del', 'response']) {
+                if (x in commentinfo) {
+                    commentform[x + 'input'].value = commentinfo[x];
+                }
+            }
+            // make deletion deletioninput readOnly
+            if (commentinfo.commenttype == 'deletion') {
+                commentform.delinput.readyOnly = true;
+            }
+            // restore check box
+            commentform.addressedcb.checked = (("hasbeenaddressed" in
+                commentinfo) && (commentinfo.hasbeenaddressed));
+            commentform.makeSaved();
+            if (commentinfo?.commenttype == 'query' &&
+                commentform.responseinput.value == '' &&
+                (!window.iseditor)) {
+                commentform.minimize(false);
+            }
+        }
+    }
 
     // make editable
     htmld.body.setAttribute('contenteditable',true);
