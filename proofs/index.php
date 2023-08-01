@@ -76,7 +76,7 @@ if (file_exists($commentsfile)) {
 
 <!-- web icon -->
 <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
-<title><?php echo $title; ?> Page Proofs</title>
+<title>Page Proofs | <?php echo $title; ?></title>
 
 <!-- simple css framework -->
 <link rel="stylesheet" type="text/css" href="shared.css">
@@ -584,7 +584,7 @@ async function saveComment() {
         }
     }
     if (this.ishtml) {
-        req.bodyhtml = htmld.body.outerHTML;
+        req.bodyhtml = htmld.body.innerHTML;
     }
     let wherefound = this;
     while (wherefound && (wherefound.parentNode != htmld.body)) {
@@ -614,7 +614,6 @@ async function saveComment() {
             }
         }
     }
-    console.log(req);
     this.makeSaving();
     const resp = await jsonrequest(req);
     if (!resp) {

@@ -26,6 +26,8 @@ $proofdir = "$datadir/$project/$assignment_type" . 's' .
 
 $commentsfile = "$proofdir/saved-comments.json";
 
+$savedhtmlfile = "$proofdir/saved-with-comments.html";
+
 function nicetime($ts) {
     return date('d M Y H:i:s', $ts);
 }
@@ -66,6 +68,9 @@ if ($requesttype == 'savecomment') {
     if (isset($commentinfo->page)) {
         $comments->pdf->{$commentinfo->id} = $commentinfo;
     }
+    // save html body
+    
+
     $success = save_comments($comments);
     if (!$success) {
         jquit('Unable to save comments.', 500);
