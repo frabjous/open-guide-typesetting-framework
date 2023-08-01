@@ -393,6 +393,13 @@ w.pdfzoom = <?php echo strval($pdfparentstart); ?>;
     echo $commentsjson;
     echo ';' . PHP_EOL;
 } ?>
+<?php if ((isset($_GET["starton"])) && (
+    ($_GET["starton"] == 'instructions') ||
+    ($_GET["starton"] == 'pdf') ||
+    ($_GET["starton"] == 'html'))) {
+        echo 'w.starton = "' . $_GET["starton"] . '";' . PHP_EOL;
+    }
+?>
 w.nummarkers = 0;
 w.anychangesmade = false;
 for (const id of [
@@ -698,7 +705,7 @@ function minimize(b) {
         }
         if (!("minimizemarker" in widg)) {
             widg.minimizemarker = addelem({
-                tag: 'div',
+                tag: 'span',
                 parent: widg,
                 mywidget: widg,
                 classes: ['minimizemarker'],
@@ -737,7 +744,7 @@ function minimize(b) {
 
 function makeCommentForm(widg, ctype, id) {
     const commentform = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: widg,
         id: id,
         mytype: ctype,
@@ -819,7 +826,7 @@ function makeCommentForm(widg, ctype, id) {
         }
     }
     commentform.addressedarea = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: commentform,
         classes: ['commentformaddressedarea']
     });
@@ -846,22 +853,22 @@ function makeCommentForm(widg, ctype, id) {
         innerHTML: 'has been addressed'
     });
     commentform.buttons = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: commentform,
         classes: ['commentformbuttons']
     });
     commentform.rightbuttons = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: commentform.buttons,
         classes: ['commentformrightbuttons']
     });
     commentform.leftbuttons = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: commentform.buttons,
         classes: ['commentformleftbuttons']
     });
     commentform.removebutton = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: commentform.leftbuttons,
         title: 'delete this comment',
         classes: ['commentformbutton', 'removebutton'],
@@ -873,7 +880,7 @@ function makeCommentForm(widg, ctype, id) {
         }
     });
     commentform.savebutton = addelem({
-        tag: 'div',
+        tag: 'span',
         title: 'save this comment',
         parent: commentform.rightbuttons,
         mycommentform: commentform,
@@ -890,7 +897,7 @@ function makeCommentForm(widg, ctype, id) {
     });
     commentform.savebutton.origHTML = commentform.savebutton.innerHTML;
     commentform.minimizebutton = addelem({
-        tag: 'div',
+        tag: 'span',
         title: 'minimize',
         mycommentform: commentform,
         parent: commentform.rightbuttons,
@@ -1124,7 +1131,7 @@ function makeHtmlType(ctype, id = false) {
             parNode.insertBefore(preNode, firstnode);
         }
         marker = addelem({
-            tag: 'div',
+            tag: 'span',
             classes: ['htmlcommentmarker','proofsetaddition',
                 id+'-marker'],
         });
@@ -1133,7 +1140,7 @@ function makeHtmlType(ctype, id = false) {
         marker.commentwidget = widgify(marker, {});
         if (this.classList.contains('noselection')) {
             marker.visiblemarker = addelem({
-                tag: 'div',
+                tag: 'span',
                 classes: ['visiblemarker', ctype, id+'-visiblemarker'],
                 parent: marker.innermarker
             });
@@ -1227,9 +1234,35 @@ function makeHtmlType(ctype, id = false) {
             marker.commentwidget.commentform.ishtml = true;
         }
     } else {
-        // TODO: restore version
+        marker = this;
+        marker.setAttribute("commenteditable", false);
+        marker.commentwidget = widgify(marker, {});
+        if (this.hasvm) {
+            marker.visiblemarker = addelem({
+                tag: 'span',
+                classes: ['visiblemarker', ctype, id + '-visiblemarker'],
+                parent: marker.innermarker
+            });
+        }
+        const yloc = marker.offsetTop;
+        if ((yloc > 0) && (yloc < 350)) {
+            marker.commentwidget.classList.add("underneath");
+        }
+        const xloc = marker.offsetLeft;
+        const sw = htmlw.innerWidth;
+        if ((xloc+375) > sw) {
+            marker.commentwidget.classList.add("pushleft");
+        }
+        marker.commentwidget.classList.remove('selecting');
+        marker.commentwidget.makeType = function() {};
+        marker.classList.add(ctype);
+        if (marker?.commentwidget) {
+            marker.commentwidget.classList.add(ctype);
+            marker.commentwidget.commentform = makeCommentForm(
+                marker.commentwidget, ctype, id);
+            marker.commentwidget.commentform.ishtml = true;
+        }
     }
-
 }
 
 function makePdfType(ctype, id = false) {
@@ -1334,7 +1367,7 @@ function widgify(marker, elem) {
     marker.innermarker = addelem({
         parent: marker,
         classes: ['innermarker'],
-        tag: 'div',
+        tag: 'span',
         onpointerdown: function(e) {
             e.stopPropagation();
         },
@@ -1342,7 +1375,7 @@ function widgify(marker, elem) {
     const commentwidget = addelem({
         parent: marker.innermarker,
         mymarker: marker,
-        tag: 'div',
+        tag: 'span',
         classes: ['commentwidget','selecting'],
         onpointerdown: function(e) {
             e.stopPropagation();
@@ -1523,7 +1556,10 @@ const submitbutton = addelem({
             if (uu.length > 0) {
                 readytosubmit = false
             }
-            // TODO: htmlcomments
+            const huhu = htmld.getElementsByClassName("unsaved");
+            if (huhu.length > 0) {
+                readytosubmit = false;
+            }
         }
         if (readytosubmit) {
             this.classList.remove('disabled');
@@ -1784,15 +1820,16 @@ function setUpHtml() {
     if (!htmld.body) { return; }
 
     // remove any old commentselector
-    const hh = htmd.getElementsByClassName("commentselectorholder");
+    const hh = htmld.getElementsByClassName("commentselectorholder");
     if (hh) { for (const h of hh) { h.parentNode.removeChild(h); } };
 
     // fix old comments
     if (("savedcomments" in w) && ("html" in w.savedcomments)) {
         for (const commentid in w.savedcomments.html) {
             const commentinfo = w.savedcomments.html[commentid];
-            const marker = htmld.getElementById(commentid + "-marker");
-            if (!marker) { continue; }
+            const markers = htmld.getElementsByClassName(commentid + "-marker");
+            if (!markers || markers.length == 0) { continue; }
+            const marker = markers[0];
             const vv = marker.getElementsByClassName("visiblemarker");
             const hasvm = (vv && vv.length> 0);
             // clear it out
@@ -1879,16 +1916,19 @@ setUpHtml();
 htmlproofs.onload = setUpHtml;
 
 // show one of the three main body elements
-if (iseditor) {
-    if (w.usehtml) {
-        changeMode('html');
-    } else {
-        changeMode('pdf');
-    }
+if ("starton" in w) {
+    changeMode(w.starton);
 } else {
-    changeMode('instructions');
+    if (iseditor) {
+        if (w.usehtml) {
+            changeMode('html');
+        } else {
+            changeMode('pdf');
+        }
+    } else {
+        changeMode('instructions');
+    }
 }
-
 
 </script>
 

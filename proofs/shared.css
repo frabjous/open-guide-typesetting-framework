@@ -113,17 +113,18 @@ body.editormode .commentselector .commenttype.comment {
     border: 1px solid var(--ogstprimary-hover);
 }
 
-div.htmlcommentmarker {
+span.htmlcommentmarker {
     display: inline-block;
 }
 
-div.innermarker {
+span.innermarker {
+    display: block;
     position: relative;
     width: 100%;
     height: 100%;
 }
 
-div.visiblemarker {
+span.visiblemarker {
     position: absolute;
     height: 30px;
     width: 30px;
@@ -134,16 +135,17 @@ div.visiblemarker {
     top: -20px;
 }
 
-div.visiblemarker.query {
+span.visiblemarker.query {
     background-color: var(--ogstgreen);
 }
 
-div.visiblemarker.comment {
+span.visiblemarker.comment {
     background-color: var(--ogstyellow);
 }
 
-div.commentwidget {
+.commentwidget {
     position: absolute;
+    display: inline-block;
     background-color: var(--ogstbg);
     bottom: 100%;
     left: -1rem;
@@ -151,21 +153,21 @@ div.commentwidget {
     z-index: 200;
 }
 
-div.commentwidget.underneath {
+.commentwidget.underneath {
     background-color: var(--ogstbg);
     top: 100%;
     bottom: auto;
 }
 
-div.commentwidget.pushleft {
+.commentwidget.pushleft {
     background-color: var(--ogstbg);
     right: -1rem;
     left: auto;
 }
 
-div.commentwidget.minimized,
-div.commentwidget.minimized.underneath,
-div.commentwidget.minimized.pushleft {
+.commentwidget.minimized,
+.commentwidget.minimized.underneath,
+.commentwidget.minimized.pushleft {
     background-color: transparent;
     left: -1rem;
     top: -0.8rem;
@@ -174,13 +176,13 @@ div.commentwidget.minimized.pushleft {
     z-index: 100;
 }
 
-div.htmlcommentmarker div.commentwidget.minimized,
-div.htmlcommentmarker div.commentwidget.minimized.underneath,
-div.htmlcommentmarker div.commentwidget.minimized.pushleft {
+span.htmlcommentmarker .commentwidget.minimized,
+span.htmlcommentmarker .commentwidget.minimized.underneath,
+span.htmlcommentmarker .commentwidget.minimized.pushleft {
     top: -1.5rem;
 }
 
-div.commentwidget div.minimizemarker {
+.commentwidget span.minimizemarker {
     display: none;
     color: var(--ogstprimary);
     cursor: pointer;
@@ -188,62 +190,63 @@ div.commentwidget div.minimizemarker {
     white-space: nowrap;
 }
 
-div.commentwidget.minimized div.minimizemarker {
+.commentwidget.minimized span.minimizemarker {
     display: inline-block;
 }
 
-div.commentwidget.minimized div.minimizemarker:hover {
+.commentwidget.minimized span.minimizemarker:hover {
     color: var(--ogstprimary-hover);
 }
 
-div.commentwidget.selecting {
+.commentwidget.selecting {
     padding: 0.5rem 2rem 0.5rem 2rem;
     border-radius: 2rem;
 }
 
-div.commentwidget.deletion,
-div.commentwidget.insertion,
-div.commentwidget.comment,
-div.commentwidget.query {
+.commentwidget.deletion,
+.commentwidget.insertion,
+.commentwidget.comment,
+.commentwidget.query {
     border-radius: 1rem;
 }
 
-div.commentform {
+span.commentform {
     width: 18rem;
     padding: 1rem;
     border-radius: 1rem;
     text-align: left;
-}
-
-div.commentwidget.minimized div.commentform {
-    display: none;
-}
-
-div.commentform label {
     display: block;
 }
 
-div.commentformaddressedarea {
+.commentwidget.minimized span.commentform {
     display: none;
 }
 
-body.editormode div.commentform div.commentformaddressedarea {
+span.commentform label {
+    display: block;
+}
+
+span.commentformaddressedarea {
+    display: none;
+}
+
+body.editormode span.commentform span.commentformaddressedarea {
     display: block;
     width: 100%;
     text-align: left;
 }
 
-body.editormode div.commentform div.commentformaddressedarea input {
+body.editormode span.commentform span.commentformaddressedarea input {
     height: 1.2rem; width: 1.2rem;
     margin: 0;
 }
 
-div.commentform label.commentformaddressedlabel {
+span.commentform label.commentformaddressedlabel {
     padding-left: 0.5rem;
     display: inline;
 }
 
-div.commentform textarea {
+span.commentform textarea {
     resize: none;
     width: 100%;
     box-sizing: border-box;
@@ -251,96 +254,96 @@ div.commentform textarea {
     font-family: var(--ogstfont-family);
 }
 
-div.commentform.query {
+span.commentform.query {
     background-color: var(--ogstgreen);
 }
 
-div.commentform.comment {
+span.commentform.comment {
     background-color: var(--ogstyellow);
 }
 
-div.commentform.insertion {
+span.commentform.insertion {
     background-color: var(--ogstbluey);
 }
 
-div.commentform.deletion {
+span.commentform.deletion {
     background-color: var(--ogstpink);
 }
 
-div.commentform.query .ins,
-div.commentform.query .del,
-div.commentform.comment .del,
-div.commentform.comment .response,
-div.commentform.comment .ins,
-div.commentform.deletion .response,
-div.commentform.insertion .del,
-div.commentform.insertion .response {
+span.commentform.query .ins,
+span.commentform.query .del,
+span.commentform.comment .del,
+span.commentform.comment .response,
+span.commentform.comment .ins,
+span.commentform.deletion .response,
+span.commentform.insertion .del,
+span.commentform.insertion .response {
     display: none;
 }
 
-div.commentform div.commentformbuttons {
+span.commentform span.commentformbuttons {
     display: block;
     width: 100%;
     user-select: none;
 }
 
-div.commentform div.commentformbuttons div.commentformbutton {
+span.commentform span.commentformbuttons span.commentformbutton {
     color: var(--ogstprimary);
     display: inline-block;
     cursor: pointer;
 }
 
-div.commentform div.commentformbuttons div.commentformbutton:hover {
+span.commentform span.commentformbuttons span.commentformbutton:hover {
     color: var(--ogstprimary-hover);
 }
 
-div.commentform div.commentformbuttons div.commentformbutton.disabled:hover,
-div.commentform div.commentformbuttons div.commentformbutton.disabled {
+span.commentform span.commentformbuttons span.commentformbutton.disabled:hover,
+span.commentform span.commentformbuttons span.commentformbutton.disabled {
     cursor: default;
     color: var(--ogstdisabled);
 }
 
-div.commentform.saving div.commentformbuttons div.commentformbutton.savebutton {
+span.commentform.saving span.commentformbuttons span.commentformbutton.savebutton {
     cursor: default;
 }
 
-div.commentform.saving div.commentformbuttons div.commentformbutton.savebutton:hover {
+span.commentform.saving span.commentformbuttons span.commentformbutton.savebutton:hover {
     color: var(--ogstprimary);
 }
 
-div.commentform div.commentformbuttons div.commentformbutton span.material-symbols-outlined {
+span.commentform span.commentformbuttons span.commentformbutton span.material-symbols-outlined {
     position: relative;
     top: 0.3rem;
 }
 
-div.commentform.query div.commentformbuttons div.commentformbutton.removebutton {
+span.commentform.query span.commentformbuttons span.commentformbutton.removebutton {
     display: none;
 }
 
-body.editormode div.commentform.query div.commentformbuttons div.commentformbutton.removebutton {
+body.editormode span.commentform.query span.commentformbuttons span.commentformbutton.removebutton {
     display: inline-block;
 }
 
 
-div.commentform div.commentformbuttons div.commentformbutton.removebutton {
+span.commentform span.commentformbuttons span.commentformbutton.removebutton {
     color: var(--ogstred);
 }
 
-div.commentform.unsaved div.commentformbuttons div.commentformbutton.minimize {
+span.commentform.unsaved span.commentformbuttons span.commentformbutton.minimize {
     display: none;
 }
 
-div.commentform div.commentformbuttons div.commentformrightbuttons {
+span.commentform span.commentformbuttons span.commentformrightbuttons {
     float: right;
     display: inline-block;
 }
 
-div.commentform div.commentformbuttons div.commentformleftbuttons {
+span.commentform span.commentformbuttons span.commentformleftbuttons {
     float: left;
     display: inline-block;
 }
 
-div.commentform br {
+span.commentform br {
     clear: both;
 }
 
