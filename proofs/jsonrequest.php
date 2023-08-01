@@ -215,10 +215,30 @@ if ($requesttype == 'submit') {
             }
             $emailcontents .= '<li>';
             if (isset($commentinfo->page)) {
-                $emailcontents .= '<strong>' . str_replace('page', 'page ',
-                    $commentinfo->page) . '</strong><br>' . "\r\n";
+                $emailcontents .= '<strong>(' . str_replace('page', 'page ',
+                    $commentinfo->page) . ')</strong><br>' . "\r\n";
             }
-            //TODO: something htmlish
+            if (isset($commentinfo->topleveltag)) {
+                $emailcontents .= '<strong>(';
+                if (isset($commentinfo->section) && ($commentinfo->section > 0)) {
+                    $emailcontents .= 'section ' . strval($commentinfo->section);
+                }
+                if ($commentinfo->topleveltag == 'h1') {
+                    $emailcontents .= ' heading';
+                } else {
+                    if ($commentinfo->topleveltag == 'p') {
+                        $emailcontents .= ' paragraph ';
+                    } elseif ($commentinfo->topleveltag == 'h2') {
+                        $emailcontents .= ' subsection heading ';
+                    } else {
+                        $emailcontents .= ' ' . $commentinfo->topleveltag . ' ';
+                    }
+                    if (isset($commentinfo->position)) {
+                        $emailcontents .= strval($commentinfo->position);
+                    }
+                }
+                $emailcontents .= ')</strong><br>' . "\r\n";
+            }
             if (isset($commentinfo->del)) {
                 $emailcontents .= 'Deleted text: ' . htmlspecialchars(
                     $commentinfo->del) . '<br>' . "\r\n";

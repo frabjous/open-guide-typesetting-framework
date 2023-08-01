@@ -39,6 +39,8 @@
     color: var(--ogstfg);
     font-weight: normal;
     font-style: normal;
+    text-decoration: none;
+    text-indent: 0px;
 }
 
 .commentselectorholder {
