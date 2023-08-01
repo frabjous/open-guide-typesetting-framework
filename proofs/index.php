@@ -530,6 +530,11 @@ function purgeTraces() {
 }
 
 async function deleteComment() {
+    // remove from DOM
+    if (this?.mywidget?.mymarker) {
+        const m = this.mywidget.mymarker;
+        m.parentNode.removeChild(m);
+    }
     if (this.ishtml) {
         this.purgeTraces();
     }
@@ -539,20 +544,11 @@ async function deleteComment() {
             requesttype: 'deletecomment',
             commentid: this.id
         };
-        this.removebutton.innerHTML =
-            '<span class="material-symbols-outlined rotating">sync' +
-            '</span> deleting';
-        const resp = await jsonrequest(req);
-        if (!resp) {
-            this.removebutton.innerHTML = '<span class="' +
-                'material-symbols-outlined">delete_forever</span>';
-            return;
+        if (this.ishtml) {
+            req.bodyhtml = htmld.body.innerHTML;
         }
-    }
-    // remove from DOM
-    if (this?.mywidget?.mymarker) {
-        const m = this.mywidget.mymarker;
-        m.parentNode.removeChild(m);
+        const resp = await jsonrequest(req);
+        if (!resp) { return; }
     }
     w.submitbutton.updateMe();
 }
@@ -1204,7 +1200,7 @@ function makeHtmlType(ctype, id = false) {
             }
             marker.commentwidget.insertionpoint = addelem({
                 tag: 'ins',
-                id: id+'insertionpoint',
+                id: id+'-insertionpoint',
                 classes: ctypeclasses
             });
             eparNode.insertBefore(marker.commentwidget.insertionpoint,
