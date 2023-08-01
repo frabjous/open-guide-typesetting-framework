@@ -705,7 +705,7 @@ function minimize(b) {
         }
         if (!("minimizemarker" in widg)) {
             widg.minimizemarker = addelem({
-                tag: 'div',
+                tag: 'span',
                 parent: widg,
                 mywidget: widg,
                 classes: ['minimizemarker'],
@@ -744,7 +744,7 @@ function minimize(b) {
 
 function makeCommentForm(widg, ctype, id) {
     const commentform = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: widg,
         id: id,
         mytype: ctype,
@@ -826,7 +826,7 @@ function makeCommentForm(widg, ctype, id) {
         }
     }
     commentform.addressedarea = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: commentform,
         classes: ['commentformaddressedarea']
     });
@@ -853,22 +853,22 @@ function makeCommentForm(widg, ctype, id) {
         innerHTML: 'has been addressed'
     });
     commentform.buttons = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: commentform,
         classes: ['commentformbuttons']
     });
     commentform.rightbuttons = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: commentform.buttons,
         classes: ['commentformrightbuttons']
     });
     commentform.leftbuttons = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: commentform.buttons,
         classes: ['commentformleftbuttons']
     });
     commentform.removebutton = addelem({
-        tag: 'div',
+        tag: 'span',
         parent: commentform.leftbuttons,
         title: 'delete this comment',
         classes: ['commentformbutton', 'removebutton'],
@@ -880,7 +880,7 @@ function makeCommentForm(widg, ctype, id) {
         }
     });
     commentform.savebutton = addelem({
-        tag: 'div',
+        tag: 'span',
         title: 'save this comment',
         parent: commentform.rightbuttons,
         mycommentform: commentform,
@@ -897,7 +897,7 @@ function makeCommentForm(widg, ctype, id) {
     });
     commentform.savebutton.origHTML = commentform.savebutton.innerHTML;
     commentform.minimizebutton = addelem({
-        tag: 'div',
+        tag: 'span',
         title: 'minimize',
         mycommentform: commentform,
         parent: commentform.rightbuttons,
@@ -1131,7 +1131,7 @@ function makeHtmlType(ctype, id = false) {
             parNode.insertBefore(preNode, firstnode);
         }
         marker = addelem({
-            tag: 'div',
+            tag: 'span',
             classes: ['htmlcommentmarker','proofsetaddition',
                 id+'-marker'],
         });
@@ -1140,7 +1140,7 @@ function makeHtmlType(ctype, id = false) {
         marker.commentwidget = widgify(marker, {});
         if (this.classList.contains('noselection')) {
             marker.visiblemarker = addelem({
-                tag: 'div',
+                tag: 'span',
                 classes: ['visiblemarker', ctype, id+'-visiblemarker'],
                 parent: marker.innermarker
             });
@@ -1239,7 +1239,7 @@ function makeHtmlType(ctype, id = false) {
         marker.commentwidget = widgify(marker, {});
         if (this.hasvm) {
             marker.visiblemarker = addelem({
-                tag: 'div',
+                tag: 'span',
                 classes: ['visiblemarker', ctype, id + '-visiblemarker'],
                 parent: marker.innermarker
             });
@@ -1367,7 +1367,7 @@ function widgify(marker, elem) {
     marker.innermarker = addelem({
         parent: marker,
         classes: ['innermarker'],
-        tag: 'div',
+        tag: 'span',
         onpointerdown: function(e) {
             e.stopPropagation();
         },
@@ -1375,7 +1375,7 @@ function widgify(marker, elem) {
     const commentwidget = addelem({
         parent: marker.innermarker,
         mymarker: marker,
-        tag: 'div',
+        tag: 'span',
         classes: ['commentwidget','selecting'],
         onpointerdown: function(e) {
             e.stopPropagation();
