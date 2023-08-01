@@ -6,6 +6,9 @@
 // defines the main open guide typesetting framework functions         //
 /////////////////////////////////////////////////////////////////////////
 
+// Note: I have no idea where I came up with "ogst" rather than "ogtf",
+// but it's all over the codebase now and I'm scared to change it
+
 const ogst = {};
 
 import getformfields from '../open-guide-editor/open-guide-misc/formreader.mjs';
