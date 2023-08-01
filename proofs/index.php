@@ -1167,6 +1167,7 @@ function makeHtmlType(ctype, id = false) {
         if (firstnode == endnode) {
             marker.commentwidget.insertionpoint = addelem({
                 tag: 'ins',
+                id: id+'-insertionpoint',
                 classes: ctypeclasses
             });
             parNode.insertBefore(marker.commentwidget.insertionpoint,
@@ -1203,6 +1204,7 @@ function makeHtmlType(ctype, id = false) {
             }
             marker.commentwidget.insertionpoint = addelem({
                 tag: 'ins',
+                id: id+'insertionpoint',
                 classes: ctypeclasses
             });
             eparNode.insertBefore(marker.commentwidget.insertionpoint,
@@ -1852,6 +1854,11 @@ function setUpHtml() {
             // restore check box
             commentform.addressedcb.checked = (("hasbeenaddressed" in
                 commentinfo) && (commentinfo.hasbeenaddressed));
+            // restore insertion point
+            const inspt = htmld.getElementById(commentid + '-insertionpoint');
+            if (inspt) {
+                marker.commentwidget.insertionpoint = inspt;
+            }
             commentform.makeSaved();
             if (commentinfo?.commenttype == 'query' &&
                 commentform.responseinput.value == '' &&
