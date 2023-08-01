@@ -79,6 +79,10 @@
     display: none;
 }
 
+.pdfpage .commentselector .commenttype.ins {
+    display: inline-block;
+}
+
 .commentselectorholder.noselection .commentselector .commenttype.ins {
     display: inline-block;
 }
@@ -92,6 +96,7 @@
 }
 
 body.editormode .commentselector .commenttype.ins,
+body.editormode .pdfpage .commentselector .commenttype.ins,
 body.editormode .commentselectorholder.noselection .commentselector .commenttype.ins,
 body.editormode .commentselector .commenttype.del,
 body.editormode .commentselector .commenttype.comment {
