@@ -28,6 +28,8 @@ $commentsfile = "$proofdir/saved-comments.json";
 
 $savedhtmlfile = "$proofdir/saved-with-comments.html";
 
+$orightmlfile = "$proofdir/$assignment_id.html";
+
 function nicetime($ts) {
     return date('d M Y H:i:s', $ts);
 }
@@ -57,6 +59,32 @@ function save_comments($comments) {
     return (!!$saveresult);
 }
 
+if (isset($bodyhtml) && file_exists($orightmlfile)) {
+    $orightml = file_get_contents($orightmlfile);
+    if (!$orightml) {
+        jquit('Original html file is blank.');
+    }
+    $htmlparts = explode('<body', $orightml, 2);
+    $header = $orightml;
+    if (count($htmlparts) > 1) {
+        $header = $htmlparts[0] . '<body';
+        $remparts = explode('>', $htmlparts[1], 2);
+        $header .= $remparts[0] . '>';
+    }
+    $bottom = '</body>';
+    $bottomparts = explode('</body>', $orightml, 2);
+    if (count($bottomparts) > 1) {
+        $bottom .= $bottomparts[1];
+    } else {
+        $bottom .= PHP_EOL . '</html>';
+    }
+    $newwhole = $header . $bodyhtml . $bottom;
+    $hsaveres = file_put_contents($savedhtmlfile, $newwhole);
+    if (!$hsaveres || $hsaveres == 0) {
+        jquit('Could not save modified html document.', 500);
+    }
+}
+
 if ($requesttype == 'savecomment') {
     if (!isset($commentinfo)) {
         jquit('Request to save comment received without info about comment.');
@@ -68,9 +96,9 @@ if ($requesttype == 'savecomment') {
     if (isset($commentinfo->page)) {
         $comments->pdf->{$commentinfo->id} = $commentinfo;
     }
-    // save html body
-    
-
+    if (isset($bodyhtml)) {
+        $comments->html->{$commentinfo->id} = $commentinfo;
+    }
     $success = save_comments($comments);
     if (!$success) {
         jquit('Unable to save comments.', 500);
