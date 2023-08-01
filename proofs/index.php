@@ -269,6 +269,15 @@ body.pdf #toppanel div.viewoption.pdf {
     padding: 2rem;
 }
 
+#instructionscore {
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-rendering: optimizeLegibility;
+    font-kerning: normal;
+    text-align: left;
+}
+
 body #toppanel div.pdfonly {
     display: none;
 }
@@ -1952,7 +1961,19 @@ if ("starton" in w) {
             <div id="instructionsholder">
                 <div id="instructions">
                     <div id="errormessage"></div>
-                    <h1>Instructions</h1>
+                    <div id="instructionscore">
+                        <h1>Instructions</h1>
+<?php if ($iseditor) { ?>
+<h2>Editor instructions</h2>
+<p>Usage of the proofs pages for editors is mostly the same as for authors (see below).
+The main difference is that while visiting the page using the editor link, all comments left will automatically be of the (green) “query” type.
+The presumption is that the editor will add any queries they have about the document before sending the author link for the proofs to the author(s).
+When the author(s) visit the proofs page, these comments will be open by default and the authors can fill in their responses to the queries.
+The submit button is also disabled in editor mode, as editors do not need to submit their comments to themselves.</p>
+
+<?php } ?>
+
+                    </div>
                 </div>
             </div>
             <div id="htmlholder">
