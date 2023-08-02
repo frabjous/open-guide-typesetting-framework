@@ -1162,7 +1162,7 @@ function makeHtmlType(ctype, id = false) {
         }
         const xloc = marker.offsetLeft;
         const sw = htmlw.innerWidth;
-        if ((xloc+375) > sw) {
+        if (((xloc+375) > sw) && (xloc > (sw/2))) {
             marker.commentwidget.classList.add("pushleft");
         }
         marker.commentwidget.classList.remove('selecting');
@@ -1263,7 +1263,7 @@ function makeHtmlType(ctype, id = false) {
         }
         const xloc = marker.offsetLeft;
         const sw = htmlw.innerWidth;
-        if ((xloc+375) > sw) {
+        if ((xloc+375) > sw && (xloc > (sw/2))) {
             marker.commentwidget.classList.add("pushleft");
         }
         marker.commentwidget.classList.remove('selecting');
