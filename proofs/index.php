@@ -1162,7 +1162,7 @@ function makeHtmlType(ctype, id = false) {
         }
         const xloc = marker.offsetLeft;
         const sw = htmlw.innerWidth;
-        if ((xloc+375) > sw) {
+        if (((xloc+375) > sw) && (xloc > (sw/2))) {
             marker.commentwidget.classList.add("pushleft");
         }
         marker.commentwidget.classList.remove('selecting');
@@ -1263,7 +1263,7 @@ function makeHtmlType(ctype, id = false) {
         }
         const xloc = marker.offsetLeft;
         const sw = htmlw.innerWidth;
-        if ((xloc+375) > sw) {
+        if ((xloc+375) > sw && (xloc > (sw/2))) {
             marker.commentwidget.classList.add("pushleft");
         }
         marker.commentwidget.classList.remove('selecting');
@@ -2010,8 +2010,8 @@ When this is filled out, click the “save” button on the lower right of the f
 
 <p>
 Once saved, the comment form will minimize, but can be brought back up by clicking the small comment icon next to the marker for the comment.
-They can be re-minimized by clicking the small button to the right of the “(saved)” indicator.
-Comments can be completely removed by clicking the trash can icon in the lower left of the form.
+It can be re-minimized by clicking the small button to the right of the “(saved)” indicator.
+A comment can be completely removed by clicking the trash can icon in the lower left of the form.
 </p>
 
 <p>
@@ -2021,7 +2021,7 @@ You can fill in the “response” field, and then save the comment to answer th
 </p>
 
 <p>
-Once you have reviewed the entire document, and saved all your comments and corrections, you can <?php if ($pdfpages > 0) { ?>move on to the pdf proofs, or <?php } ?>submit your comments.
+Once you have reviewed the entire document, and saved all your comments and corrections, you can <?php if ($pdfpages > 0) { ?>move on to the pdf proofs, or <?php } ?>submit your comments to the editor(s).
 </p>
 <?php } ?>
 <?php if ($pdfpages > 0) { ?>
@@ -2073,7 +2073,7 @@ When you are done adding comments and corrections, and all of them have been sav
 <h2>Submitting your comments and corrections</h2>
 <p>
 When comments and corrections have been made, and all of them have been saved, you can click the flashing “submit” button in the upper right of the screen.
-(If it is not enabled, most likely there is a comment or comments that have not yet been saved.
+(If it is not enabled, most likely there is a comment that has not yet been saved.
 Make sure they are all saved<?php if (($usehtml) && ($pdfpages > 0)) { ?> on both the pdf and html proofs<?php } ?> before submitting.)
 When changes and comments are submitted, the editor who created the proofs is notified by email.
 </p>
@@ -2088,7 +2088,7 @@ You can download (clean) files of the proofs by clicking the small icons in the 
 These may include other file formats that cannot be previewed in this browser window.
 </p>
 
-<h2>Problems and questions</h2>
+<h2>Problems or questions</h2>
 <p>
 If you have trouble with the site, please contact either the editor who emailed you the link, or the project site administrator<?php if (isset($project_settings->contactname)) { echo ', ' . $project_settings->contactname; } if (isset($project_settings->contactemail)) { echo ' ⟨<a href="mailto:' . $project_settings->contactemail . '" target="_blank">' . $project_settings->contactemail . '</a>⟩'; } ?>.
 </p>
