@@ -284,6 +284,12 @@ body.pdf #toppanel div.viewoption.pdf {
     text-align: left;
 }
 
+#instructionscore img {
+    width: 35rem;
+    max-width: 100%;
+    border: 3px solid (--ogstmuted);
+}
+
 body #toppanel div.pdfonly {
     display: none;
 }
@@ -2008,6 +2014,8 @@ Once the type is chosen, a small form should pop up wherein you can specify your
 When this is filled out, click the “save” button on the lower right of the form.
 </p>
 
+<div><img src="images/deletion.gif" alt="[animation of deletion correction]"></div>
+
 <p>
 Once saved, the comment form will minimize, but can be brought back up by clicking the small comment icon next to the marker for the comment.
 It can be re-minimized by clicking the small button to the right of the “(saved)” indicator.
@@ -2019,6 +2027,8 @@ You may see green comment markers and forms already open when you examine the pr
 These are queries about the document left by the editor(s).
 You can fill in the “response” field, and then save the comment to answer their query.
 </p>
+
+<div><img src="images/editorcomm.gif" alt="[animation of editor query]"></div>
 
 <p>
 Once you have reviewed the entire document, and saved all your comments and corrections, you can <?php if ($pdfpages > 0) { ?>move on to the pdf proofs, or <?php } ?>submit your comments to the editor(s).
@@ -2053,6 +2063,8 @@ This should trigger a pop-up menu, on which you can choose what kind of comment 
 Once you choose the type, a small dialogue window should appear allowing you to fill in the details of your comment or correction.
 When done, click the “save” button in the lower right of the pop-up.
 </p>
+
+<div><img src="images/pdfcomment.gif" alt="[animation of pdf comment]"></div>
 
 <p>
 The comment will minimize once saved, but you can unminimize it by clicking again on the marker.
