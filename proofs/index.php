@@ -287,7 +287,7 @@ body.pdf #toppanel div.viewoption.pdf {
 #instructionscore img {
     width: 35rem;
     max-width: 100%;
-    border: 3px solid (--ogstmuted);
+    border: 0.5px solid var(--ogstinactive);
 }
 
 body #toppanel div.pdfonly {
