@@ -146,12 +146,18 @@ a:hover, a:link:hover, a:visited:hover {
     max-height: 100%;
     max-width: 100%;
 }
+
+#instructionsholder,
 #pdfholder,
 #htmlholder {
     height: 100%;
     width: 100%;
     max-width: 100%;
     max-height: 100%;
+}
+
+#instructionsholder {
+    overflow: auto;
 }
 
 #htmlholder {
@@ -1965,14 +1971,127 @@ if ("starton" in w) {
                         <h1>Instructions</h1>
 <?php if ($iseditor) { ?>
 <h2>Editor instructions</h2>
-<p>Usage of the proofs pages for editors is mostly the same as for authors (see below).
-The main difference is that while visiting the page using the editor link, all comments left will automatically be of the (green) “query” type.
+<p>
+Usage of the proofs pages for editors is mostly the same as for authors (see below).
+The main difference is that while visiting a proofs page using the editor link, all comments left will automatically be of the (green) “query” type.
 The presumption is that the editor will add any queries they have about the document before sending the author link for the proofs to the author(s).
-When the author(s) visit the proofs page, these comments will be open by default and the authors can fill in their responses to the queries.
-The submit button is also disabled in editor mode, as editors do not need to submit their comments to themselves.</p>
+When the author(s) visit(s) the proofs page, these comments will be open by default and the authors can fill in their responses to the queries.
+The editor should revisit the page after the author(s) submit their comments and corrections (which the editor should be notified about via email).
+Editors can click the “has been addressed” checkbox for each correction/comment to mark it as dealt with.
+</p>
 
+<p>
+The submit button is also disabled in editor mode, as editors do not need to submit their comments to themselves.
+</p>
+
+<p>
+If, for whatever reason, an editor wishes to add a different kind of comment/correction, e.g., an insertion or deletion, they should use the author link instead. Both should be listed in the document’s “proofs” listing one the typesetting framework current project page.
+</p>
 <?php } ?>
+<?php if ($usehtml) { ?>
+<h2>HTML page proofs</h2>
+<p>
+When you are ready to view the html proofs, click the “html proofs” button on the panel above.
+Please read over the proofs carefully.
+</p>
 
+<p>
+There are three kinds of comments or corrections authors can leave on proofs: (a) deletions (pink), which indicate certain text should be deleted, with the optional possibility of replacement text to be inserted, (b) insertions (blue), which indicate that text should be inserted (only), and (c) comments (yellow), which can be used for any other kind of comment or question.
+</p>
+
+<p>
+To add a comment or correction, either select the relevant part of the document with the mouse, or, if inserting text without removing anything, click the point where text should be inserted.
+A small box should pop up when you release the mouse button (or lift your finger on a touch screen) giving you an option of what kind of comment/correction to leave.
+(Deletions require some text be selected; insertions without deletions require the opposite.
+Comments can be left in either kind of case.)
+Once the type is chosen, a small form should pop up wherein you can specify your requested changes or comments.
+When this is filled out, click the “save” button on the lower right of the form.
+</p>
+
+<p>
+Once saved, the comment form will minimize, but can be brought back up by clicking the small comment icon next to the marker for the comment.
+They can be re-minimized by clicking the small button to the right of the “(saved)” indicator.
+Comments can be completely removed by clicking the trash can icon in the lower left of the form.
+</p>
+
+<p>
+You may see green comment markers and forms already open when you examine the proofs.
+These are queries about the document left by the editor(s).
+You can fill in the “response” field, and then save the comment to answer their query.
+</p>
+
+<p>
+Once you have reviewed the entire document, and saved all your comments and corrections, you can <?php if ($pdfpages > 0) { ?>move on to the pdf proofs, or <?php } ?>submit your comments.
+</p>
+<?php } ?>
+<?php if ($pdfpages > 0) { ?>
+<h2>PDF page proofs</h2>
+<?php if ($usehtml) { ?>
+<p>
+You do not need to leave duplicate comments on both the html and pdf proofs.
+Generally, comments regarding changes to the text should be left on the html proofs.
+Comments specific to the pdf, e.g., those involving page breaks or running headers, etc., can be left on the pdf proofs.
+</p>
+<?php } ?>
+<p>
+To view the pdf proofs, click the “pdf proofs” button on the panel above.
+</p>
+
+<p>
+The proofs consist of a series of images converted from the pages of the pdf.
+To see the actual pdf itself, you can download it using the pdf icon in the upper right.
+However, comments and corrections to the pdf should be indicated here on this page.
+</p>
+
+<p>
+To leave a comment or correction on a pdf page, click (or touch) part of the page, and while the mouse button is down (or your finger is touching the touch screen), draw a box by moving the mouse (or your finger), and then release.
+This should trigger a pop-up menu, on which you can choose what kind of comment or correction to leave.
+<?php if ($usehtml) { ?>As with html proofs, t<?php } else { ?>T<?php } ?>here are three types you can choose from: (a) deletions (pink), indicating that text should be deleted, with the possibility of suggesting replacement text, (b) insertions (blue), indicating that text should be inserted (only), and (c) general comments (yellow), which may contain any other kind of comment or question.
+</p>
+
+<p>
+Once you choose the type, a small dialogue window should appear allowing you to fill in the details of your comment or correction.
+When done, click the “save” button in the lower right of the pop-up.
+</p>
+
+<p>
+The comment will minimize once saved, but you can unminimize it by clicking again on the marker.
+You can re-minimize it by clicking on the small icon next to the “(saved)” indicator.
+You can also wholly remove a comment by clicking on the red trash can icon in the lower left of the pop-up form.
+</p>
+
+<p>
+You may also see green comment boxes.
+These are queries left by the editor(s) about the document.
+You can fill in the “response” field for each query and save the query.
+</p>
+
+<p>
+When you are done adding comments and corrections, and all of them have been saved, you may submit your comments and corrections.
+</p>
+<?php } ?>
+<h2>Submitting your comments and corrections</h2>
+<p>
+When comments and corrections have been made, and all of them have been saved, you can click the flashing “submit” button in the upper right of the screen.
+(If it is not enabled, most likely there is a comment or comments that have not yet been saved.
+Make sure they are all saved<?php if (($usehtml) && ($pdfpages > 0)) { ?> on both the pdf and html proofs<?php } ?> before submitting.)
+When changes and comments are submitted, the editor who created the proofs is notified by email.
+</p>
+
+<p>
+You can make further changes by revisiting the page later on with the same url. You can also wait until a subsequent visit to submit your comments to the editors if you are not ready yet to submit. Simply make sure that any comments/corrections you wish to preserve are saved before doing so.
+</p>
+
+<h2>Downloads</h2>
+<p>
+You can download (clean) files of the proofs by clicking the small icons in the upper right part of the screen.
+These may include other file formats that cannot be previewed in this browser window.
+</p>
+
+<h2>Problems and questions</h2>
+<p>
+If you have trouble with the site, please contact either the editor who emailed you the link, or the project site administrator<?php if (isset($project_settings->contactname)) { echo ', ' . $project_settings->contactname; } if (isset($project_settings->contactemail)) { echo ' ⟨<a href="mailto:' . $project_settings->contactemail . '" target="_blank">' . $project_settings->contactemail . '</a>⟩'; } ?>.
+</p>
                     </div>
                 </div>
             </div>
