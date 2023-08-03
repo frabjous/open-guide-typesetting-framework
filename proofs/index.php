@@ -1981,8 +1981,8 @@ if ("starton" in w) {
 Usage of the proofs pages for editors is mostly the same as for authors (see below).
 The main difference is that while visiting a proofs page using the editor link, all comments left will automatically be of the (green) “query” type.
 The presumption is that the editor will add any queries they have about the document before sending the author link for the proofs to the author(s).
-When the author(s) visit(s) the proofs page, these comments will be open by default and the authors can fill in their responses to the queries.
-The editor should revisit the page after the author(s) submit their comments and corrections (which the editor should be notified about via email).
+When the authors visit the proofs page, these comments will be open by default and the authors can fill in their responses to the queries.
+The editor should revisit the page after the authors submit their comments and corrections (which the editor should be notified about via email).
 Editors can click the “has been addressed” checkbox for each correction/comment to mark it as dealt with.
 </p>
 
