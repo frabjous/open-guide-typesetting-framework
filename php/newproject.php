@@ -56,6 +56,10 @@ $maindir = dirname(dirname(__FILE__));
 
 chdir($maindir);
 
+echo 'Welcome to the typesetting framework new project set up script.' . PHP_EOL;
+echo 'Note: git and npm should be installed before proceeding ' .
+    'or the script' . PHP_EOL . 'may malfunction.' . PHP_EOL;
+
 // install oge git repo
 if (!file_exists("open-guide-editor/index.php")) {
     echo 'Installing open-guide editor.' .PHP_EOL.
@@ -74,7 +78,7 @@ if (!is_dir("open-guide-editor/node_modules")) {
 }
 
 // bundle oge dependencies
-if (!file_exists("open-guide-editor/editor-bundle.js")) {
+if (!file_exists("open-guide-editor/editor.bundle.js")) {
     echo 'Bundling open guide editor packages.' .PHP_EOL;
     chdir('open-guide-editor');
     run_or_quit('node_modules/.bin/rollup js/editor.mjs -f iife -o editor.bundle.js -p @rollup/plugin-node-resolve');
@@ -99,7 +103,7 @@ if (file_exists('settings.json')) {
 
 // ensure data directory exists
 while (!is_dir($datadir)) {
-    $datadir = readline('Location of data directory: ');
+    $datadir = readline('Location of data directory for typesetting site: ');
     if (!is_dir($datadir)) {
         mkdir($datadir, 0755, true);
     }
@@ -117,12 +121,17 @@ if (!$datadirset) {
 }
 
 $project = '';
-while ($project) {
-    $project = readline('New project name: ');
+while ($project == '') {
+    $project = readline('New (short) project name: ');
     if (!mb_ereg_match('^[A-Za-z0-9]*$', $project)) {
-        echo 'Project names should have only letters and numerals.' . PHP_EOL;
+        echo 'Project short names should have only letters and numerals.' . PHP_EOL;
         $project = '';
     }
+}
+
+$projecttitle = '';
+while ($projecttitle == '') {
+    $projecttitle = readline('Full project title: ');
 }
 
 $contact = '';
@@ -148,84 +157,52 @@ if (!is_dir($projectdir) && !mkdir($projectdir, 0755, true)) {
     ragequit("Could not create directory for project.");
 }
 
-$project_settings = json_decode(file_get_contents('sample-project-settings-journal.json'));
+$project_settings = json_decode(file_get_contents(
+    'sample-project-settings-journal.json'));
 
+$project_settings->title = $projecttitle;
+
+$project_settings->contactname = $contact;
+
+$project_settings->contactemail = $email;
+
+$pssave = file_put_contents("$projectdir/project-settings.json",
+    json_encode($project_settings, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|
+        JSON_UNESCAPED_SLASHES));
+
+if (!$pssave || $pssave == 0) {
+    ragequit("Could not save project settings.");
+}
+
+require_once('php/readsettings.php');
 require_once('php/libauthentication.php');
 
+$password = random_string(12);
 
+$users = new StdClass();
 
-/*
-if (count($argv) < 2) {
-    show_help();
-    ragequit('No arguments provided.');
+$username = mb_ereg_replace('@.*','',$email);
+
+$users->{$username} = new StdClass();
+$users->{$username}->name = $contact;
+$users->{$username}->email = $email;
+$users->{$username}->passwordhash = password_hash($password, PASSWORD_DEFAULT);
+
+if (!save_users($project, $users)) {
+    ragequit('Could not save users.');
 }
 
-$arguments = array_slice($argv, 1);
+echo 'Project ' . $project . ' created.' . PHP_EOL;
+echo 'Username: ' . $username . PHP_EOL;
+echo 'Password: ' . $password . PHP_EOL;
+echo 'You should now be able to log in to the typesettings framework' . PHP_EOL;
+echo 'with the account info just given.' . PHP_EOL;
+echo 'The password may be changed on site.';
 
-$idmode = false;
-$ids = array();
-$bibentries = array();
-$maxcount = 1;
-$bibtexmode = false;
-$jsonmode = false;
-
-while (count($arguments) > 0) {
-    // read next argument
-    $arg = array_shift($arguments);
-
-    if ($arg == '--help') {
-        show_help();
-        continue;
-    }
-
-    if ($arg == '--count') {
-        $maxcount = intval(array_shift($arguments)) ?? 1;
-    }
-
-    if ($arg == '--idmode') {
-        $idmode = true;
-        continue;
-    }
-
-    if ($arg == '--bibtex') {
-        $bibtexmode = true;
-        continue;
-    }
-
-    if ($arg == '--json') {
-        $jsonmode = true;
-        continue;
-    }
-
-    if ($idmode) {
-        array_push($ids, $arg);
-        continue;
-    }
-
-    array_push($bibentries, $arg);
-}
-
-if (!$jsonmode && !$bibtexmode) {
-    $jsonmode = true;
-}
-
-if (count($ids) > 0) {
-    if ($jsonmode) {
-        echo ids_to_json($ids);
-    }
-    if ($bibtexmode) {
-        echo ids_to_bib($ids);
-    }
-}
-
-if (count($bibentries) > 0) {
-    if ($jsonmode) {
-        echo plain_array_to_json($bibentries, $maxcount);
-    }
-    if ($bibtexmode) {
-        echo plain_array_to_bib($bibentries, $maxcount);
-    }
-}
+echo '';
+echo 'The sample settings file has been copied into the project’s data directory' . PHP_EOL;
+echo 'where it may be customized for the project.' . PHP_EOL;
+echo '';
+echo 'Script complete.';
 
 exit(0);
- */
