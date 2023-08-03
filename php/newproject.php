@@ -8,6 +8,18 @@
 // cli tool for setting up site and creating a first project           //
 /////////////////////////////////////////////////////////////////////////
 
+function ragequit($msg) {
+    fwrite(STDERR, $msg . PHP_EOL);
+    exit(1);
+}
+
+function run_or_quit($cmd) {
+    exec($cmd, $o, $e);
+    if ($e != 0) {
+        ragequit('Error running command: ' . $cmd . PHP_EOL . 'Quitting.');
+    }
+}
+
 if (php_sapi_name() != 'cli' || isset($_SERVER["SERVER_PROTOCOL"])) {
     ragequit("Must be run from command line.");
 }
@@ -16,7 +28,6 @@ $maindir = dirname(dirname(__FILE__));
 
 chdir($maindir);
 
-echo getcwd();
 
 /*
 if (count($argv) < 2) {
