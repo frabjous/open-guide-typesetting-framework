@@ -195,11 +195,11 @@ if (!save_users($project, $users)) {
 echo 'Project ' . $project . ' created.' . PHP_EOL;
 echo 'Username: ' . $username . PHP_EOL;
 echo 'Password: ' . $password . PHP_EOL;
-echo 'You should now be able to log in to the typesettings framework' . PHP_EOL;
+echo 'You should now be able to log in to the typesetting framework' . PHP_EOL;
 echo 'with the account info just given.' . PHP_EOL;
-echo 'The password may be changed on site.';
+echo 'The password may be changed on site.' . PHP_EOL;
 
-echo '';
+echo PHP_EOL;
 echo 'The sample settings file has been copied into the project’s data directory' . PHP_EOL;
 echo 'where it may be customized for the project.' . PHP_EOL;
 echo '';
