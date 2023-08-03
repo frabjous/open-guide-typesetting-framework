@@ -4,16 +4,21 @@
 // Public License along with this program. If not, see
 // https://www.gnu.org/licenses/.
 
-/////////////// philpapers.php /////////////////////////////////////////
-// cli wrapper around libphilpapers.php                               //
-////////////////////////////////////////////////////////////////////////
+/////////////// newproject.php //////////////////////////////////////////
+// cli tool for setting up site and creating a first project           //
+/////////////////////////////////////////////////////////////////////////
 
-require_once(dirname(__FILE__) . '/libphilpapers.php');
-
-if (php_sapi_name() != 'cli') {
+if (php_sapi_name() != 'cli' || isset($_SERVER["SERVER_PROTOCOL"])) {
     ragequit("Must be run from command line.");
 }
 
+$maindir = dirname(dirname(__FILE__));
+
+chdir($maindir);
+
+echo getcwd();
+
+/*
 if (count($argv) < 2) {
     show_help();
     ragequit('No arguments provided.');
@@ -87,3 +92,4 @@ if (count($bibentries) > 0) {
 }
 
 exit(0);
+ */
