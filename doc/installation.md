@@ -73,6 +73,18 @@ Installing the framework is straightforward.
 6. You will likely want to finish configuring your project by editing the `project-settings.json` file in the project’s subdirectory of the data directory.
     Instructions for configuring projects can be found in the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) documentation.
 
+## Optional Email Configuration
+
+By default, the typesetting framework will use the default php `mail(…)` function to send email, using the site’s contact name and email in the headers.
+
+Depending on your server configuration, however, this function can lead to email that goes straight into people’s spam folders.
+
+As an alternative, a php script named `customemail.php` can be created and placed in the project subdirectory of the main data directory. This script should define a php function named `custom_send_email($to, $subject, $htmlcontent)` which takes three arguments: the email address of the recipient, the subject of the email, and the (html) contents of the message, in that order.
+
+Creating such a script requires some knowledge of php, but a standard use case would be to define such a function as a wrapper around something like the [phpmailer](https://github.com/PHPMailer/PHPMailer) package or similar, to make use of its capabilities.
+
+If the typesetting framework finds such a script and it defines a function with that name, it will be used instead of the default php `mail(…)` function to send email.
+
 ## Other Documentation
 
 See also the other documentation files concerning [project configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) and [regular usage (by editors and typesetters)](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/usage.md).
