@@ -60,9 +60,17 @@ Installing the framework is straightforward.
     https://yourdomain.com/open-guide-typesetting-framework/
     ```
 
-    You can skip right to the log in for a given project by adding `?project=shortname` to the URL. Follow the [usage instructions](usage.md) for adding any additional editors. The site maintainer can then be removed as an editor if desired.
+    You can skip right to the log in for a given project by adding `?project=shortname` to the URL. Follow the [usage instructions](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/usage.md) for adding any additional editors. The site maintainer can then be removed as an editor if desired.
 
    You can rename the directory hosting the framework to something shorter than `open-guide-typesetting-framework`, or even unpack it directly into the server's root directory, but the submodule directories like `open-guide-editor` and `open-guide-misc` are expected to remain as is.
 
 6. You will likely want to finish configuring your project by editing the `project-settings.json` file in the project’s subdirectory of the data directory.
-    Instructions for configuring projects can be found in the [configuration]() documentation.
+    Instructions for configuring projects can be found in the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) documentation.
+
+## Other Documentation
+
+See also the other documentation files concerning [project configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) and [regular usage (by editors and typesetters)](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/usage.md).
+
+## License
+
+Copyright 2023 © Kevin C. Klement. This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).
