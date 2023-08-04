@@ -37,6 +37,12 @@ Installing the framework is straightforward.
 
     This will also install the `open-guide-editor` git submodule and its own `open-guide-misc` submodule.
 
+    Change into the directory created.
+
+    ```sh
+    cd open-guide-typesetting-framework
+    ```
+
 2. Follow the instructions for finishing [installing](https://github.com/frabjous/open-guide-editor/blob/main/doc/installation.md) and, if you wish to change the defaults, for [configuring](https://github.com/frabjous/open-guide-editor/blob/main/doc/settings.md), the Open Guide Editor used by the framework. (The `newproject.php` script, mentioned below, will do a minimal job doing this if it detects it hasn't been done already.)
 
     This script can be run multiple times if you wish to use the same site for multiple projects.
