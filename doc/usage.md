@@ -149,11 +149,30 @@ This button will make use of the current state of the main document to create al
 (See the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) documentation.)
 
 The new proof set will be added to a list of all the proof sets that have been created for the document.
-The proof sets will be listed by date created, and each will have downloads for the various file formats of the proofs that the project is configured to use.
+These will be listed by date created, and each will have downloads for the various file formats of the proofs that the project is configured to use.
 There will also be two links, an "editor link" and an "author link".
-Typically, the editor creating the proofs should first visit the proofs page with the editor link and add any "query"-type comments to the proofs.
+Typically, the editor creating the proofs should first visit the proofs page with the editor link, and add any "query"-type comments to the proofs.
 They should then send the "author link" (right click the link to copy the link url) to the authors to invite them to view the proofs.
-The authors can add comments and corrections to the proofs, and then submit them to the editor
+The authors can add comments and corrections to the proofs, and then submit them when completed.
+This will trigger an email to be sent to the editor who created the proofs.
+The editor should then revisit the proofs page with the editor link and view the comments and corrections.
+They should then reopen the "Edit document" section and make any necessary changes.
+Depending on circumstances, another proof set may need to be generated afterwards, or it may be time to move on to the next step.
+
+The proofs page has its own instructions about how to add comments or corrections. These instructions are visible at first by default when using the author link. Editors can also view the instructions by clicking the button for viewing them on the panel. It is typically one of the three viewing options on the panel, in addition to viewing the html or pdf versions of the proofs (unless the project is configured not to use one of these).
+
+## Publication
+
+The final block is labelled "Publication".
+This block is to be used when it is time to create a finalized version for publication.
+There are two buttons, one for creating a new minor version (which raises the version number by 0.1) and one for creating a new major version (which raises the version to the next whole number, e.g., 1.0).
+Some typesetting projects may only target one published version; others may post new versions periodically, and it is a matter of individual policy which kind of revision should correspond to a minor or major version change.
+
+What files are created during this process depends once again on the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md).
+Typically they will be the same file-types as were produced during the proofs stage, possibly with some post-processing done such as file-size or linearization optimizations.
+The framework can be configured to create a `.zip` file containing all the production files together, which will be listed for download first if created.
+If any of the produced files are plain-text files, a link will be added to view them directly in the publication block.
+There they can be copied to the clipboard, which can be useful for things like extracting an abstract or references list.
 
 ## Archiving and Unarchiving Documents
 
