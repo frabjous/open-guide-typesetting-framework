@@ -107,9 +107,9 @@ This is only used internally in the framework and specifies how the header for a
 
 ### `metadata` (assignment type option)
 
-This, often lengthy, option specifies what metadata fields appear in the metadata block for a given document of the assignment type in question.
+This, often lengthy, option specifies what metadata fields appear in the metadata block for a given document of the assignment type in question. Any set of fields, with any names, can be used, but it makes sense for the metadata items to match those used in the pandoc template that will be used.
 
-The metadata fields may have any name. A typical element specification could looks like this:
+A typical metadata item specification could look like this:
 
 ```json
 {
@@ -136,7 +136,7 @@ For `pandoc`, there are four possibilities, `yaml`, `yamlarray`, `yamlblock`, `y
 
 `yamlblock` should be used instead if the value may consist of multiple lines. This will cause the item to be inserted using the a `|` after the metadata item name and colon with the value of the field following in indented lines. This is used for things like abstracts.
 
-The `yamlarray`, `yamllist` and `subelement` options are used for those allowing multiple values. If the value of a metadata item is wrapped in (array) brackets, this means that the metadata item allows multiple values, for example:
+The `yamlarray`, `yamllist` and `subelement` options are used for those allowing multiple values. If the value of a metadata item is wrapped in (json array) brackets, this means that the metadata item allows multiple values, for example:
 
 ```json
 {
@@ -160,7 +160,45 @@ This would allow more than one `reviewedauthor` values to be specified. In the m
 
 If `yamlarray` is used instead, there will be a single input field, but individual values will be identified as separated by the value of `separator` in the input field, e.g., `"separator": ","`, for comma-separated values. The separated values will be made into comma-separated array values in the yaml file, which is useful for things like keywords.
 
-Finally, it is possible to create metadata items that allow for multiple values, each of which has multiple subfields. This is done by using the `"subcategories": true` option in the metadata specifier.
+Finally, it is possible to create metadata items that allow for multiple values, each of which has multiple subfields. This is done by using the `"subcategories": true` option in the metadata specifier. Besides it and `"label"`, every other key–value pair will be interpreted as representing a subfield. Here is an example:
+
+```json
+{
+    "assignmentTypes": {
+        "article": {
+            "metadata": {
+                "author": {
+                    "subcategories": true,
+                    "label": "Author(s)",
+                    "name": {
+                        "required": true,
+                        "inputtype": "text",
+                        "label": "Name",
+                        "pandoc": "subelement"
+                    },
+                    "affiliation": {
+                        "required": false,
+                        "inputtype": "text",
+                        "label": "Affiliation",
+                        "pandoc": "subelement"
+                    },
+                    "email": {
+                        "required": false,
+                        "inputtype": "email",
+                        "label": "Email",
+                        "pandoc": "subelement"
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+This defines a metadata item for "author" that can have multiple values, each of which itself has subfields for "name", "affiliation" and "email". These multiple values and their subfields will be added to the yaml metadata field as a complex yaml structure in the appropriate way.
+
+Note, however, that the default pandoc template is not set up to use subfields for the "author" metadata item. However, non-default pandoc templates can be set up to make use of complex values like these, as described in the [pandoc documentation](https://pandoc.org/MANUAL.html#metadata-blocks).
+
 
 ## Other Documentation
 
