@@ -27,14 +27,14 @@
                 },
                 {
                     "command": "pandoc --metadata-file metadata.yaml --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t pdf -o %documentid%-%version%-tmp.pdf main.md && gs -dNOPAUSE -dFastWebView -sDEVICE=pdfwrite -sOUTPUTFILE=%documentid%-%version%.pdf -dBATCH %documentid%-%version%-tmp.pdf && rm %documentid%-%version%-tmp.pdf",
-                    "outputfile": "%documentid%-onecolumn-%version%.pdf"
+                    "outputfile": "%documentid%-%version%.pdf"
                 },
                 {
                     "command": "php -r 'echo json_decode(file_get_contents(\"metadata.json\"))->abstract;' | pandoc -f markdown -t plain --wrap none -o abstract.txt",
                     "outputfile": "abstract.txt"
                 },
                 {
-                    "command" : "echo \"\" | pandoc --metadata-file metadata.yaml --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --wrap none -t plain -o references.txt",
+                    "command": "echo \"\" | pandoc --metadata-file metadata.yaml --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --wrap none -t plain -o references.txt",
                     "outputfile": "references.txt"
                 },
                 {
@@ -56,7 +56,7 @@
             "splitsentences": true,
             "convert": "pandoc %upload% -t markdown --quiet --reference-location=block --wrap=none",
             "metadata": {
-                "title" : {
+                "title": {
                     "required": true,
                     "label": "Title",
                     "inputtype": "text",
@@ -169,14 +169,14 @@
                 },
                 {
                     "command": "pandoc --metadata-file metadata.yaml --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t pdf -o %documentid%-%version%-tmp.pdf main.md && gs -dNOPAUSE -dFastWebView -sDEVICE=pdfwrite -sOUTPUTFILE=%documentid%-%version%.pdf -dBATCH %documentid%-%version%-tmp.pdf && rm %documentid%-%version%-tmp.pdf",
-                    "outputfile": "%documentid%-onecolumn-%version%.pdf"
+                    "outputfile": "%documentid%-%version%.pdf"
                 },
                 {
                     "command": "php -r 'echo json_decode(file_get_contents(\"metadata.json\"))->abstract;' | pandoc -f markdown -t plain --wrap none -o abstract.txt",
                     "outputfile": "abstract.txt"
                 },
                 {
-                    "command" : "echo \"\" | pandoc --metadata-file metadata.yaml --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --wrap none -t plain -o references.txt",
+                    "command": "echo \"\" | pandoc --metadata-file metadata.yaml --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --wrap none -t plain -o references.txt",
                     "outputfile": "references.txt"
                 },
                 {
@@ -219,7 +219,7 @@
                         "pandoc": "subelement"
                     }
                 },
-                "reviewedtitle" : {
+                "reviewedtitle": {
                     "required": true,
                     "label": "Title of reviewed work",
                     "inputtype": "text",
