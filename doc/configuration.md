@@ -130,9 +130,37 @@ The metadata fields may have any name. A typical element specification could loo
 
 This specifies that there should be a metadata item called "title". A typical metadata item specifier has four attributes: (1) `required`, a boolean (true/false) that specifies whether the field is required, (2) `label`, a string used to label the item in the metadata block, (3) `inputtype`, which specifies what type of HTML input element should be used (typically "`text`" or "`number`" or possibly "`email`"), and (4) `pandoc`, a string specifying how the metadata should be passed to pandoc in the metadata files.
 
-For `pandoc`, there are four possibilities, `yaml`, `yamlarray`, `yamlblock` and `subelement`. A typical metadata field will use `yaml`, which will simply insert the value into the `metadata.yaml` file using its item name followed by a colon followed by the value. `yamlblock` should be used instead if the value may consist of multiple lines. This will cause the item to be inserted using the a `|` after the metadata item name and colon with the value of the field following in indented lines. This is used for things like abstracts. `yamlarray` will split comma separated values into comma-separated array values in the entry, which is useful for things like keywords, where many values are entered into one input field. The `subelement` option should only be used for metadata items with subcategories, discussed below.
+Optionally a `placeholder` may also be specified, which will appear in the input field until a value is actually supplied.
 
+For `pandoc`, there are four possibilities, `yaml`, `yamlarray`, `yamlblock`, `yamllist` and `subelement`. A typical metadata field will use `yaml`, which will simply insert the value into the `metadata.yaml` file using its item name followed by a colon followed by the value. 
 
+`yamlblock` should be used instead if the value may consist of multiple lines. This will cause the item to be inserted using the a `|` after the metadata item name and colon with the value of the field following in indented lines. This is used for things like abstracts.
+
+The `yamlarray`, `yamllist` and `subelement` options are used for those allowing multiple values. If the value of a metadata item is wrapped in (array) brackets, this means that the metadata item allows multiple values, for example:
+
+```json
+{
+    "assignmentTypes": {
+        "article": {
+            "metadata": {
+                "reviewedauthor": [{
+                    "required": false,
+                    "inputtype": "text",
+                    "label": "Author(s) of reviewed work",
+                    "placeholder": "Editor name",
+                    "pandoc": "yamllist"
+                }]
+            }
+        }
+    }
+}
+```
+
+This would allow more than one `reviewedauthor` values to be specified. In the metadata block, such entries will have plus and minus buttons for adding or removing additional values. The `yamllist` value for pandoc will create, in the yaml metadata file, a list of the values, one per line, preceded with hyphens.
+
+If `yamlarray` is used instead, there will be a single input field, but individual values will be identified as separated by the value of `separator` in the input field, e.g., `"separator": ","`, for comma-separated values. The separated values will be made into comma-separated array values in the yaml file, which is useful for things like keywords.
+
+Finally, it is possible to create metadata items that allow for multiple values, each of which has multiple subfields. This is done by using the `"subcategories": true` option in the metadata specifier.
 
 ## Other Documentation
 
