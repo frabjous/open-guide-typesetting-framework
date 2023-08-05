@@ -102,7 +102,8 @@ For example:
 }
 ```
 
-This should be a HTML string that includes certain metadata fields written in all caps (in this example, "`VOLUME`", "`NUMBER`", "`TITLE`" and "`AUTHOR`"). This is only used internally in the framework and specifies how the header of a given type of assignment should appear inside the framework for a given document listing in the list of current assignments or archived assignments. 
+This should be a HTML string that includes certain metadata fields written in all caps (in this example, "`VOLUME`", "`NUMBER`", "`TITLE`" and "`AUTHOR`").
+This is only used internally in the framework and specifies how the header for a listing for a document of a given type should appear inside the framework in the list of current assignments or archived assignments. 
 
 ## Other Documentation
 
