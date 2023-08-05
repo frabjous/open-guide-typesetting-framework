@@ -24,6 +24,13 @@ $project = '';
 $username = '';
 $accesskey = '';
 if (isset($_GET["project"])) { $project = $_GET["project"];}
+// pick only project if there is only one
+if (($project == '') && (count(get_object_vars($projects)) == 1)) {
+    foreach ($projects as $projname => $proj) {
+        $project = $projname;
+        break;
+    }
+}
 
 // load authentication library
 require_once('php/libauthentication.php');
