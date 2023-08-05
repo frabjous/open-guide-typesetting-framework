@@ -71,10 +71,39 @@ The main uploaded file can be any file format pandoc can convert into its own ma
 This covers most use cases, but other formats (such as the ancient pre-2003 MS Word `.doc` format) should be converted to one of these before upload.
 
 Upon upload, the file is automatically converted into the markdown format used by the typesetting framework, and certain changes are applied as specified by the project configuration.
-An attempt is also made to identify any free-form bibliography or reference section, and the extracted references made available to the next step.
+An attempt is also made to identify a free-form bibliography or reference section if one exists, and the extracted references made available to the next step.
 
 Once uploaded, the main file can be re-downloaded if need be.
 It can also be replaced, which will regenerate the main markdown document, but the previous versions will still be available and should appear in the ancillary file list with the prefix `previous-` along with a timestamp.
+
+## Bibliography
+
+There are two buttons near the top of the Bibliography section.
+The typical workflow would involve using one or the other to get started.
+If a free-form bibliography was found in the main document, the "extract from main file" button will be enabled.
+More details on what it does can be found below.
+The other is an upload button for a separate structured bibliographic file such as a BibTeX `.bib` file, though other formats supported by pandoc's conversion methods are also allowed (`.ris`, Endnote `.xml` files, and CSL `.yaml` or `.json` files.)
+These files will be converted into the format used by the framework and their entries will be added to the bibliographic listing below.
+
+The "extract" button takes each entry from the converted free-form bibliography and uses that text to search an online database.
+Currently only PhilPapers is supported but this may change.
+The process is deliberately made slow so as not to overwhelm the database server it interacts with or make it suspect a denial of service attack.
+PhilPapers uses IDs which are typically 5 or 6 uppercase letters, and are somewhat random, though the first three of which often match the author's name, and the following often have something to do with the title, but this is not consistent.
+These five or six digits are often followed by a hyphen and a number.
+These IDs can be found at the end of URL when visiting a certain work's page on PhilPapers.
+The extraction process finds up to the top five matching PhilPapers IDs, from them selects one (usually the first) and downloads a bibliographic record for it and populates a bibliographic listing for each one.
+This process is currently very error prone, though I hope to make improvements.
+
+After extraction, each entry should be checked carefully.
+There is a drop-down list of the other PhilPapers ID found in the search, as well as an input field for inputing a new one, and redoing the import.
+It is recommended that you have PhilPapers open in another window.
+It's best to make changes and additions on PhilPapers itself and the redo the import if information is missing or incorrect, as this benefits everyone in the profession.
+However, entries can also be manually edited, or inserted using the button at the bottom.
+
+The format of the bibliographic entries is based on what is supported by [Citation Style Language](https://citationstyles.org/) (CSL). 
+When the bibliography is saved, it is saved as a [CSL JSON](https://citeproc-js.readthedocs.io/en/latest/csl-json/markup.html) file (`bibliography.json`) which is supported by pandoc's implementation of citeproc. CSL supports many different kinds of bibliographic entries, and different kinds of entries support many different kinds of fields. 
+
+The "id" field is used for citations in the markdown document. See the [citations](https://pandoc.org/MANUAL.html#citations) part of the Pandoc User's guide for more information on that.
 
 ## Archiving and Unarchiving Documents
 
