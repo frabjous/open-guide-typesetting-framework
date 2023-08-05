@@ -13,12 +13,15 @@ Each site installation of the typesetting framework must host one or more "proje
 php php/newproject.php
 ```
 
-Each project has its own subdirectory of the site's data directory (using its "short" name).
+Answer the prompts in the terminal to complete the process.
+
+Each project has its own subdirectory of the site's data directory (using its "short name").
 Projects can also be created by simply copying an existing project subdirectory to a directory with a new short name, and editing its settings.
 
 Inside the project's subdirectory is a file, "`project-settings.json`", which is where the settings for each project are configured, and customizations should be made.
 If the project was created with the `newproject.php` script, this file will begin as a near-clone of the `sample-project-settings-journal.json` file found in the main directory of the git repo. 
 These settings are appropriate for a journal.
+
 For any other kind of project, and most likely even for a journal, the `project-settings.json` file should be edited and customized for the actual project.
 Most of the below describes what it is in this file and how it can be tweaked.
 
@@ -137,6 +140,7 @@ A typical metadata item specifier has four attributes:
 (4) `pandoc`, a string specifying how the metadata should be passed to pandoc in the metadata files.
 
 Optionally a `"placeholder"` may also be specified, whose value will appear in the input field until a value is actually supplied.
+If not specified, the label will also be used for this purpose.
 
 For `"pandoc"`, there are five possibilities, `"yaml"`, `"yamlblock"`, `"yamlarray"`, `"yamllist"` and `"subelement"`.
 A simple metadata field will use `"yaml"`, which will simply insert the value into the `metadata.yaml` file using its item name followed by a colon followed by the value. 
@@ -170,9 +174,14 @@ This would allow more than one `reviewedauthor` values to be specified.
 In the metadata block, such entries will have plus and minus buttons for adding or removing additional values.
 The `"yamllist"` option for pandoc will create, in the yaml metadata file, a list of the values, one per line, preceded with hyphens.
 
-If `"yamlarray"` is used instead, there will be a single input field, but individual values will be identified as separated by the value of `"separator"` in the input field, e.g., `"separator": ","`, for comma-separated values. The separated values will be made into comma-separated array values in the yaml file. This is useful for things like keywords.
+If `"yamlarray"` is used instead, there will be a single input field, but individual values will be identified as separated by the value of `"separator"` in the input field, e.g., `"separator": ","`, for comma-separated values.
+The separated values will be made into comma-separated array values in the yaml file. This is useful for things like keywords.
 
-Finally, it is possible to create metadata items that allow for multiple complex values, each of which has multiple subfields. This is done by using the `"subcategories": true` option in the metadata specifier. Besides it and `"label"`, every other key–value pair will be interpreted as representing a subfield, which has its own specifier which should use the value `"subelement"` for the `"pandoc"` option. Here is an example:
+Finally, it is possible to create metadata items that allow for multiple complex values, each of which has multiple subfields.
+This is done by using the `"subcategories": true` option in the metadata specifier.
+Besides it and `"label"`, every other key–value pair will be interpreted as representing a subfield, which has its own specifier.
+These should use the value `"subelement"` for the `"pandoc"` option.
+Here is an example:
 
 ```json
 {
@@ -207,11 +216,57 @@ Finally, it is possible to create metadata items that allow for multiple complex
 }
 ```
 
-This defines a metadata item for "author" that can have multiple values, each of which itself has subfields for "name", "affiliation" and "email". These multiple values and their subfields will be added to the yaml metadata field as a complex yaml structure in the appropriate way.
+This defines a metadata item for "author" that can have multiple values, each of which itself has subfields for "name", "affiliation" and "email".
+These multiple values and their subfields will be added to the yaml metadata field as a complex yaml structure in the appropriate way.
 
-Note, however, that the default pandoc template is not set up to use subfields for the "author" metadata item. However, non-default pandoc templates can be set up to make use of complex values like these, as described in the [pandoc documentation](https://pandoc.org/MANUAL.html#metadata-blocks).
+Note, however, that the default pandoc template is not set up to use subfields for the "author" metadata item.
+However, non-default pandoc templates can be set up to make use of complex values like these, as described in the [pandoc documentation](https://pandoc.org/MANUAL.html#metadata-blocks).
 
-For those items listed as `required` which allow multiple values, only the first value will be treated as required.
+For those items listed as `required` which allow multiple values, only the first value of the multiple allowed values will be treated as required.
+
+### `convert` (assignment type option)
+
+This option is a string that specifies the command that will be used to convert the uploaded file of the main document into the markdown file used as the main editing and source document used by the framework.
+
+For example:
+
+```json
+{
+    "assignmentTypes": {
+        "article": {
+            "convert": "pandoc %upload% -t markdown --quiet --reference-location=block --wrap=none"
+        }
+    }
+}
+```
+
+The placeholder `%upload%` will be replaced in actual use by the name of the uploaded file.
+
+Since the framework is built around a pandoc-based workflow, it is unlikely that you will want to customize this much, except perhaps to add custom pandoc filters and the like.
+
+The option `-o main.md` will be added to the command to write to a file named `main.md` which is expected to be used for the main markdown file for the document until proofs or publication versions are created.
+
+### `splitsentences` (assignment type option)
+
+```json
+{
+    "assignmentTypes": {
+        "article": {
+            "splitsentences": true
+        }
+    }
+}
+```
+
+This is a simple boolean option (`true`/`false`).
+If set to `true`, paragraphs of text in the markdown document will be split so as to have one sentence per line.
+The sentence-break detection algorithm is not perfect, and it may miss some, especially when a sentence ends with an uppercase letter or unusual punctuation. 
+In these cases, multiple sentences will appear on the same line, but this is usually harmless.
+Paragraph breaks are indicated in markdown with blank lines between lines of text, which should not be affected by this option.
+This option exists simply for the convenience of the editor in locating individual sentences in a paragraph when editing.
+This splitting is not done by pandoc itself, and will work best if the `convert` option discussed above includes `--wrap=none` to start with, so that each sentence is not already split across lines.
+
+The option can simply be set to false if this behavior is undesired, in which case the `--wrap` option in the `convert` option will determine the layout of the paragraphs in the markdown.
 
 ## Other Documentation
 
