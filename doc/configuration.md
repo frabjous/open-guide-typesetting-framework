@@ -107,7 +107,8 @@ This is only used internally in the framework and specifies how the header for a
 
 ### `metadata` (assignment type option)
 
-This, often lengthy, option specifies what metadata fields appear in the metadata block for a given document of the assignment type in question. Any set of fields, with any names, can be used, but it makes sense for the metadata items to match those used in the pandoc template that will be used.
+This, often lengthy, option specifies what metadata fields appear in the metadata block for a given document of the assignment type in question.
+Any set of fields, with any names, can be used, but it makes sense for the metadata items to match those used in the project's pandoc template for the assignment type.
 
 A typical metadata item specification could look like this:
 
@@ -128,15 +129,24 @@ A typical metadata item specification could look like this:
 }
 ```
 
-This specifies that there should be a metadata item called "title". A typical metadata item specifier has four attributes: (1) `required`, a boolean (true/false) that specifies whether the field is required, (2) `label`, a string used to label the item in the metadata block, (3) `inputtype`, which specifies what type of HTML input element should be used (typically "`text`" or "`number`" or possibly "`email`"), and (4) `pandoc`, a string specifying how the metadata should be passed to pandoc in the metadata files.
+This specifies that there should be a metadata item called "title" with the given attributes.
+A typical metadata item specifier has four attributes:
+(1) `required`, a boolean (true/false) that specifies whether the field is required,
+(2) `label`, a string used to label the item in the metadata block,
+(3) `inputtype`, which specifies what type of HTML input element should be used (typically "`text`" or "`number`" or possibly "`email`"), and
+(4) `pandoc`, a string specifying how the metadata should be passed to pandoc in the metadata files.
 
-Optionally a `placeholder` may also be specified, which will appear in the input field until a value is actually supplied.
+Optionally a `"placeholder"` may also be specified, whose value will appear in the input field until a value is actually supplied.
 
-For `pandoc`, there are four possibilities, `yaml`, `yamlarray`, `yamlblock`, `yamllist` and `subelement`. A typical metadata field will use `yaml`, which will simply insert the value into the `metadata.yaml` file using its item name followed by a colon followed by the value. 
+For `"pandoc"`, there are five possibilities, `"yaml"`, `"yamlblock"`, `"yamlarray"`, `"yamllist"` and `"subelement"`.
+A simple metadata field will use `"yaml"`, which will simply insert the value into the `metadata.yaml` file using its item name followed by a colon followed by the value. 
 
-`yamlblock` should be used instead if the value may consist of multiple lines. This will cause the item to be inserted using the a `|` after the metadata item name and colon with the value of the field following in indented lines. This is used for things like abstracts.
+`"yamlblock"` should be used instead if the value may consist of multiple lines.
+This will cause the item to be inserted using the a `|` after the metadata item name and colon with the value of the field following on indented lines.
+This can be used for things like an abstract.
 
-The `yamlarray`, `yamllist` and `subelement` options are used for those allowing multiple values. If the value of a metadata item is wrapped in (json array) brackets, this means that the metadata item allows multiple values, for example:
+The `"yamlarray"`, `"yamllist"` and `"subelement"` options are used for those items allowing multiple values.
+If the specifier for a metadata item is wrapped in (json array) brackets, this means that the metadata item allows multiple values, for example:
 
 ```json
 {
@@ -156,11 +166,13 @@ The `yamlarray`, `yamllist` and `subelement` options are used for those allowing
 }
 ```
 
-This would allow more than one `reviewedauthor` values to be specified. In the metadata block, such entries will have plus and minus buttons for adding or removing additional values. The `yamllist` value for pandoc will create, in the yaml metadata file, a list of the values, one per line, preceded with hyphens.
+This would allow more than one `reviewedauthor` values to be specified.
+In the metadata block, such entries will have plus and minus buttons for adding or removing additional values.
+The `"yamllist"` option for pandoc will create, in the yaml metadata file, a list of the values, one per line, preceded with hyphens.
 
-If `yamlarray` is used instead, there will be a single input field, but individual values will be identified as separated by the value of `separator` in the input field, e.g., `"separator": ","`, for comma-separated values. The separated values will be made into comma-separated array values in the yaml file, which is useful for things like keywords.
+If `"yamlarray"` is used instead, there will be a single input field, but individual values will be identified as separated by the value of `"separator"` in the input field, e.g., `"separator": ","`, for comma-separated values. The separated values will be made into comma-separated array values in the yaml file. This is useful for things like keywords.
 
-Finally, it is possible to create metadata items that allow for multiple values, each of which has multiple subfields. This is done by using the `"subcategories": true` option in the metadata specifier. Besides it and `"label"`, every other key–value pair will be interpreted as representing a subfield. Here is an example:
+Finally, it is possible to create metadata items that allow for multiple complex values, each of which has multiple subfields. This is done by using the `"subcategories": true` option in the metadata specifier. Besides it and `"label"`, every other key–value pair will be interpreted as representing a subfield, which has its own specifier which should use the value `"subelement"` for the `"pandoc"` option. Here is an example:
 
 ```json
 {
@@ -199,6 +211,7 @@ This defines a metadata item for "author" that can have multiple values, each of
 
 Note, however, that the default pandoc template is not set up to use subfields for the "author" metadata item. However, non-default pandoc templates can be set up to make use of complex values like these, as described in the [pandoc documentation](https://pandoc.org/MANUAL.html#metadata-blocks).
 
+For those items listed as `required` which allow multiple values, only the first value will be treated as required.
 
 ## Other Documentation
 
