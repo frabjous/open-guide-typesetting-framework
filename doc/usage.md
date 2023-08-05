@@ -1,7 +1,7 @@
 
 # Open Guide Typesetting Framework Documentation
 
-# Regular Usage (By Typesetters and Editors)
+# Regular Usage (by typesetters and editors)
 
 ## Logging in
 
@@ -46,27 +46,32 @@ Each part is discussed in more detail below.
 Opening the metadata block allows the various metadata fields used by the project for the type of document to be filled in.
 These typically include things such as the title, author, abstract and more.
 
-Exactly which fields are included and how they work depends on the project configuration; see the [configuration documentation](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md). 
+Exactly which fields are included and how they work depend on the project configuration; see the [configuration documentation](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md). 
 Typically these fields will include all those used within the pandoc template used by the configuration.
 
 Fields left empty are ignored, and usually not all fields are required for every document.
 
-Some fields (such as “author”) may allow multiple values. Values may be added or removed using the plus and minus buttons below the fields. Markdown syntax such as asterisks and underscores may be used in metadata fields.
+Some fields (such as “author”) may allow multiple values.
+Values may be added or removed using the plus and minus buttons below the fields.
+Markdown syntax such as asterisks and underscores may be used in metadata fields.
 
-Click the “save metadata” button at the bottom of the block to save the metadata. This will create (or edit) `metadata.json` and `metadata.yaml` files in the document’s directory. The latter is of the right form to be used with pandoc’s `--metadata` option.
+Click the “save metadata” button at the bottom of the block to save the metadata.
+This will create (or edit) files named `metadata.json` and `metadata.yaml` in the document’s directory.
+The latter is of the right form to be used with pandoc’s `--metadata` option.
 
-Saving the metadata will usually close the block but it can be reopened if need be. Changes to the metadata can be made later, and once saved, should be applied to any new processing of the document if everything is properly and typically configured.
+Saving the metadata will usually close the block but it can be reopened if need be.
+Changes to the metadata can be made later, and once saved, should be applied to any new processing of the document if everything is configured in a typical way.
 
 
 ## Uploads
 
-The uploads section has two file upload fields, one for the main document, and another one for ancillary files (such as images for figures and the like).
+The uploads section has two file upload fields, one for the main document, and another one for auxiliary files (such as images for figures and the like).
 
 The main uploaded file can be any file format pandoc can convert into its own markdown format, including `.docx` (MS Word/OnlyOffice), `.epub`, `.html` (web page), `.md` (markdown), `.odt` (LibreOffice/OpenOffice), `.rtf` (Rich Text/WordPad), and `.tex` (LaTeX) formats.
-This covers most use cases, but other formats (such as the ancient pre-2003 Word `.doc` format) should be converted to one of these before upload.
+This covers most use cases, but other formats (such as the ancient pre-2003 MS Word `.doc` format) should be converted to one of these before upload.
 
 Upon upload, the file is automatically converted into the markdown format used by the typesetting framework, and certain changes are applied as specified by the project configuration.
-An attempt is also made to identify any free-form bibliography or reference sections, and the extracted references made available to the next step.
+An attempt is also made to identify any free-form bibliography or reference section, and the extracted references made available to the next step.
 
 Once uploaded, the main file can be re-downloaded if need be.
 It can also be replaced, which will regenerate the main markdown document, but the previous versions will still be available and should appear in the ancillary file list with the prefix `previous-` along with a timestamp.

@@ -1,7 +1,7 @@
 
 # Open Guide Typesetting Framework Documentation
 
-# Installation
+# Installation Instructions (for system administrators)
 
 ## Requirements
 
