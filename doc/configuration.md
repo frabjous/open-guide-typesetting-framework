@@ -3,7 +3,7 @@
 
 # Project Configuration and Settings
 
-Follow these instructions after completing the [installation instructions](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) for the framework.
+Read and make use of this documentation after completing the [installation instructions](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) for the framework.
 
 ## Projects, Project Directories and Settings File
 
@@ -383,6 +383,8 @@ Each of these sub-steps is separated by the shell operator `&&` in the command f
 
 The `"outputfile"` attribute specifies a filename that is expected to be created by the command.
 After running the command, this file is looked for, and if found, moved into the production version’s subdirectory with the `editions` subdirectory of the document directory.
+
+It is possible here to produce multiple output files with the same extension (e.g., different pdfs with different creation options or templates) so long as the output files are otherwise named differently.
 
 If an output file has the plain text `.txt` extension, it will be made available directly in the framework as an "extraction" to be copied and pasted.
 This is useful for things like abstracts and reference lists.
