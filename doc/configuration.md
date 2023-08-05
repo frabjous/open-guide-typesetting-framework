@@ -264,9 +264,40 @@ The sentence-break detection algorithm is not perfect, and it may miss some, esp
 In these cases, multiple sentences will appear on the same line, but this is usually harmless.
 Paragraph breaks are indicated in markdown with blank lines between lines of text, which should not be affected by this option.
 This option exists simply for the convenience of the editor in locating individual sentences in a paragraph when editing.
-This splitting is not done by pandoc itself, and will work best if the `convert` option discussed above includes `--wrap=none` to start with, so that each sentence is not already split across lines.
+This splitting is not done by pandoc itself, but after its conversion, and will work best if the `convert` option discussed above includes `--wrap=none` to start with, so that each sentence is not already split across lines.
 
-The option can simply be set to false if this behavior is undesired, in which case the `--wrap` option in the `convert` option will determine the layout of the paragraphs in the markdown.
+The option can simply be set to `false` if this behavior is undesired, in which case the `--wrap` option in the `convert` option will determine the layout of the paragraphs in the markdown.
+
+### `output` (assignment type option)
+
+This complex option does two things.
+Firstly, when a new document is imported, a settings file for the Open Guide editor named `oge-settings.json` is created in its directory.
+Such settings files can be used to set the main or "root" document for each typesetting project, as well as configure the commands used by the editor to create its preview.
+
+For more information on `oge-settings.json` files and their syntax, see the [settings documentation](https://github.com/frabjous/open-guide-editor/blob/main/doc/settings.md) for the Open Guide Editor.
+
+Each key in the assignment type `"output"` option should be the file extension for an output file which can be created from the input markdown document.
+The `"editorcommand"` attribute of the object the extension is mapped to in the JSON will be used as the `command` value editor's preview "routine" as set in the `oge-settings.file`.
+
+The syntax of the command is the same as that described in the Open Guide Editor documentation, and allows the same placeholders such as `%rootdocument%` (for the main file being edited) and `%outputfile%` for the file being created.
+Additionally, a `%projectdir%` placeholder can be used, which is useful for setting things like a resource path if the project stores assets such as, e.g., images used by the global template.
+These commands are passed through a shell, so shell operators such as `&&` or `||` may be used to chain together multiple commands, create pipes and redirections, etc.
+
+In a typical set up, these will make use of pandoc with options appropriate for the output type.
+Certain pandoc options here are almost a requirement. Consider using these:
+
+- `--metadata-file metadata.yaml` – without this, the metadata specified in the metadata block will not be passed to pandoc
+- `--number-sections` – without this, sections and subsections in the output document will not have numbers 
+- `--citeproc` – without this, no citations in the document will be processed or linked to the bibiography
+- `--bibliography bibiography.json` – without this, the bibliographic information specified in the framework's Bibliography block will be used
+- `--resource-path .:%projectdir%` (or similar) – without this, assets such as images and auxiliary files will probably not be located by pandoc; note this example starts with `.:` which specifies that the document's own directory should be searched first, and only then the project-wide resource directory.
+- 
+
+The other thing the `output` option configures is how proof sets are created.
+The creation process will run the same commands as used by the editor to produce all the file-types whose extensions are listed.
+Typically both a `html` and `pdf` output routine should be specified, and optionally others such as `epub`.
+
+same commands are specified for the editor are a
 
 ## Other Documentation
 
