@@ -9,7 +9,7 @@ Typically a user is added to the system by another user.
 The new user is sent a link allowing them to choose a password for the site.
 If a new user has not visited the site yet, or has not chosen to be remembered between visits, they will need to login in (and possibly choose what project to log in to) when first visiting the page.
 This is done though a typical username/login form.
-There is now a button that allows a user to be remembered indefinitely by the site on a given device.
+There is an option that allows a user to be remembered indefinitely by the site on a given device.
 Forgotten passwords can also be reset for existing users.
 
 ## Top Navigation and User Maintenance
@@ -19,8 +19,8 @@ The "current" and "archived" buttons will show the documents currently being wor
 More on using those below.
 
 The "my details" button allows each site user (typesetter or editor) to change their name or email, or request a change in their password.
-These should be self-explanatory.
-The "users" button can be used to add or remove users from the site.
+Hopefully it is self-explanatory how to do these things.
+The "users" button can be used to add users to or remove users from the site.
 Any one with access to the framework can invite other users or remove them, so be judicious about who is given access to the framework itself.
 
 There is also a toggle in the top banner for switching between dark and light mode.
@@ -30,14 +30,15 @@ This is a purely aesthetic choice.
 
 The "current" page shows a listing of typesetting assignments or documents.
 
-A new document listing can be created by clicking the appropriate “add new …” button for the type of document/assignment.
+A new document listing can be created by clicking the appropriate “add new …” button for the type of document/typesetting assignment.
 (For more on configuring document types, see the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) documentation.)
 
 The first step after clicking this button is to fill in the document id field in the top left of the new listing.
-This can be anything unique to the document, a number, identifier, or even a short title so long as it consists only of letters and digits.
+This can be anything unique to the document, a number, identifier, or even a short title, so long as it consists only of letters and digits, and is not already in use.
 A document id must be assigned before any other work on the individual document/typesetting assignment can be saved.
+The document id also typically forms the basis for the production filenames created at the end of the process, so should be chosen appropriately.
 
-Each listing consists of six collapsible/expandable parts: "**Metadata**", "**Uploads**", "**Bibliography**", "**Edit document**", "**Proofs**", "**Publication**".
+Below this, each listing consists of six collapsible/expandable parts: "**Metadata**", "**Uploads**", "**Bibliography**", "**Edit document**", "**Proofs**", "**Publication**".
 A typical typesetting job would go through each of these parts in the sequence in which they are listed.
 Each part is discussed in more detail below.
 
@@ -67,7 +68,7 @@ Changes to the metadata can be made later, and once saved, should be applied to 
 
 The uploads section has two file upload fields, one for the main document, and another one for auxiliary files (such as images for figures and the like).
 
-The main uploaded file can be any file format pandoc can convert into its own markdown format, including `.docx` (MS Word/OnlyOffice), `.epub`, `.html` (web page), `.md` (markdown), `.odt` (LibreOffice/OpenOffice), `.rtf` (Rich Text/WordPad), and `.tex` (LaTeX) formats.
+The main uploaded file can be any file format pandoc can convert to its own markdown format, including `.docx` (MS Word/OnlyOffice), `.epub`, `.html` (web page), `.md` (markdown), `.odt` (LibreOffice/OpenOffice), `.rtf` (Rich Text/WordPad), and `.tex` (LaTeX) formats.
 This covers most use cases, but other formats (such as the ancient pre-2003 MS Word `.doc` format) should be converted to one of these before upload.
 
 Upon upload, the file is automatically converted into the markdown format used by the typesetting framework, and certain changes are applied as specified by the project configuration.
@@ -110,10 +111,10 @@ The most common fields that might need to be added manually include things like 
 
 Note that when entries are added by conversion or extraction, the fields are often sorted in an usual way, and may change after saving and reloading.
 The order of the fields in each entry does not matter, nor does the order of the entries in the list.
-However, it is important to pay attention to which is which.
+However, it is important to pay attention to which field is which.
 There is usually no need to worry about about the case of titles, as citeproc will put titles into title case automatically for styles that use it.
 
-The "id" field is what is used for citations in the markdown document. See the [citations section in Pandoc User's guide](https://pandoc.org/MANUAL.html#citations) for more information on its citation methods.
+The "id" field is what is used for citations in the markdown document. See the [citations section in the pandoc user's guide](https://pandoc.org/MANUAL.html#citations) for more information on its citation methods.
 
 The optional (and usually unused) "abbreviation" field is not a CSL field but a place to indicate that the work in question is referred to in the text with an abbreviation rather than by means of the usual author-date citations. When the bibliography is applied, an attempt will be made to link any occurrences of the abbreviation in the document to the appropriate bibliography entry.
 
@@ -137,7 +138,7 @@ For them, there will be a visible warning about this.
 However, it is possible to make use of plain-text based auxiliary files, such as svg images or stylesheets or LaTeX packages, and there are circumstances in which it makes sense to edit these directly.
 
 The main document is a markdown file using pandoc's academic-oriented flavor of markdown.
-Editors or typesetters using the editor should be intimately familiar with pandoc's version of markdown. Pandoc's website provides a fairly [comprehensive overview of its markdown](https://pandoc.org/MANUAL.html#pandocs-markdown) in its [User's Guide](https://pandoc.org/MANUAL.html).
+Editors or typesetters editing the document should be intimately familiar with pandoc's version of markdown. Pandoc's website provides a fairly [comprehensive overview of its markdown](https://pandoc.org/MANUAL.html#pandocs-markdown) in its [User's Guide](https://pandoc.org/MANUAL.html).
 
 Those new to the typesetting framework should also consult the [Basic Usage, Buttons and Keybindings](https://github.com/frabjous/open-guide-editor/blob/main/doc/basic-usage.md) section of the documentation for the [Open Guide Editor](https://github.com/frabjous/open-guide-editor/) for information on how to use the editor, including the live-updating preview mechanisms, citation auto-completion, and more.
 
