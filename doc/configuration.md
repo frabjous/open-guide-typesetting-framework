@@ -58,7 +58,7 @@ For example:
 }
 ```
 
-This setting consists of key--value pairs, and are used during the document conversion process. Each key is a regular expression search term, and each value is a regular expression replacement expression. Each pair is applied as the first two arguments to PHP's `mb_ereg_replace(…)` (see [here](https://www.php.net/manual/en/function.mb-ereg-replace.php)) function on the markdown document that results after converting the main upload.
+This setting consists of key--value pairs, and are used during the document conversion process. Each key is a regular expression search term, and each value is a regular expression replacement term. Each pair is applied as the first two arguments to PHP's `mb_ereg_replace(…)` (see [here](https://www.php.net/manual/en/function.mb-ereg-replace.php)) function on the markdown document that results after converting the main upload.
 
 Note, however, that json requires that backslashes must be escaped as double backslashes. Since backslashes occur often in regular expressions, they must all occur as double backslashes. For more on regular expression syntax, see [here](https://github.com/geoffgarside/oniguruma/blob/master/Syntax.txt).
 
@@ -70,7 +70,39 @@ These replacements can be removed if unwanted, and more can be added if desired.
 
 ## Assignment Types
 
-The remainder of the settings fall under the "`assignmentTypes`" option.
+The remainder of the settings fall under the "`assignmentTypes`" option. Each key found under "`assignmentType`" specifies a *type* of document or typesetting assignment used by the project.
+
+For example, he default `project-settings.json` file specifies two assignment types: `article` and `review`, which might be appropriate for a journal that publishes both articles and reviews.
+A third, say, `discussion`, could be added.
+
+An anthology might use a `chapter` or `contribution` assignment type instead. 
+The framework does not place any limitation on the names of the assignment types, but it is best to use a single word, and in particular, a singular noun that can be pluralized by adding an "s".
+
+Each project should have at least one assignment type, but needs to have no more than that.
+A project could have any number of assignment types otherwise.
+
+Typesetting assignments/documents in the typesetting framework are sorted by assignment type.
+Each assignment type is given it own "add new …" button.
+The files for a documents of a given assignment type can be found in a subdirectory of the project directory named after the assignment type with an `-s` at the end, e.g., `articles` (for the `article` assignment type).
+
+Each assignment type key under `assignmentTypes` in the `project-settings.json` file must have various suboptions (with the appropriate keys) as described below.
+These keys may occur in any order, and most likely will not occur in the order in which they discussed below.
+
+### `display` (assignment type option)
+
+For example:
+
+```json
+{
+    "assignmentTypes": {
+        "article": {
+            "display": "[VOLUME.NUMBER] “<em>TITLE</em>”<br>by AUTHOR"
+        }
+    }
+}
+```
+
+This should be a HTML string that includes certain metadata fields written in all caps (in this example, "`VOLUME`", "`NUMBER`", "`TITLE`" and "`AUTHOR`"). This is only used internally in the framework and specifies how the header of a given type of assignment should appear inside the framework for a given document listing in the list of current assignments or archived assignments. 
 
 ## Other Documentation
 
