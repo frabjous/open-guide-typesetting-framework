@@ -5,9 +5,12 @@
 
 It may be best to read and make use of this documentation after completing the [installation instructions](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) for the framework.
 
-## Projects, Project Directories and Settings File
+## Projects, Project Directories, and Settings Files
 
-Each site installation of the typesetting framework must host one or more "projects". A "project" could be a journal, or an anthology, an online guide, or similar. Each login account and typesetting assignment will be attached to project. A first or additional project can be created by running the `newproject.php` script in the `php` subdirectory of the cloned git repo from the command line.
+Each installation site of the typesetting framework must host one or more "projects".
+A "project" could be a journal, or an anthology, an online guide, or similar.
+Each login account and typesetting assignment will be attached to a project.
+A first (or additional) project can be created by running the `newproject.php` script in the `php` subdirectory of the cloned git repo from the command line.
 
 ```sh
 php php/newproject.php
@@ -393,6 +396,18 @@ This is useful for things like abstracts and reference lists.
 
 It is often useful to have the last command produce a compressed archive such as a `.zip` file of all the other output files (which at that point would be the entire contents of the edition/version's subdirectory).
 This (along with all the others) will be given as download options in the framework.
+
+## Templates and Other Ways to Customize
+
+Modifying the `project-settings.json` file is only one way to customize how what is produced by the typesetting process, and perhaps not even the most important.
+
+Many if not most file formats that are produced via converting pandoc markdown files are created, directly or indirectly, with html or LaTeX intermediaries.
+As examples, `.epub` files are zipped `.(x)html` files, and unless a non-default `--pdf-engine` option is given, most `.pdf` files produced by pandoc are done by first converting to a LaTeX file and compiling the intermediate LaTeX file to pdf.
+
+Typesetting projects that use the typesetting framework will most likely want to create pandoc templates for both html and latex output, if not additional templates. These templates might make use of additional customized files such as css stylesheets, or LaTeX document packages/document classes. These are the main ways for a project to truly make its output files fit its own style and brand.
+
+The process of creating pandoc templates and related files is outside the scope of this documentation, but the [pandoc documentation on templates](https://pandoc.org/MANUAL.html#templates) is excellent. Even more fine-grained control can be accomplished with [pandoc filters](https://pandoc.org/filters.html) and the like. These are all compatible with the typesetting framework, and the command line flags to use them would simply have to be added to the `"output"` and/or `"createEdition"` options described above.
+<!-- TODO: add link to jhap/og templates when created. maybe fregeifier -->
 
 ## Other Documentation
 
