@@ -1,7 +1,7 @@
 {
-    "title": "Journal for the History of Analytical Philosophy",
-    "contactname": "Kevin C. Klement",
-    "contactemail": "klement@umass.edu",
+    "title": "Journal of Something",
+    "contactname": "Sydney B. Someone",
+    "contactemail": "sydney@someone.net",
     "importreplacements": {
         " -- ": "---",
         "\\. \\. \\.": "…",

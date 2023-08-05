@@ -105,6 +105,35 @@ For example:
 This should be a HTML string that includes certain metadata fields written in all caps (in this example, "`VOLUME`", "`NUMBER`", "`TITLE`" and "`AUTHOR`").
 This is only used internally in the framework and specifies how the header for a listing for a document of a given type should appear inside the framework in the list of current assignments or archived assignments. 
 
+### `metadata` (assignment type option)
+
+This, often lengthy, option specifies what metadata fields appear in the metadata block for a given document of the assignment type in question.
+
+The metadata fields may have any name. A typical element specification could looks like this:
+
+```json
+{
+    "assignmentTypes": {
+        "article": {
+            "metadata": {
+                "title": {
+                    "required": true,
+                    "label": "Title",
+                    "inputtype": "text",
+                    "pandoc": "yaml"
+                }
+            }
+        }
+    }
+}
+```
+
+This specifies that there should be a metadata item called "title". A typical metadata item specifier has four attributes: (1) `required`, a boolean (true/false) that specifies whether the field is required, (2) `label`, a string used to label the item in the metadata block, (3) `inputtype`, which specifies what type of HTML input element should be used (typically "`text`" or "`number`" or possibly "`email`"), and (4) `pandoc`, a string specifying how the metadata should be passed to pandoc in the metadata files.
+
+For `pandoc`, there are four possibilities, `yaml`, `yamlarray`, `yamlblock` and `subelement`. A typical metadata field will use `yaml`, which will simply insert the value into the `metadata.yaml` file using its item name followed by a colon followed by the value. `yamlblock` should be used instead if the value may consist of multiple lines. This will cause the item to be inserted using the a `|` after the metadata item name and colon with the value of the field following in indented lines. This is used for things like abstracts. `yamlarray` will split comma separated values into comma-separated array values in the entry, which is useful for things like keywords, where many values are entered into one input field. The `subelement` option should only be used for metadata items with subcategories, discussed below.
+
+
+
 ## Other Documentation
 
 See also the other documentation files concerning [installation](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) and [regular usage (by editors and typesetters)](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/usage.md).
