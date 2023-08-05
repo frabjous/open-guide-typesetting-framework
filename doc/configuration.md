@@ -270,6 +270,28 @@ The option can simply be set to `false` if this behavior is undesired, in which 
 
 ### `output` (assignment type option)
 
+Here is an example:
+
+```json
+{
+    "assignmentTypes": {
+        "article": {
+            "output": {
+                "pdf": {
+                    "editorcommand": "pandoc --metadata-file metadata.yaml --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t pdf -o %outputfile% %rootdocument%"
+                },
+                "html": {
+                    "editorcommand": "pandoc --metadata-file metadata.yaml --wrap preserve --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t html -o %outputfile% %rootdocument%"
+                },
+                "epub": {
+                    "editorcommand": "pandoc --metadata-file metadata.yaml --wrap preserve --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t epub -o %outputfile% %rootdocument%"
+                }
+            }
+        }
+    }
+}
+```
+
 This complex option does two things.
 Firstly, when a new document is imported, a settings file for the Open Guide editor named `oge-settings.json` is created in its directory.
 Such settings files can be used to set the main or "root" document for each typesetting project, as well as configure the commands used by the editor to create its preview.
@@ -277,27 +299,81 @@ Such settings files can be used to set the main or "root" document for each type
 For more information on `oge-settings.json` files and their syntax, see the [settings documentation](https://github.com/frabjous/open-guide-editor/blob/main/doc/settings.md) for the Open Guide Editor.
 
 Each key in the assignment type `"output"` option should be the file extension for an output file which can be created from the input markdown document.
-The `"editorcommand"` attribute of the object the extension is mapped to in the JSON will be used as the `command` value editor's preview "routine" as set in the `oge-settings.file`.
+The `"editorcommand"` attribute of the object the extension is mapped to in the json will be used as the `command` value editor's preview "routine" as set in the `oge-settings.file`.
+This is in effect the command used to create the output file from the main source document.
 
-The syntax of the command is the same as that described in the Open Guide Editor documentation, and allows the same placeholders such as `%rootdocument%` (for the main file being edited) and `%outputfile%` for the file being created.
-Additionally, a `%projectdir%` placeholder can be used, which is useful for setting things like a resource path if the project stores assets such as, e.g., images used by the global template.
+The syntax of the command is the same as that described in the Open Guide Editor documentation, and allows the same placeholders, such as `%rootdocument%` (for the main file being edited) and `%outputfile%` for the file being created.
+Additionally, a `%projectdir%` placeholder can be used, which will be replaced by the path to the project’s subdirectory of the framework’s data directory.
+This can be useful for setting things like a resource path if the project templates make use of assets such as, e.g., images used by the global template.
 These commands are passed through a shell, so shell operators such as `&&` or `||` may be used to chain together multiple commands, create pipes and redirections, etc.
 
 In a typical set up, these will make use of pandoc with options appropriate for the output type.
 Certain pandoc options here are almost a requirement. Consider using these:
 
-- `--metadata-file metadata.yaml` – without this, the metadata specified in the metadata block will not be passed to pandoc
-- `--number-sections` – without this, sections and subsections in the output document will not have numbers 
-- `--citeproc` – without this, no citations in the document will be processed or linked to the bibiography
-- `--bibliography bibiography.json` – without this, the bibliographic information specified in the framework's Bibliography block will be used
-- `--resource-path .:%projectdir%` (or similar) – without this, assets such as images and auxiliary files will probably not be located by pandoc; note this example starts with `.:` which specifies that the document's own directory should be searched first, and only then the project-wide resource directory.
-- 
+- `--metadata-file metadata.yaml` – Without this, the metadata specified in the metadata block will not be passed to pandoc.
+- `--number-sections` – Without this, sections and subsections in the output document will not have numbers. 
+- `--citeproc` – without this, no citations in the document will be processed or linked to the bibliography.
+- `--bibliography bibiography.json` – without this, the bibliographic information specified in the framework's Bibliography block will be used.
+- `--resource-path .:%projectdir%` (or similar) – without this, assets such as images and auxiliary files will probably not be located by pandoc.
+    Note this example starts with `.:` which specifies that the document's own directory should be searched first, and only then the project-wide resource directory if the required resource is not found in its directory.
+- `--template=[filename]` – Without this, the default pandoc template will be used. This may not be a problem if you have created your own pandoc settings folder with your own templates.
+- `--standalone` and `--embed-resources` — Without using these for html output, the resulting html file will not be a complete file with a header and footer and template applied, and resources such as images and stylesheets will likely not be available in the editor preview window.
+
+Some of the above could also be done using a pandoc defaults file (see [here](https://pandoc.org/MANUAL.html#defaults-files)), but specifying them here also makes sense, especially if pandoc is used for other things on the server.
 
 The other thing the `output` option configures is how proof sets are created.
 The creation process will run the same commands as used by the editor to produce all the file-types whose extensions are listed.
-Typically both a `html` and `pdf` output routine should be specified, and optionally others such as `epub`.
+Typically both a `html` and `pdf` output routine should be specified, and optionally others such as `epub`, etc.
 
-same commands are specified for the editor are a
+### `createEdition` (assignment type option)
+
+Finally, the `"createEdition"` option is used by the "Publication" block in the framework when preparing a final version of the document for publication.
+
+Here is an example:
+
+```json
+{
+    "assignmentTypes": {
+        "article": {
+            "createEdition": [
+                {
+                    "command": "pandoc --metadata-file metadata.yaml --wrap preserve --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t epub -o %documentid%-%version%.epub main.md",
+                    "outputfile": "%documentid%-%version%.epub"
+                },
+                {
+                    "command": "pandoc --metadata-file metadata.yaml --wrap preserve --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t html -o %documentid%-%version%.html main.md",
+                    "outputfile": "%documentid%-%version%.html"
+                },
+                {
+                    "command": "cp main.md %documentid%-%version%.md",
+                    "outputfile": "%documentid%-%version%.md"
+                },
+                {
+                    "command": "pandoc --metadata-file metadata.yaml --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t pdf -o %documentid%-%version%-tmp.pdf main.md && gs -dNOPAUSE -dFastWebView -sDEVICE=pdfwrite -sOUTPUTFILE=%documentid%-%version%.pdf -dBATCH %documentid%-%version%-tmp.pdf && rm %documentid%-%version%-tmp.pdf",
+                    "outputfile": "%documentid%-%version%.pdf"
+                },
+                {
+                    "command": "php -r 'echo json_decode(file_get_contents(\"metadata.json\"))->abstract;' | pandoc -f markdown -t plain --wrap none -o abstract.txt",
+                    "outputfile": "abstract.txt"
+                },
+                {
+                    "command": "echo \"\" | pandoc --metadata-file metadata.yaml --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --wrap none -t plain -o references.txt",
+                    "outputfile": "references.txt"
+                },
+                {
+                    "command": "cd editions/%version% && zip ../../%documentid%-%version%.zip *",
+                    "outputfile": "%documentid%-%version%.zip"
+                }
+            ]
+        }
+    }
+}
+```
+
+This option is an array of items. Each item had two properties, "command" and "outputfile". The "command" attribute determines a command to be run to create a final production file. The placeholders `%projectdir%`, `%documentid%` and `%version%` for the project directory, unique document id, and the version.
+
+These commands are run in turn. Typically 
+
 
 ## Other Documentation
 
