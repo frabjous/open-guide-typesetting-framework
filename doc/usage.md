@@ -87,7 +87,7 @@ These files will be converted into the format used by the framework and their en
 
 The "extract" button takes each entry from the converted free-form bibliography and uses that text to search an online database.
 Currently only PhilPapers is supported but this may change.
-The process is deliberately made slow so as not to overwhelm the database server it interacts with or make it suspect a denial of service attack.
+The process is deliberately made slow, so as not to overwhelm the database server it interacts with, or make it suspect a denial of service attack.
 PhilPapers uses IDs which are typically 5 or 6 uppercase letters, and are somewhat random, though the first three of which often match the author's name, and the following often have something to do with the title, but this is not consistent.
 These five or six digits are often followed by a hyphen and a number.
 These IDs can be found at the end of URL when visiting a certain work's page on PhilPapers.
@@ -95,15 +95,32 @@ The extraction process finds up to the top five matching PhilPapers IDs, from th
 This process is currently very error prone, though I hope to make improvements.
 
 After extraction, each entry should be checked carefully.
-There is a drop-down list of the other PhilPapers ID found in the search, as well as an input field for inputing a new one, and redoing the import.
+There is a drop-down list of the other PhilPapers ID found in the search, as well as an input field for inputting a new one, and redoing the import.
 It is recommended that you have PhilPapers open in another window.
-It's best to make changes and additions on PhilPapers itself and the redo the import if information is missing or incorrect, as this benefits everyone in the profession.
-However, entries can also be manually edited, or inserted using the button at the bottom.
+It's best to make changes and additions on PhilPapers itself, and then redo the import, if information is missing or incorrect, as this benefits everyone in the profession.
+However, entries can also be manually edited in the framework, or inserted using the button at the bottom.
 
 The format of the bibliographic entries is based on what is supported by [Citation Style Language](https://citationstyles.org/) (CSL). 
-When the bibliography is saved, it is saved as a [CSL JSON](https://citeproc-js.readthedocs.io/en/latest/csl-json/markup.html) file (`bibliography.json`) which is supported by pandoc's implementation of citeproc. CSL supports many different kinds of bibliographic entries, and different kinds of entries support many different kinds of fields. 
+When the bibliography is saved, it is saved as a [CSL JSON](https://citeproc-js.readthedocs.io/en/latest/csl-json/markup.html) file (`bibliography.json`) which is supported by pandoc's implementation of the [citeproc](https://github.com/jgm/citeproc) citation processor library.
+CSL supports many different kinds of bibliographic entries, and different kinds of entries support many different kinds of fields.
+When the "type" of entry is chosen, the most common fields for the most common "types" of entries used in philosophy (at the top of the list of choices) are added to the listing, though additional types of entries can be used and additional fields can be added with the drop-down at the bottom of the entry.
+Empty fields will be ignored.
+Not all CSL styles, however, support all types and all fields.
+The most common fields that might need to be added manually include things like `original-date` or `translator`.
 
-The "id" field is used for citations in the markdown document. See the [citations](https://pandoc.org/MANUAL.html#citations) part of the Pandoc User's guide for more information on that.
+Note that when entries are added by conversion or extraction, the fields are often sorted in an usual way, and may change after saving and reloading.
+The order of the fields in each entry does not matter, nor does the order of the entries in the list.
+However, it is important to pay attention to which is which.
+There is no need to worry about about the case of titles, as citeproc will put titles into title case automatically for most styles.
+
+The "id" field is used for citations in the markdown document. See the [citations](https://pandoc.org/MANUAL.html#citations) part of the Pandoc User's guide for more information on its citation methods.
+
+The optional (and usually unused) "abbreviation" field is not a CSL field but a place to indicate that the work in question is referred to in the text with an abbreviation rather than by means of the usual author-date citations. When the bibliography is applied, an attempt will be made to link any occurrences of the abbreviation in the document to the appropriate bibliography entry.
+
+When all items in the list have been checked and any missing or erroneous information supplied or fixed, click the "save bibliography" button at the bottom of the block.
+
+The Bibliography section can be reopened later and entries added or changed, and such changes should be applied to the document when next processed.
+However, "re-applying" the bibliography to an already edited main file may have unexpected results and is probably best avoided except in exceptional circumstances.
 
 ## Archiving and Unarchiving Documents
 
