@@ -38,7 +38,7 @@ require_once('php/libauthentication.php');
 // check if cookie login is successful if matches requested project
 $cookie_login = false;
 if (($cookie_projectname != '') &&
-    ($project == '' || $project == $cookie_project)) {
+    ($project == '' || $project == $cookie_projectname)) {
     $cookie_login = verify_by_accesskey(
         $cookie_projectname,
         $cookie_username,
