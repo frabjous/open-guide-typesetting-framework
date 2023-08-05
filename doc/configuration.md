@@ -370,10 +370,25 @@ Here is an example:
 }
 ```
 
-This option is an array of items. Each item had two properties, "command" and "outputfile". The "command" attribute determines a command to be run to create a final production file. The placeholders `%projectdir%`, `%documentid%` and `%version%` for the project directory, unique document id, and the version.
+This option is an array of items.
+Each item can have two attributes, `"command"` and `"outputfile"`. The `"command"` attribute determines a command to be run to create a final production file. The placeholders `%projectdir%`, `%documentid%` and `%version%` for the project directory, unique document id, and the version number, can be used in the commands.
 
-These commands are run in turn. Typically 
+It may be useful to pass the `%version%` placeholder as the value of a pandoc metadata option, e.g., "`-M version=%version%`" if the pandoc template makes use of the version, as this is not typically included in the `metadata.yaml` file.
 
+These commands are run in turn.
+Typically, the commands should be very close to those used in the `"output"` option (or else the previews and proof sets will not match the actual output files), but they may involve additional steps of post-processing.
+For example, the example above has a command resulting in a pdf, which uses pandoc only to create a temporary pdf.
+A ghostscript (`gs`) command then follows which uses the temporary pdf to create an optimized and linearized pdf for fast web viewing (typically reducing the file size as well), and then the temporary pdf is deleted.
+Each of these sub-steps is separated by the shell operator `&&` in the command field.
+
+The `"outputfile"` attribute specifies a filename that is expected to be created by the command.
+After running the command, this file is looked for, and if found, moved into the production version’s subdirectory with the `editions` subdirectory of the document directory.
+
+If an output file has the plain text `.txt` extension, it will be made available directly in the framework as an "extraction" to be copied and pasted.
+This is useful for things like abstracts and reference lists.
+
+It is often useful to have the last command produce a compressed archive such as a `.zip` file of all the other output files (which at that point would be the entire contents of the edition/version's subdirectory).
+This (along with all the others) will be given as download options in the framework.
 
 ## Other Documentation
 
