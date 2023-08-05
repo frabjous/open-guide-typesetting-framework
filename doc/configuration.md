@@ -3,7 +3,7 @@
 
 # Project Configuration and Settings
 
-Read and make use of this documentation after completing the [installation instructions](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) for the framework.
+It may be best to read and make use of this documentation after completing the [installation instructions](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) for the framework.
 
 ## Projects, Project Directories and Settings File
 
@@ -23,7 +23,7 @@ If the project was created with the `newproject.php` script, this file will begi
 These settings are appropriate for a journal.
 
 For any other kind of project, and most likely even for a journal, the `project-settings.json` file should be edited and customized for the actual project.
-Most of the below describes what it is in this file and how it can be tweaked.
+Most of the rest of this documentation file describes what it is in `project-settings.json` and how it can be tweaked.
 
 Consult the file itself (or the sample file) to see its full structure, as this documentation will only show some parts at a time.
 
@@ -40,7 +40,7 @@ For example:
 
 ```
 
-These settings specify the full title of the project, the main contact person for the project's name and email. The full project name appears at the top of the typesetting framework's pages and in various other places. The contact name and email are used in headers of emails sent (unless a custom script is used) and in certain error messages in the typesetting framework itsef.
+These settings specify the full title of the project, the main contact person for the project's name and email. The full project name appears at the top of the typesetting framework's pages and in various other places. The contact name and email are used in headers of emails sent (unless a custom script is used) and in certain error messages in the typesetting framework itself.
 
 These options are set by the `newproject.php` script if used, but may be changed at any time.
 
@@ -65,9 +65,9 @@ This setting consists of key--value pairs, and are used during the document conv
 
 Note, however, that json requires that backslashes must be escaped as double backslashes. Since backslashes occur often in regular expressions, they must all occur as double backslashes. For more on regular expression syntax, see [here](https://github.com/geoffgarside/oniguruma/blob/master/Syntax.txt).
 
-In the above, for example, the key `"\\. \\. \\."` is really the regular expression `"\. \. \."`, which is the syntax for three periods separated by spaces, i.e., "`. . .`". The value "…" is the single unicode ellipsis symbol. This entry under "`importreplacements`" option specifies that whenever three periods separated by spaces are found in the document, they should be replaced by a single unicode ellipsis.
+In the above, for example, the key `"\\. \\. \\."` is really the regular expression `"\. \. \."`, which is the syntax for three periods separated by spaces, i.e., "`. . .`". The value "…" is the single unicode ellipsis symbol. This entry under the "`importreplacements`" option specifies that whenever three periods separated by spaces are found in the document, they should be replaced by a single unicode ellipsis when the document is converted.
 
-In a monospaced font, the point of an entry like `"\\b([A-Z])\\. ?([A-Z])\\.": "\\1. \\2."` may be unclear. This looks for upper-case initials as occur in  "`G. E. Moore`". On the right side, in between the `\1.` and `\2.` (the first and second initial), the space is a narrow space rather than a full space, so "G. E. Moore" is condensed in the output to "G. E. Moore", which I like better aesthetically.
+In a monospaced font, the point of an entry like `"\\b([A-Z])\\. ?([A-Z])\\.": "\\1. \\2."` may be unclear. This looks for upper-case initials, as those occuring in  "`G. E. Moore`". On the right side, in between the `\1.` and `\2.` (representing the first and second initial), the space is a narrow space rather than a full space, so "G. E. Moore" is condensed in the output to "G. E. Moore", which I like better aesthetically.
 
 These replacements can be removed if unwanted, and more can be added if desired.
 
@@ -318,6 +318,8 @@ Certain pandoc options here are almost a requirement. Consider using these:
     Note this example starts with `.:` which specifies that the document's own directory should be searched first, and only then the project-wide resource directory if the required resource is not found in its directory.
 - `--template=[filename]` – Without this, the default pandoc template will be used. This may not be a problem if you have created your own pandoc settings folder with your own templates.
 - `--standalone` and `--embed-resources` — Without using these for html output, the resulting html file will not be a complete file with a header and footer and template applied, and resources such as images and stylesheets will likely not be available in the editor preview window.
+
+There are many other options to consider, such as `--css` to add stylesheets to html and html-based output, `--csl` to specify a citation and bibliography style different from the default Chicago style, and so on.
 
 Some of the above could also be done using a pandoc defaults file (see [here](https://pandoc.org/MANUAL.html#defaults-files)), but specifying them here also makes sense, especially if pandoc is used for other things on the server.
 
