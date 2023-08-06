@@ -1,8 +1,0 @@
-{
-    "journal_name": "Your Journal Name Here",
-    "contact_name": "Journal Contact",
-    "contact_email": "journalcontact@journalsite.net",
-    "timezone": "America\/New_York",
-    "document_class": "article",
-    "datafolder": "\/home\/kck\/http\/typesetting\/data"
-}
