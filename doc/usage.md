@@ -7,8 +7,8 @@
 
 Typically a user is added to the system by another user.
 The new user is sent a link allowing them to choose a password for the site.
-If a new user has not visited the site yet, or has not chosen to be remembered between visits, they will need to login in (and possibly choose what project to log in to) when first visiting the page.
-This is done though a typical username/login form.
+If a new user has not visited the site yet, or has not chosen to be remembered between visits, they will need to log in (and possibly choose what project to log in to) when first visiting the page.
+This is done through a typical username/login form.
 There is an option that allows a user to be remembered indefinitely by the site on a given device.
 Forgotten passwords can also be reset for existing users.
 
@@ -38,14 +38,14 @@ This can be anything unique to the document, a number, identifier, or even a sho
 A document id must be assigned before any other work on the individual document/typesetting assignment can be saved.
 The document id also typically forms the basis for the production filenames created at the end of the process, so should be chosen appropriately.
 
-Below this, each listing consists of six collapsible/expandable parts: "**Metadata**", "**Uploads**", "**Bibliography**", "**Edit document**", "**Proofs**", "**Publication**".
+Below this, each listing consists of six collapsible/expandable parts: "**Metadata**", "**Uploads**", "**Bibliography**", "**Edit document**", "**Proofs**", and "**Publication**".
 A typical typesetting job would go through each of these parts in the sequence in which they are listed.
 Each part is discussed in more detail below.
 
 ## Metadata
 
 Opening the metadata block allows the various metadata fields used by the project for the type of document to be filled in.
-These typically include things such as the title, author, abstract and more.
+These typically include things such as the title, author, abstract, and more.
 
 Exactly which fields are included and how they work depend on the project configuration; see the [configuration documentation](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md). 
 Typically these fields will include all those used within the pandoc template used by the configuration.
@@ -58,7 +58,7 @@ Markdown syntax such as asterisks and underscores may be used in metadata fields
 
 Click the “save metadata” button at the bottom of the block to save the metadata.
 This will create (or edit) files named `metadata.json` and `metadata.yaml` in the document’s directory.
-The latter is of the right form to be used with pandoc’s `--metadata` option.
+The latter is of the right form to be used with pandoc’s `--metadata-file` option.
 
 Saving the metadata will usually close the block but it can be reopened if need be.
 Changes to the metadata can be made later, and once saved, should be applied to any new processing of the document if everything is configured in a typical way.
@@ -75,7 +75,7 @@ Upon upload, the file is automatically converted into the markdown format used b
 An attempt is also made to identify a free-form bibliography or reference section if one exists, and the extracted references made available to the next step.
 
 Once uploaded, the main file can be re-downloaded if need be.
-It can also be replaced, which will regenerate the main markdown document, but the previous versions will still be available and should appear in the ancillary file list with the prefix `previous-` along with a timestamp.
+It can also be replaced, which will regenerate the main markdown document, but the previous versions will still be available and should appear in the auxiliary file list with the prefix `previous-` along with a timestamp.
 
 ## Bibliography
 
@@ -91,12 +91,12 @@ Currently only PhilPapers is supported but this may change.
 The process is deliberately made slow, so as not to overwhelm the database server it interacts with, or make it suspect a denial of service attack.
 PhilPapers uses IDs which are typically 5 or 6 uppercase letters, and are somewhat random, though the first three letters often match the author's name, and the following letters often have something to do with the title, but this is not consistent.
 These five or six digits are often followed by a hyphen and a number.
-These IDs can be found at the end of URL when visiting a certain work's page on the PhilPapers site.
-The extraction process finds up to the top five matching PhilPapers IDs for each entry, and from them selects one (usually the first) and downloads a bibliographic record for it and uses it to populate a listing in the Bibliography block.
+These IDs can be found at the end of the URL when visiting a certain work's page on the PhilPapers site.
+The extraction process finds up to the top five matching PhilPapers IDs for each entry, and from them selects one (usually the first) and downloads a bibliographic record for it, and uses it to populate a listing in the Bibliography block.
 This process is currently very error prone, though I hope to make improvements.
 
 After extraction, each entry should be checked carefully.
-There is a drop-down list of the other PhilPapers ID found in the search in the upper left of each converted listing, as well as an input field for inputting a new one, and a button for redoing the import.
+There is a drop-down list of the other PhilPapers IDs found in the search in the upper left of each converted listing, as well as an input field for inputting a new one, and a button for redoing the import.
 It is recommended that you have PhilPapers open in another window or tab when working on the bibliography.
 If possible, it's best to make changes and additions on PhilPapers itself, and then redo the import, if information is missing or incorrect, as this benefits everyone in the profession.
 However, entries can also be manually edited in the framework, and new ones inserted using the button at the bottom.
@@ -112,11 +112,13 @@ The most common fields that might need to be added manually include things like 
 Note that when entries are added by conversion or extraction, the fields are often sorted in an usual way, and may change after saving and reloading.
 The order of the fields in each entry does not matter, nor does the order of the entries in the list.
 However, it is important to pay attention to which field is which.
-There is usually no need to worry about about the case of titles, as citeproc will put titles into title case automatically for styles that use it.
+There is usually no need to worry about the case of titles, as citeproc will put titles into title case automatically for styles that use it.
 
-The "id" field is what is used for citations in the markdown document. See the [citations section in the pandoc user's guide](https://pandoc.org/MANUAL.html#citations) for more information on its citation methods.
+The "id" field is what is used for citations in the markdown document.
+See the [citations section in the pandoc user's guide](https://pandoc.org/MANUAL.html#citations) for more information on its citation methods.
 
-The optional (and usually unused) "abbreviation" field is not a CSL field but a place to indicate that the work in question is referred to in the text with an abbreviation rather than by means of the usual author-date citations. When the bibliography is applied, an attempt will be made to link any occurrences of the abbreviation in the document to the appropriate bibliography entry.
+The optional (and usually unused) "abbreviation" field is not a CSL field but a place to indicate that the work in question is referred to in the text with an abbreviation rather than by means of the usual author-date citations.
+When the bibliography is applied, an attempt will be made to link any occurrences of the abbreviation in the document to the appropriate bibliography entry.
 
 When all items in the list have been checked and any missing or erroneous information supplied or fixed, click the "save bibliography" button at the bottom of the block.
 In addition to saving the bibliography on the server, this will also enable another button labelled "apply to document".
@@ -125,7 +127,7 @@ This process of automatic identification is far from perfect, however, and the c
 It is usually best to "apply" the bibliography once before the main document is edited, which is why the "Bibliography" block appears before the "Edit document" block.
 
 The Bibliography section can be reopened later and entries added or changed, and such changes should be applied to the document when next processed.
-However, "re-applying" the bibliography to an already-edited main file may have unexpected results and is probably best avoided except in exceptional circumstances.
+However, "re-applying" the bibliography to an already-edited main file may have unexpected results, and is probably best avoided except in exceptional circumstances.
 
 ## Edit document
 
@@ -138,7 +140,7 @@ For them, there will be a visible warning about this.
 However, it is possible to make use of plain-text based auxiliary files, such as svg images or stylesheets or LaTeX packages, and there are circumstances in which it makes sense to edit these directly.
 
 The main document is a markdown file using pandoc's academic-oriented flavor of markdown.
-Editors or typesetters editing the document should be intimately familiar with pandoc's version of markdown. Pandoc's website provides a fairly [comprehensive overview of its markdown](https://pandoc.org/MANUAL.html#pandocs-markdown) in its [User's Guide](https://pandoc.org/MANUAL.html).
+Editors or typesetters editing the document should be intimately familiar with pandoc's version of markdown. Pandoc's website provides a fairly [comprehensive overview of its markdown](https://pandoc.org/MANUAL.html#pandocs-markdown) in its [user's guide](https://pandoc.org/MANUAL.html).
 
 Those new to the typesetting framework should also consult the [Basic Usage, Buttons and Keybindings](https://github.com/frabjous/open-guide-editor/blob/main/doc/basic-usage.md) section of the documentation for the [Open Guide Editor](https://github.com/frabjous/open-guide-editor/) for information on how to use the editor, including the live-updating preview mechanisms, citation auto-completion, and more.
 
@@ -167,18 +169,18 @@ The proofs page has its own instructions about how to add comments or correction
 The final block is labelled "Publication".
 This block is to be used when it is time to create a finalized version for publication.
 There are two buttons, one for creating a new minor version (which raises the version number by 0.1) and one for creating a new major version (which raises the version to the next whole number, e.g., 1.0).
-Some typesetting projects may only target one published version; others may post new versions periodically, and it is a matter of individual policy which kind of revision should correspond to a minor or major version change.
+Some typesetting projects may only target one published version; others may post new versions periodically, and it is a matter of individual policy what kind of revision should correspond to a minor or major version change.
 
 What files are created during this process depends once again on the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md).
 Typically they will be the same file-types as were produced during the proofs stage, possibly with some post-processing done such as file-size or linearization optimizations.
 The framework can be configured to create a `.zip` file containing all the production files together, which will be listed for download first if created.
-If any of the produced files are plain-text files, a link will be added to view them directly in the publication block.
+If any of the produced files are plain-text files, a link will be added to view/extract them directly in the publication block.
 There they can be copied to the clipboard, which can be useful for things like extracting an abstract or references list.
 
 ## Archiving and Unarchiving Documents
 
 Documents no longer being worked on can be archived by clicking the archive button on the top right of each listing.
-They will still be available under the "archived" and can be "unarchived" in a similar manner.
+They will still be available under the "archived" section and can be "unarchived" in a similar manner.
 Proofs can only be viewed for current documents, but even old proof sets will become available again if a project is unarchived.
 The main purpose of archiving is simply to make it easier to find the currently relevant documents.
 
