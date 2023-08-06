@@ -14,11 +14,11 @@
         "article": {
             "createEdition": [
                 {
-                    "command": "pandoc --metadata-file metadata.yaml --wrap preserve --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --reference-location=block -t epub -o %documentid%-%version%.epub main.md",
+                    "command": "pandoc --metadata-file metadata.yaml --wrap preserve --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t epub -o %documentid%-%version%.epub main.md",
                     "outputfile": "%documentid%-%version%.epub"
                 },
                 {
-                    "command": "pandoc --metadata-file metadata.yaml --wrap preserve --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --reference-location=block -t html -o %documentid%-%version%.html main.md",
+                    "command": "pandoc --metadata-file metadata.yaml --wrap preserve --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t html -o %documentid%-%version%.html main.md",
                     "outputfile": "%documentid%-%version%.html"
                 },
                 {
@@ -47,10 +47,10 @@
                     "editorcommand": "pandoc --metadata-file metadata.yaml --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t pdf -o %outputfile% %rootdocument%"
                 },
                 "html": {
-                    "editorcommand": "pandoc --metadata-file metadata.yaml --wrap preserve --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --reference-location=block -t html -o %outputfile% %rootdocument%"
+                    "editorcommand": "pandoc --metadata-file metadata.yaml --wrap preserve --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t html -o %outputfile% %rootdocument%"
                 },
                 "epub": {
-                    "editorcommand": "pandoc --metadata-file metadata.yaml --wrap preserve --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --reference-location=block -t epub -o %outputfile% %rootdocument%"
+                    "editorcommand": "pandoc --metadata-file metadata.yaml --wrap preserve --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t epub -o %outputfile% %rootdocument%"
                 }
             },
             "splitsentences": true,
@@ -156,11 +156,11 @@
             "convert": "pandoc %upload% -t markdown --quiet --reference-location=block --wrap=none",
             "createEdition": [
                 {
-                    "command": "pandoc --metadata-file metadata.yaml --wrap preserve --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --reference-location=block -t epub -o %documentid%-%version%.epub main.md",
+                    "command": "pandoc --metadata-file metadata.yaml --wrap preserve --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t epub -o %documentid%-%version%.epub main.md",
                     "outputfile": "%documentid%-%version%.epub"
                 },
                 {
-                    "command": "pandoc --metadata-file metadata.yaml --wrap preserve --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --reference-location=block -t html -o %documentid%-%version%.html main.md",
+                    "command": "pandoc --metadata-file metadata.yaml --wrap preserve --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t html -o %documentid%-%version%.html main.md",
                     "outputfile": "%documentid%-%version%.html"
                 },
                 {
@@ -189,10 +189,10 @@
                     "editorcommand": "pandoc --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t pdf -o %outputfile% %rootdocument%"
                 },
                 "html": {
-                    "editorcommand": "pandoc --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --reference-location=block -t html -o %outputfile% %rootdocument%"
+                    "editorcommand": "pandoc --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t html -o %outputfile% %rootdocument%"
                 },
                 "epub": {
-                    "editorcommand": "pandoc --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --reference-location=block -t epub -o %outputfile% %rootdocument%"
+                    "editorcommand": "pandoc --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t epub -o %outputfile% %rootdocument%"
                 }
             },
             "splitsentences": true,
