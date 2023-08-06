@@ -207,13 +207,13 @@ Framework</h1>
 <p>Web-based academic typesetting framework for open access guides, open
 access journals, etc.</p>
 <p>Although it can be configured to use other tools additionally, it is
-primarily designed to typeset academic work using <a href="https://pandoc.org/">pandoc</a> and other open source tools like
+primarily designed for typesetting academic works using <a href="https://pandoc.org/">pandoc</a>, and other open source tools like
 LaTeX. The framework makes use of the flexibility of pandoc’s
 academic-oriented flavor of markdown in its source documents. These can
 in turn be used to create high-quality output production files in many
 different file formats. Output formats can include typographically
 sophisticated pdfs, as well as more accessible formats such as html/web
-pages, and others such as ePub, for distribution of academic
+pages, and others such as ePub, for the distribution of academic
 publications in many forms and modalities.</p>
 <p>The framework includes the <a href="https://github.com/frabjous/open-guide-editor">Open Guide
 Editor</a> as a submodule, to be used in the typesetting process. This
@@ -235,37 +235,61 @@ features:</p>
 attached to a given project.</p></li>
 <li><p>A means for editing and maintaining the metadata for a given
 typesetting assignment, using customizable fields appropriate to the
-document types for the works published by the project.</p></li>
+document types of the works published by the project.</p></li>
 <li><p>A mechanism for uploading submitted documents, automatically
 converting them to the markdown format used by the framework, and doing
 additional processing.</p></li>
 <li><p>Automatically extraction of bibliographic data from uploaded
-files, or from separate bibliography files. Text of entries can be used
-to search online bibliographic databases for automatic download of
-structured bibliographic data. Bibliographies can created in a format
-compatible with <a href="https://citationstyles.org/">Citation Style
-Language</a> and the citeproc citation processor used by
+files, or from separate bibliography files. Text of extracted entries
+can be used to search online bibliographic databases for automatic
+download of structured bibliographic data. Bibliographies can created in
+a format compatible with <a href="https://citationstyles.org/">Citation
+Style Language</a>, and the citeproc citation processor used by
 pandoc.</p></li>
-<li><p>Citations in the converted documents are automatically converted
-to pandoc-style style citations consistent with the bibliographies
+<li><p>Automatic conversion of citations in imported documents to
+pandoc-style style citations consistent with the bibliographies
 created.</p></li>
-<li></li>
+<li><p>The ability to copy-edit and typeset markdown files, with the
+ability to preview multiple output files created from the same source
+file.</p></li>
+<li><p>A mechanism for producing page proofs and sharing them with
+authors, including the ability to add queries, comments, and corrections
+on the proofs, whether in html or pdf format. These corrections and
+comments can be submitted back to the editors for purposes of creating
+finalized versions.</p></li>
+<li><p>Final production of a typeset document in any number of output
+formats, including optimizations and post-processing. Multiple editions
+or versions of the same work can be produced over time, using a
+version-numbering scheme.</p></li>
 </ul>
+<h2 id="additional-documentation">Additional Documentation</h2>
+<p>This repository contains additional documentation broken down into
+three additional files, on the following topics.</p>
+<ul>
+<li><p><a href="https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md">Installation
+instructions</a> (for system administrators)</p></li>
+<li><p><a href="https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md">Project
+configuration and settings</a> (for project leaders and/or their
+technical support helpers)</p></li>
+<li><p><a href="https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/usage.md">Regular
+usage information</a> (for editors/typesetters)</p></li>
+</ul>
+<p>Hopefully answers to most questions can be found in the documents
+above. If not, feel free to contact me.</p>
 <h2 id="todo-roadmap">TODO / Roadmap</h2>
 <p>The framework is mostly feature-complete at this point, at least for
-my own use cases. Pull requests for expansions for other use cases are
-welcome. There are also areas for improvement, especially with regard to
-bibliographic management and automated interaction with bibliographic
-databases, which will hopefully be implemented at some point.</p>
+my own use cases. However, more beta testing and bug fixing may be
+needed at this stage. Pull requests for expansions for other use cases
+are welcome. There are also areas for improvement, especially with
+regard to bibliographic management and automated interaction with
+bibliographic databases. Improvements will hopefully be implemented at
+some point. Feature requests and bug reports can be posted here on
+GitHub.</p>
 <h2 id="trivia">Trivia</h2>
 <p>This is a sequel to an earlier project entitled <a href="https://bitbucket.org/frabjous/journal-tools">journal-tools</a>,
 which was also used by the <a href="https://jhaponline.org"><em>Journal
 for the History of Analytical Philosophy</em></a> for many years.</p>
 <!--
-# Journal Tools
-
-## The JHAP Typesetting framework
-
 This code provides a web-based framework for typesetting academic journal articles and book reviews using LaTeX. Editors can log in, create projects, convert other file formats to LaTeX, edit LaTeX files, and natbib-based bibliographies, create page proofs and leave comments on them, share proofs with authors, allow authors to leave comments and answer queries on these proofs, and create web-optimized PDFs for online publication.
 
 The framework was designed for [*The Journal for the History of Analytical Philosophy*](https://jhaponline.org) but may be adapted for use by other journals, or others in general.
@@ -347,10 +371,10 @@ function jt_custom_email($to, $subject, $message) {
 The file may of course load other packages, such as [PHPMailer](https://github.com/PHPMailer/PHPMailer), etc., in order to define the function. If this file is not created or this function is not defined, the framework will use PHP’s default `mail(...)` function.
 -->
 <h2 id="license">License</h2>
-<p>The Open Guide Typesetting Framework is copyright 2018–2023 © <a href="https://people.umass.edu/klement">Kevin C. Klement</a>. This is
-free software, which can be redistributed and/or modified under the
-terms of the <a href="https://www.gnu.org/licenses/gpl.html">GNU General
-Public License (GPL), version 3</a>.</p>
+<p>Copyright 2023 © <a href="https://people.umass.edu/klement">Kevin C.
+Klement</a>. This is free software, which can be redistributed and/or
+modified under the terms of the <a href="https://www.gnu.org/licenses/gpl.html">GNU General Public License
+(GPL), version 3</a>.</p>
 <p>The favicon is based on <a href="https://commons.wikimedia.org/wiki/File:JS_Icon_Edit_White.svg">JS_Icon_Edit_White.svg</a>
 by <a href="https://commons.wikimedia.org/wiki/User:Stalinsunnykvj">Jstalins</a>,
 licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.en">Creative
