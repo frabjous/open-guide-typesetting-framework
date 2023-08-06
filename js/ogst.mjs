@@ -1667,7 +1667,7 @@ ogst.assignmentcard = function(
             this.uploadblock.setAttribute("open", "open");
             return;
         }
-        if (this.biblastapplied <= this.biblastchanged) {
+        if (this.biblastapplied == -1) {
             this.bibblock.setAttribute("open", "open");
             return;
         }
