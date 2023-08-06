@@ -58,7 +58,7 @@ Installing the framework is straightforward.
     php php/newproject.php
     ```
 
-    This will prompt you for a short name as well as a full title for your project, as well as a site maintainer contact name and email. It will create a initial user of the site with the same email, and provide a password.
+    This will prompt you for a short name as well as a full title for your project, as well as a site maintainer contact name and email. It will create a initial user of the site with the same name and email, and provide a password.
 
 5. You should now be able to visit the site if your web server is up and running, e.g.:
 
@@ -77,9 +77,10 @@ Installing the framework is straightforward.
 
 By default, the typesetting framework will use the default php `mail(…)` function to send email, using the site’s contact name and email in the headers.
 
-Depending on your server configuration, however, this function can lead to email that goes straight into people’s spam folders.
+Depending on your server configuration, however, this function can lead to email that goes straight into people’s spam/junk folders.
 
-As an alternative, a php script named `customemail.php` can be created and placed in the project subdirectory of the main data directory. This script should define a php function named `custom_send_email($to, $subject, $htmlcontent)` which takes three arguments: the email address of the recipient, the subject of the email, and the (html) contents of the message, in that order.
+As an alternative, a php script named `customemail.php` can be created and placed in the project subdirectory of the main data directory.
+This script should define a php function named `custom_send_email($to, $subject, $htmlcontent)` which takes three arguments: the email address of the recipient, the subject of the email, and the (html) contents of the message, in that order.
 
 Creating such a script requires some knowledge of php, but a standard use case would be to define such a function as a wrapper around something like the [phpmailer](https://github.com/PHPMailer/PHPMailer) package or similar, to make use of its capabilities.
 
