@@ -1,42 +1,266 @@
-# Open Guide Typesetting Framework
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="generator" content="pandoc" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="author" content="Kevin C. Klement" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta property="og:title" content="README" />
+    <title>README</title>
+    <style>
+html {
+line-height: 1.5;
+font-family: 'Libertinus Serif', serif;
+font-size: 20px;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+text-align: justify;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+h1, h2, h3, h4 {
+text-align: left;
+page-break-after: avoid;
+}
+@media print {
+body {
+background-color: transparent;
+color: black;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h1, h2, h3, h4 {
+text-align: left;
+page-break-after: avoid;
+}
+span.citation a:link,
+span.citation a:visited,
+span.citation a {
+color: inherit;
+text-decoration: none;
+}
+a.footnote-back {
+display: none !important;
+}
+}
+p {
+margin: 1em 0;
+}
+img {
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+h1 span.header-section-number::after {
+content: ".";
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 1.5em 1em 1.5em;
+padding-left: 1em;
+}
+#footnotes hr {
+display: none;
+}
+#footnotes {
+margin-top: 2.4em;
+}
+#footnotes::before {
+content: "Notes";
+font-size: 2em;
+font-weight: bold;
+margin-block-start: 0.67em;
+margin-block-end: 0.67em;
+}
+#footnotes ul, #footnotes ol {
+margin-top: 10px;
+}
+code {
+font-family: 'DejaVu Sans Code', 'DejaVu Sans Mono', 'Droid Sans Mono', 'Fira Code', 'Fira Mono', 'JetBrains Mono', Inconsolata, Cousine, 'IBM Plex Mono', 'Red Hat Mono', 'Sarasa Mono K', 'Ubuntu Mono', Consolas, Menlo, Monaco, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+white-space: pre-wrap;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+sup {
+white-space: nowrap;
+line-height: 0;
+font-size: 75%;
+position: relative;
+vertical-align: baseline;
+top: -0.5em;
+}
+sub {
+white-space: nowrap;
+line-height: 0;
+font-size: 75%;
+position: relative;
+vertical-align: baseline;
+top: 0.3em;
+line-height: 0;
+}
+span.smallcaps{
+font-variant: small-caps;
+}
+span.underline {
+text-decoration: underline;
+}
+div.column{
+display: inline-block;
+vertical-align: top;
+width: 50%;
+}
 
-## Introduction
-
-Web-based academic typesetting framework for open access guides, open access journals, etc.
-
-Although it can be configured to use other tools additionally, it is primarily designed to typeset academic work using [pandoc](https://pandoc.org/) and other open source tools like LaTeX.
-The framework makes use of the flexibility of pandoc's academic-oriented flavor of markdown in its source documents.
-These can in turn be used to create high-quality output production files in many different file formats.
-Output formats can include typographically sophisticated pdfs, as well as more accessible formats such as html/web pages, and others such as ePub, for distribution of academic publications in many forms and modalities.
-
-The framework includes the [Open Guide Editor](https://github.com/frabjous/open-guide-editor) as a submodule, to be used in the typesetting process. This is a web-based text editor that provides live-updating previews of html- or pdf-based output formats (or both) for the source file being edited. (A video showing its capabilities can be found on its github page through the link just given.)
-
-The framework was created to be used by the [*Journal for the History of Analytical Philosophy*](https://jhaponline.org), as well as the forthcoming *Open Guide to Bertrand Russell’s Philosophy*, which I am editing, but may be useful to others undertaking similar projects. Thus, the framework is being made available open source and free for others to use, modify, and benefit from.
-
-## Features
-
-The Open Guide Typesetting Framework provides the following features:
-
-* Remote log in and user maintenance for editors and typesetters attached to a given project.
-
-* A means for editing and maintaining the metadata for a given typesetting assignment, using customizable fields appropriate to the document types for the works published by the project.
-
-* A mechanism for uploading submitted documents, automatically converting them to the markdown format used by the framework, and doing additional processing.
-
-* Automatically extraction of bibliographic data from uploaded files, or from separate bibliography files. Text of entries can be used to search online bibliographic databases for automatic download of structured bibliographic data. Bibliographies can created in a format compatible with [Citation Style Language](https://citationstyles.org/) and the citeproc citation processor used by pandoc.
-
-* Citations in the converted documents are automatically converted to pandoc-style style citations consistent with the bibliographies created.
-
-* 
-
-## TODO / Roadmap
-
-The framework is mostly feature-complete at this point, at least for my own use cases. Pull requests for expansions for other use cases are welcome. There are also areas for improvement, especially with regard to bibliographic management and automated interaction with bibliographic databases, which will hopefully be implemented at some point.
-
-## Trivia
-
-This is a sequel to an earlier project entitled [journal-tools](https://bitbucket.org/frabjous/journal-tools), which was also used by the [*Journal for the History of Analytical Philosophy*](https://jhaponline.org) for many years.
-
+div.csl-entry {
+margin-left: 1.5em;
+text-indent: -1.5em;
+}
+ul.task-list{
+list-style: none;
+}
+.pagebreak {
+page-break-after: always;
+}
+.display.math{
+display: block;
+text-align: center;
+margin: 0.5rem auto;
+}
+@page {
+size: Letter;
+margin: 1in;
+counter-increment: page;
+@bottom-center {
+content: counter(page);
+}
+}
+@page:first {
+@bottom-center {
+content: none;
+}
+} </style>
+</head>
+<body>
+<h1 id="open-guide-typesetting-framework">Open Guide Typesetting
+Framework</h1>
+<h2 id="introduction">Introduction</h2>
+<p>Web-based academic typesetting framework for open access guides, open
+access journals, etc.</p>
+<p>Although it can be configured to use other tools additionally, it is
+primarily designed to typeset academic work using <a href="https://pandoc.org/">pandoc</a> and other open source tools like
+LaTeX. The framework makes use of the flexibility of pandoc’s
+academic-oriented flavor of markdown in its source documents. These can
+in turn be used to create high-quality output production files in many
+different file formats. Output formats can include typographically
+sophisticated pdfs, as well as more accessible formats such as html/web
+pages, and others such as ePub, for distribution of academic
+publications in many forms and modalities.</p>
+<p>The framework includes the <a href="https://github.com/frabjous/open-guide-editor">Open Guide
+Editor</a> as a submodule, to be used in the typesetting process. This
+is a web-based text editor that provides live-updating previews of html-
+or pdf-based output formats (or both) for the source file being edited.
+(A video showing its capabilities can be found on its github page
+through the link just given.)</p>
+<p>The framework was created to be used by the <a href="https://jhaponline.org"><em>Journal for the History of Analytical
+Philosophy</em></a>, as well as the forthcoming <em>Open Guide to
+Bertrand Russell’s Philosophy</em>, which I am editing, but may be
+useful to others undertaking similar projects. Thus, the framework is
+being made available open source and free for others to use, modify, and
+benefit from.</p>
+<h2 id="features">Features</h2>
+<p>The Open Guide Typesetting Framework provides the following
+features:</p>
+<ul>
+<li><p>Remote log in and user maintenance for editors and typesetters
+attached to a given project.</p></li>
+<li><p>A means for editing and maintaining the metadata for a given
+typesetting assignment, using customizable fields appropriate to the
+document types for the works published by the project.</p></li>
+<li><p>A mechanism for uploading submitted documents, automatically
+converting them to the markdown format used by the framework, and doing
+additional processing.</p></li>
+<li><p>Automatically extraction of bibliographic data from uploaded
+files, or from separate bibliography files. Text of entries can be used
+to search online bibliographic databases for automatic download of
+structured bibliographic data. Bibliographies can created in a format
+compatible with <a href="https://citationstyles.org/">Citation Style
+Language</a> and the citeproc citation processor used by
+pandoc.</p></li>
+<li><p>Citations in the converted documents are automatically converted
+to pandoc-style style citations consistent with the bibliographies
+created.</p></li>
+<li></li>
+</ul>
+<h2 id="todo-roadmap">TODO / Roadmap</h2>
+<p>The framework is mostly feature-complete at this point, at least for
+my own use cases. Pull requests for expansions for other use cases are
+welcome. There are also areas for improvement, especially with regard to
+bibliographic management and automated interaction with bibliographic
+databases, which will hopefully be implemented at some point.</p>
+<h2 id="trivia">Trivia</h2>
+<p>This is a sequel to an earlier project entitled <a href="https://bitbucket.org/frabjous/journal-tools">journal-tools</a>,
+which was also used by the <a href="https://jhaponline.org"><em>Journal
+for the History of Analytical Philosophy</em></a> for many years.</p>
 <!--
 # Journal Tools
 
@@ -122,8 +346,14 @@ function jt_custom_email($to, $subject, $message) {
 ```
 The file may of course load other packages, such as [PHPMailer](https://github.com/PHPMailer/PHPMailer), etc., in order to define the function. If this file is not created or this function is not defined, the framework will use PHP’s default `mail(...)` function.
 -->
-## License
-
-The Open Guide Typesetting Framework is copyright 2018–2023 © [Kevin C. Klement](https://people.umass.edu/klement). This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).
-
-The favicon is based on [JS_Icon_Edit_White.svg](https://commons.wikimedia.org/wiki/File:JS_Icon_Edit_White.svg) by [Jstalins](https://commons.wikimedia.org/wiki/User:Stalinsunnykvj), licensed under a [Creative Commons Attribution Share-Alike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/deed.en) license.
+<h2 id="license">License</h2>
+<p>The Open Guide Typesetting Framework is copyright 2018–2023 © <a href="https://people.umass.edu/klement">Kevin C. Klement</a>. This is
+free software, which can be redistributed and/or modified under the
+terms of the <a href="https://www.gnu.org/licenses/gpl.html">GNU General
+Public License (GPL), version 3</a>.</p>
+<p>The favicon is based on <a href="https://commons.wikimedia.org/wiki/File:JS_Icon_Edit_White.svg">JS_Icon_Edit_White.svg</a>
+by <a href="https://commons.wikimedia.org/wiki/User:Stalinsunnykvj">Jstalins</a>,
+licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.en">Creative
+Commons Attribution Share-Alike 4.0 International</a> license.</p>
+</body>
+</html>
