@@ -4,6 +4,8 @@
 
 Web-based academic typesetting framework for open access guides, open access journals, etc.
 
+![ogtf](https://github.com/frabjous/open-guide-typesetting-framework/assets/305948/f66dcc1f-59f1-4ed9-a7e8-91e65bb5a157)
+
 Although it can be configured to use other tools (additionally), it is primarily designed for typesetting academic works using [pandoc](https://pandoc.org/), and other open source tools like LaTeX.
 The framework makes use of the flexibility of pandoc's academic-oriented flavor of markdown in its source documents.
 These can in turn be used to create high-quality output production files in many different file formats.
