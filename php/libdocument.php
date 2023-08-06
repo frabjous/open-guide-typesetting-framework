@@ -106,6 +106,8 @@ function extract_bibliography($markdown) {
                 $s = mb_ereg_replace('\\\-','',$s);
                 // remove leading hyphens
                 $s = mb_ereg_replace('^-*\s*','',$s);
+                // remove leading punctuation
+                $s = mb_ereg_replace('^[ ,\.]*','',$s);
                 // remove escaped single quotes
                 $s = mb_ereg_replace("\\\'","'",$s);
                 // remove escaped brackers
