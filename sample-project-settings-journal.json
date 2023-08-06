@@ -186,13 +186,13 @@
             ],
             "output": {
                 "pdf": {
-                    "editorcommand": "pandoc --number-sections --citeproc --bibliography bibliography.json --resource-dir .:%projectdir% -t pdf -o %outputfile% %rootdocument%"
+                    "editorcommand": "pandoc --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t pdf -o %outputfile% %rootdocument%"
                 },
                 "html": {
-                    "editorcommand": "pandoc --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-dir .:%projectdir% --reference-location=block -t html -o %outputfile% %rootdocument%"
+                    "editorcommand": "pandoc --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --reference-location=block -t html -o %outputfile% %rootdocument%"
                 },
                 "epub": {
-                    "editorcommand": "pandoc --number-sections --citeproc --bibliography bibliography.json --resource-dir .:%projectdir% --reference-location=block -t epub -o %outputfile% %rootdocument%"
+                    "editorcommand": "pandoc --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --reference-location=block -t epub -o %outputfile% %rootdocument%"
                 }
             },
             "splitsentences": true,

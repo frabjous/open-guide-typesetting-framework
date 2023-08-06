@@ -903,7 +903,7 @@ ogst.assignmentcard = function(
             this.innerHTML = 'save bibliography';
             if (!resp) { return; }
             if ("biblastsaved" in resp) {
-                this.mycard.biblastsaved = resp.biblastsaved;
+                this.mycard.biblastsaved = ((new Date()).getTime()/1000);
             }
             this.mycard.updatebibbuttons();
         }
@@ -972,11 +972,6 @@ ogst.assignmentcard = function(
             card.bibsavebutton.disabled = false;
         } else {
             card.bibsavebutton.disabled = true;
-        }
-        if (numitems > 0 && card.bibsavebutton.disabled) {
-            card.bibapplybutton.disabled = false;
-        } else {
-            card.bibapplybutton.disabled = true;
         }
         if (card.updateeditsection) {
             card.updateeditsection();
