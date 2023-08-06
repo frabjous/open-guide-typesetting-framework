@@ -806,7 +806,7 @@ export function getAllBibData(bibcontentsitems) {
         if (id == '') {
             bibitem.fields.id.setAttribute('aria-invalid','true');
             bibitem.fields.id.focus();
-            bibitem.fields.id.scrollIntoView();
+            bibitem.fields.id.scrollIntoView({ block: 'nearest' });
             bibitem.fields.id.placeholder = 'please enter an id';
             return false;
         }
@@ -827,7 +827,7 @@ export function getAllBibData(bibcontentsitems) {
         if (info?.type == "select a type") {
             bibitem.fields.type.setAttribute('aria-invalid','true');
             bibitem.fields.type.focus();
-            bibitem.fields.type.scrollIntoView();
+            bibitem.fields.type.scrollIntoView({ block: 'nearest' });
             return false;
         }
         unsorted[id] = info;

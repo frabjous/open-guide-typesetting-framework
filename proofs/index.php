@@ -458,7 +458,7 @@ function reportError(msg) {
         ') Check your internet connection. If the problem persists, ' +
         ' consult your ' + ((window.iseditor) ? 'site administrator' :
         'editor') + '.';
-    errormessage.scrollIntoView();
+    errormessage.scrollIntoView({ block: 'nearest' });
 }
 
 function okmessage(msg) {
@@ -466,7 +466,7 @@ function okmessage(msg) {
     errormessage.style.display = 'block';
     errormessage.classList.add('okmsg');
     errormessage.innerHTML = msg;
-    errormessage.scrollIntoView();
+    errormessage.scrollIntoView({ block: 'nearest' });
 }
 
 async function jsonrequest(req) {
@@ -1694,7 +1694,7 @@ if (pdfpp > 0) {
             const id = 'page' + this.value;
             const page = document.getElementById(id);
             if (page) {
-                page.scrollIntoView();
+                page.scrollIntoView({ block: 'nearest' });
             }
             // clear old value
             this.value = '';

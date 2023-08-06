@@ -943,7 +943,7 @@ ogst.assignmentcard = function(
             }
             card.updatebibbuttons();
             card.openNext();
-            card.scrollIntoView();
+            card.scrollIntoView({ block: 'nearest' });
             card.okmessage('Bibliography applied.');
         }
     });
@@ -1628,13 +1628,13 @@ ogst.assignmentcard = function(
         card.msg.style.display = 'block';
         card.msg.classList.remove('okmsg');
         card.msg.innerHTML = errMsg;
-        card.msg.scrollIntoView(false);
+        card.msg.scrollIntoView({ block: 'nearest' });
     }
     card.okmessage = function(okMsg) {
         card.msg.style.display = 'block';
         card.msg.classList.add('okmsg');
         card.msg.innerHTML = okMsg;
-        card.msg.scrollIntoView(false);
+        card.msg.scrollIntoView({ block: 'nearest' });
     }
     card.clearmessage = function() {
         card.msg.style.display = 'none';
@@ -1826,7 +1826,7 @@ ogst.clearmain = function() {
     main.contents.innerHTML = '';
     ogst.clearmessage();
     // scroll to top
-    byid('projecttitle').scrollIntoView();
+    byid('projecttitle').scrollIntoView({ block: 'nearest' });
 }
 
 // clear the message at the top of the main project area
@@ -2015,7 +2015,7 @@ ogst.login = async function() {
         byid("loginmsg").innerHTML = 'Login error. ' +
             (loginresult?.errMsg ?? '') +
             (loginresult?.respObj?.errMsg ?? '');
-        byid("login").getElementsByTagName("h2")[0].scrollIntoView();
+        byid("login").getElementsByTagName("h2")[0].scrollIntoView({ block: 'nearest' });
         return;
     }
     // report login errors
@@ -2036,7 +2036,7 @@ ogst.login = async function() {
                 this.removeAttribute("aria-invalid");
             });
         }
-        byid("login").getElementsByTagName("h2")[0].scrollIntoView();
+        byid("login").getElementsByTagName("h2")[0].scrollIntoView({ block: 'nearest' });
         return;
     }
     ogst.establishuser(respObj);
@@ -2081,7 +2081,7 @@ ogst.newassignment = function(assignmentType, btn) {
     const newcard = ogst.assignmentcard(
         assignmentType, assignmentId, assignmentInfo, sect, isarchived
     );
-    if (sect?.hdr) { sect.hdr.scrollIntoView(); }
+    if (sect?.hdr) { sect.hdr.scrollIntoView({ block: 'nearest' }); }
 }
 
 // puts a message which is not an error at top of projects page
@@ -2091,7 +2091,7 @@ ogst.okmessage = function(okmsg) {
         main.msgdiv.style.display = 'block';
         main.msgdiv.innerHTML = okmsg;
         main.msgdiv.classList.add('okmsg');
-        byid('projecttitle').scrollIntoView();
+        byid('projecttitle').scrollIntoView({ block: 'nearest' });
     } else {
         console.log('Message without main message: ' + okmsg);
     }
@@ -2184,7 +2184,7 @@ ogst.reporterror = function(errMsg) {
         main.msgdiv.style.display = 'block';
         main.msgdiv.innerHTML = errMsg;
         main.msgdiv.classList.remove('okmsg');
-        byid('projecttitle').scrollIntoView();
+        byid('projecttitle').scrollIntoView({ block: 'nearest' });
     } else {
         console.error(errMsg);
     }
@@ -2222,7 +2222,7 @@ ogst.resetpwd = async function() {
         msg.innerHTML = 'Error requesting password reset. ' +
             (response?.errMsg ?? '') + ' ' +
             (response?.respObj?.errMsg ?? '');
-        byid('forgotpwd').getElementsByTagName('h2')[0].scrollIntoView();
+        byid('forgotpwd').getElementsByTagName('h2')[0].scrollIntoView({ block: 'nearest' });
         return;
     }
     // check for lack of success
@@ -2230,7 +2230,7 @@ ogst.resetpwd = async function() {
     if (!respObj.success) {
         msg.innerHTML = 'Error with password request. ' +
             (respObj?.resetErrMsg ?? '');
-        byid('forgotpwd').getElementsByTagName('h2')[0].scrollIntoView();
+        byid('forgotpwd').getElementsByTagName('h2')[0].scrollIntoView({ block: 'nearest' });
         return;
     }
     // it was successful, destroy the form
@@ -2609,7 +2609,7 @@ ogst.showview = function(id) {
         v.style.display='none';
     };
     byid(id).style.display = 'block';
-    byid('projecttitle').scrollIntoView();
+    byid('projecttitle').scrollIntoView({ block: 'nearest' });
 }
 
 // function to update the top navigation
