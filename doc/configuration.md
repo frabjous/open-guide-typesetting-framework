@@ -278,7 +278,7 @@ Paragraph breaks are indicated in markdown with blank lines between lines of tex
 This option exists simply for the convenience of the editor in locating individual sentences in a paragraph when editing.
 This splitting is not done by pandoc itself, but done after the markdown conversion, and will work best if the `convert` option discussed above includes `--wrap=none` to start with, so that each sentence is not already split across lines.
 
-The option can simply be set to `false` if this behavior is undesired, in which case the `--wrap` option in the `convert` option will determine the layout of the paragraphs in the markdown.
+The option can be set to `false` if this behavior is undesired, in which case the `--wrap` option in the `convert` command will determine the layout of the paragraphs in the markdown.
 
 ### `output` (assignment type option)
 
@@ -305,19 +305,19 @@ Here is an example:
 ```
 
 This complex option does two things.
-Firstly, when a new document is imported, a settings file for the Open Guide editor named `oge-settings.json` is created in its directory.
+Firstly, when a new document is imported, a settings file for the Open Guide Editor named `oge-settings.json` is created in its directory.
 Such settings files can be used to set the main or "root" document for each typesetting project, as well as configure the commands used by the editor to create its preview.
 
 For more information on `oge-settings.json` files and their syntax, see the [settings documentation](https://github.com/frabjous/open-guide-editor/blob/main/doc/settings.md) for the Open Guide Editor.
 
 Each key in the assignment type `"output"` option should be the file extension for an output file which can be created from the input markdown document.
-The `"editorcommand"` attribute of the object the extension is mapped to in the json will be used as the `command` value editor's preview "routine" as set in the `oge-settings.file`.
+The `"editorcommand"` attribute of the object the extension is mapped to in the json will be used as the value of the `command` attribute in the editor's preview "routine" as set in the `oge-settings.file`.
 This is in effect the command used to create the output file from the main source document.
 
 The syntax of the command is the same as that described in the Open Guide Editor documentation, and allows the same placeholders, such as `%rootdocument%` (for the main file being edited) and `%outputfile%` for the file being created.
 Additionally, a `%projectdir%` placeholder can be used, which will be replaced by the path to the project’s subdirectory of the framework’s data directory.
-This can be useful for setting things like a resource path if the project templates make use of assets such as, e.g., images used by the global template.
-These commands are passed through a shell, so shell operators such as `&&` or `||` may be used to chain together multiple commands, create pipes and redirections, etc.
+This can be useful for setting things like a resource path if the project templates make use of assets such as, e.g., images.
+These commands are passed through a shell, so shell operators such as "`&&`" or "`||`" may be used to chain together multiple commands, create pipes and redirections, etc.
 
 In a typical set up, these will make use of pandoc with options appropriate for the output type.
 Certain pandoc options here are almost a requirement. Consider using these:
@@ -325,23 +325,23 @@ Certain pandoc options here are almost a requirement. Consider using these:
 - `--metadata-file metadata.yaml` – Without this, the metadata specified in the metadata block will not be passed to pandoc.
 - `--number-sections` – Without this, sections and subsections in the output document will not have numbers. 
 - `--citeproc` – without this, no citations in the document will be processed or linked to the bibliography.
-- `--bibliography bibiography.json` – without this, the bibliographic information specified in the framework's Bibliography block will be used.
+- `--bibliography bibliography.json` – without this, the bibliographic information specified in the framework's Bibliography block will not be used.
 - `--resource-path .:%projectdir%` (or similar) – without this, assets such as images and auxiliary files will probably not be located by pandoc.
-    Note this example starts with `.:` which specifies that the document's own directory should be searched first, and only then the project-wide resource directory if the required resource is not found in its directory.
+    Note this example starts with "`.:`" which specifies that the document's own directory should be searched first, and only then the project-wide resource directory if the required resource is not found in the document directory.
 - `--template=[filename]` – Without this, the default pandoc template will be used. This may not be a problem if you have created your own pandoc settings folder with your own templates.
-- `--standalone` and `--embed-resources` — Without using these for html output, the resulting html file will not be a complete file with a header and footer and template applied, and resources such as images and stylesheets will likely not be available in the editor preview window.
+- `--standalone` and `--embed-resources` — Without using these for html output, the resulting html file will not be a complete file with a header and template applied, and resources such as images and stylesheets will likely not be available in the editor preview window.
 
-There are many other options to consider, such as `--css` to add stylesheets to html and html-based output, `--csl` to specify a citation and bibliography style different from the default Chicago style, and so on.
+There are many other options to consider, such as `--css` to add stylesheets to html and html-based output files, `--csl` to specify a citation and bibliography style different from the default Chicago style, and so on.
 
 Some of the above could also be done using a pandoc defaults file (see [here](https://pandoc.org/MANUAL.html#defaults-files)), but specifying them here also makes sense, especially if pandoc is used for other things on the server.
 
 The other thing the `output` option configures is how proof sets are created.
-The creation process will run the same commands as used by the editor to produce all the file-types whose extensions are listed.
-Typically both a `html` and `pdf` output routine should be specified, and optionally others such as `epub`, etc.
+The creation process will run the same commands as used by the editor to produce all the output file-types whose extensions are listed.
+Typically at least both an `html` and `pdf` output routine should be specified, and optionally others such as `epub`, etc.
 
 ### `createEdition` (assignment type option)
 
-Finally, the `"createEdition"` option is used by the "Publication" block in the framework when preparing a final version of the document for publication.
+Finally, the `"createEdition"` option is used by the "Publication" block in the framework when preparing a final version of a document for publication.
 
 Here is an example:
 
@@ -385,18 +385,18 @@ Here is an example:
 ```
 
 This option is an array of items.
-Each item can have two attributes, `"command"` and `"outputfile"`. The `"command"` attribute determines a command to be run to create a final production file. The placeholders `%projectdir%`, `%documentid%` and `%version%` for the project directory, unique document id, and the version number, can be used in the commands.
+Each item can have two attributes, `"command"` and `"outputfile"`. The `"command"` attribute determines a command to be run to create a final production file. The placeholders `%projectdir%`, `%documentid%` and `%version%`, for the project directory, unique document id, and the version number, respectively, can be used in the commands.
 
-It may be useful to pass the `%version%` placeholder as the value of a pandoc metadata option, e.g., "`-M version=%version%`" if the pandoc template makes use of the version, as this is not typically included in the `metadata.yaml` file.
+It may be useful to pass the `%version%` placeholder as the value of a pandoc metadata option, e.g., "`-M version=%version%`" if the pandoc template makes use of the version number, as this is not typically included in the `metadata.yaml` file.
 
 These commands are run in turn.
 Typically, the commands should be very close to those used in the `"output"` option (or else the previews and proof sets will not match the actual output files), but they may involve additional steps of post-processing.
-For example, the example above has a command resulting in a pdf, which uses pandoc only to create a temporary pdf.
+For instance, the example above has a command resulting in a pdf, which uses pandoc only to create a temporary pdf.
 A ghostscript (`gs`) command then follows which uses the temporary pdf to create an optimized and linearized pdf for fast web viewing (typically reducing the file size as well), and then the temporary pdf is deleted.
-Each of these sub-steps is separated by the shell operator `&&` in the command field.
+Each of these sub-steps is separated by the shell operator "`&&`" in the command field.
 
-The `"outputfile"` attribute specifies a filename that is expected to be created by the command.
-After running the command, this file is looked for, and if found, moved into the production version’s subdirectory with the `editions` subdirectory of the document directory.
+The `"outputfile"` attribute specifies a filename for the file that is expected to be created by the command.
+After running the command, this file is looked for, and if found, moved into the production version’s subdirectory within the `editions` subdirectory of the document directory.
 
 It is possible here to produce multiple output files with the same extension (e.g., different pdfs with different creation options or templates) so long as the output files are otherwise named differently.
 
@@ -408,12 +408,12 @@ This (along with all the others) will be given as download options in the framew
 
 ## Templates and Other Ways to Customize
 
-Modifying the `project-settings.json` file is only one way to customize how what is produced by the typesetting process, and perhaps not even the most important.
+Modifying the `project-settings.json` file is only one way to customize what is produced by the typesetting process, and perhaps not even the most important.
 
 Many if not most file formats that are produced via converting pandoc markdown files are created, directly or indirectly, with html or LaTeX intermediaries.
-As examples, `.epub` files are zipped `.(x)html` files, and unless a non-default `--pdf-engine` option is given, most `.pdf` files produced by pandoc are done by first converting to a LaTeX file and compiling the intermediate LaTeX file to pdf.
+As examples, `.epub` files are just zipped `.(x)html` files, and unless a non-default `--pdf-engine` option is given, most `.pdf` files produced by pandoc are done by first converting to a LaTeX file and compiling the intermediate LaTeX file to pdf.
 
-Typesetting projects that use the typesetting framework will most likely want to create pandoc templates for both html and latex output, if not additional templates. These templates might make use of additional customized files such as css stylesheets, or LaTeX document packages/document classes. These are the main ways for a project to truly make its output files fit its own style and brand.
+Project leaders using the typesetting framework will most likely want to create pandoc templates for both html and LaTeX output, if not additional templates. These templates might make use of additional customized files such as css stylesheets, or LaTeX document packages/document classes. These are the main ways for a project to truly make its output files fit its own style and brand.
 
 The process of creating pandoc templates and related files is outside the scope of this documentation, but the [pandoc documentation on templates](https://pandoc.org/MANUAL.html#templates) is excellent. Even more fine-grained control can be accomplished with [pandoc filters](https://pandoc.org/filters.html) and the like. These are all compatible with the typesetting framework, and the command line flags to use them would simply have to be added to the `"output"` and/or `"createEdition"` options described above.
 <!-- TODO: add link to jhap/og templates when created. maybe fregeifier -->
