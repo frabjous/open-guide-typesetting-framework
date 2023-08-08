@@ -263,6 +263,12 @@
                     "label": "Year of reviewed work",
                     "pandoc": "yaml"
                 },
+                "reviewedpages": {
+                    "required": false,
+                    "inputtype": "number",
+                    "label": "Reviewed pages",
+                    "pandoc": "yaml"
+                },
                 "reviewedcost": {
                     "required": false,
                     "inputtype": "number",
