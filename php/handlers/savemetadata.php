@@ -55,6 +55,22 @@ if (isset($assign_type_info->metadata)) {
     $metadata_spec = $assign_type_info->metadata;
 }
 $yaml = '';
+// set title for reviews
+if ((!isset($metadata->title)) &&
+    isset($metadata->reviewedtitle)) {
+    $yaml .= "title: 'Review of " . mb_ereg_replace("'","''", $metadata->reviewedtitle);
+    if (isset($metadata->reviewedsubtitle)) {
+        $yaml . ': ' . mb_ereg_replace("'","''", $metadata->reviewedsubtitle);
+    }
+    if (isset($metadata->reviewedauthor)) {
+        $yaml .= ' by ' .  mb_ereg_replace("'","''", implode(', ', $metadata->reviewedauthor));
+    } else {
+        if (isset($metadata->reviewededitor)) {
+            $yaml .= ' edited by ' . mb_ereg_replace("'","''", implode(', ', $metadata->reviewededitor));
+        }
+    }
+    $yaml .= "'" . PHP_EOL;
+}
 foreach($metadata as $mkey => $mval) {
     // subelement, yaml, yamlarray, yamllist, yamlblock
     if (!isset($metadata_spec->{$mkey})) { continue; }
