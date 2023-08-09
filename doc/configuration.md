@@ -58,8 +58,8 @@ For example:
         "\\. \\. \\.": "…",
         "\\[\\.\\.\\.\\]": "…",
         "\\[…\\]": "…",
-        "\\b([A-Z])\\. ?([A-Z])\\. ?([A-Z])\\.": "\\1. \\2. \\3.",
-        "\\b([A-Z])\\. ?([A-Z])\\.": "\\1. \\2."
+        "\\b([A-Z])\\. ?([A-Z])\\. ?([A-Z])\\.": "\\1. \\2. \\3.",
+        "\\b([A-Z])\\. ?([A-Z])\\.": "\\1. \\2."
     }
 }
 ```
@@ -76,7 +76,7 @@ In the above, for example, the key `"\\. \\. \\."` is really the regular express
 The value "…" is the single unicode ellipsis symbol.
 This entry under the "`importreplacements`" option specifies that whenever three periods separated by spaces are found in the document, they should be replaced by a single unicode ellipsis when the document is converted.
 
-In a monospaced font, the point of an entry like `"\\b([A-Z])\\. ?([A-Z])\\.": "\\1. \\2."` may be unclear.
+In a monospaced font, the point of an entry like `"\\b([A-Z])\\. ?([A-Z])\\.": "\\1. \\2."` may be unclear.
 This looks for two upper-case initials, such as those occurring in  "`G. E. Moore`".
 On the right side, in between the `\1.` and `\2.` (representing the first and second initial), the space there is a narrow space rather than a full space, so "G. E. Moore" is condensed in the output to "G. E. Moore", which I like better aesthetically.
 

@@ -574,6 +574,11 @@ async function deleteComment() {
     w.submitbutton.updateMe();
 }
 
+function isBadParent(e) {
+    const tN = e.tagName.toLowerCase();
+    return (tN == 'body' || tN == 'main' || tN == 'article');
+}
+
 async function saveComment() {
     const req = {
         requesttype: 'savecomment',
@@ -611,7 +616,7 @@ async function saveComment() {
         req.bodyhtml = htmld.body.innerHTML;
     }
     let wherefound = this;
-    while (wherefound && (wherefound.parentNode != htmld.body)) {
+    while (wherefound && (!isBadParent(wherefound.parentNode))) {
         wherefound = wherefound.parentNode;
     }
     // try to find good determination of position in document

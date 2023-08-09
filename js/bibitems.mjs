@@ -629,11 +629,11 @@ export function addbibitems(itemarray) {
                                 // impose my will universally on initials G. E. / W. V. O.
                                 // note the replacements use a thin space between $1 and $2
                                 if (/^[A-Z]\. ?[A-Z]\.$/.test(nameobj.given)) {
-                                    nameobj.given = nameobj.given.replace(/^([A-Z]\.) ?([A-Z]\.)/,"$1 $2");
+                                    nameobj.given = nameobj.given.replace(/^([A-Z]\.) ?([A-Z]\.)/,"$1 $2");
                                     nf.given.value = nameobj.given;
                                 }
                                 if (/^[A-Z]\. ?[A-Z]\. ?[A-Z]\.$/.test(nameobj.given)) {
-                                    nameobj.given = nameobj.given.replace(/^([A-Z]\.) ?([A-Z]\.) ? ([A-Z]\.)/,"$1 $2 $3");
+                                    nameobj.given = nameobj.given.replace(/^([A-Z]\.) ?([A-Z]\.) ? ([A-Z]\.)/,"$1 $2 $3");
                                     nf.given.value = nameobj.given;
                                 }
                             }
