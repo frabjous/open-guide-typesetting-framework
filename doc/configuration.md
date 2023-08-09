@@ -78,7 +78,7 @@ This entry under the "`importreplacements`" option specifies that whenever three
 
 In a monospaced font, the point of an entry like `"\\b([A-Z])\\. ?([A-Z])\\.": "\\1. \\2."` may be unclear.
 This looks for two upper-case initials, such as those occurring in  "`G. E. Moore`".
-On the right side, in between the `\1.` and `\2.` (representing the first and second initial), the space there is a narrow space rather than a full space, so "G. E. Moore" is condensed in the output to "G. E. Moore", which I like better aesthetically.
+On the right side, in between the `\1.` and `\2.` (representing the first and second initial), the space there is a narrow space rather than a full space, so "G. E. Moore" is condensed in the output to "G. E. Moore", which I like better aesthetically.
 
 These replacements can be removed if unwanted, and more can be added if desired.
 
