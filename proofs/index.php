@@ -621,7 +621,12 @@ async function saveComment() {
     }
     // try to find good determination of position in document
     const bodychildren = {};
-    for (const child of htmld.body.childNodes) {
+    let mainParent = htmld.body;
+    const artart = mainParent.getElementsByTagName("article");
+    if (artart && (artart.length > 0)) {
+        mainParent = artart[0];
+    }
+    for (const child of mainParent.childNodes) {
         if (child.tagName) {
             const tagname = child.tagName.toLowerCase();
             if (!(tagname in bodychildren)) {
