@@ -164,6 +164,10 @@ if ((isset($metadata->author)) && !(isset($metadata->creator))) {
     }
 }
 
+if ((isset($project_settings->title)) && !(isset($metadata->publisher))) {
+    $yaml .= "publisher: '" . mb_ereg_replace("'", "''", $project_settings->title) . "'" . PHP_EOL;
+}
+
 // add universal nocite save yaml
 if ($yaml != '') {
     $yaml .= 'nocite: |' . PHP_EOL . '  @*' . PHP_EOL;
