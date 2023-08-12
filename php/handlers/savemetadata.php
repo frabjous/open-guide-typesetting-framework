@@ -148,6 +148,22 @@ foreach($metadata as $mkey => $mval) {
             PHP_EOL;
     }
 }
+// add epub-esque metadata
+if ((isset($metadata->author)) && !(isset($metadata->creator))) {
+    $yaml .= 'creator:' . PHP_EOL;
+    foreach ($metadata->author as $author) {
+        $yaml .= '- role: author' . PHP_EOL;
+        $yaml .= '  text: ';
+        if (is_string($author)) {
+            $yaml .= $author . PHP_EOL;
+            continue;
+        }
+        if (isset($author->name)) {
+            $yaml .= $author->name . PHP_EOL;
+        }
+    }
+}
+
 // add universal nocite save yaml
 if ($yaml != '') {
     $yaml .= 'nocite: |' . PHP_EOL . '  @*' . PHP_EOL;
