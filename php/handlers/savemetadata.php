@@ -63,10 +63,30 @@ if ((!isset($metadata->title)) &&
         $yaml . ': ' . mb_ereg_replace("'","''", $metadata->reviewedsubtitle);
     }
     if (isset($metadata->reviewedauthor)) {
-        $yaml .= ' by ' .  mb_ereg_replace("'","''", implode(', ', $metadata->reviewedauthor));
+        $yaml .= ' by ';
+        for ($j=0; $j<count($metadata->reviewedauthor); $j++) {
+            if ($j != 0) {
+                if ($j < (count($metadata->reviewedauthor) - 1)) {
+                    $yaml .= ', ';
+                } else {
+                    $yaml .= ' and ';
+                }
+            }
+            $yaml .= mb_ereg_replace("'","''", $metadata->reviewedauthor[$j]);
+        }
     } else {
         if (isset($metadata->reviewededitor)) {
-            $yaml .= ' edited by ' . mb_ereg_replace("'","''", implode(', ', $metadata->reviewededitor));
+            $yaml .= ' edited by ';
+            for ($j=0; $j<count($metadata->reviewededitor); $j++) {
+                if ($j != 0) {
+                    if ($j < (count($metadata->reviewededitor) - 1)) {
+                        $yaml .= ', ';
+                    } else {
+                        $yaml .= ' and ';
+                    }
+                }
+            }
+            $yaml .= mb_ereg_replace("'","''", $metadata->reviewededitor[$j]);
         }
     }
     $yaml .= "'" . PHP_EOL;
