@@ -62,7 +62,7 @@ foreach($project_settings->assignmentTypes as $assignment_type => $assign_type_s
         $filenames = scandir($assignment_dir);
         $filenames = array_values(array_filter($filenames, function($fn) {
             if (in_array($fn, array(
-                '.','..','archived','proofs'
+                '.','..','archived','proofs','editions'
             ))) { return false; }
             return true;
         }));
