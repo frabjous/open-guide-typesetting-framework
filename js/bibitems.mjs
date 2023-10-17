@@ -197,9 +197,13 @@ export function addbibitems(itemarray) {
             innerHTML: '<span class="material-symbols-outlined">' +
                 'delete_forever</span>',
             mybibitem: bibitem,
+            mycard: card,
             parent: bibitem.widgets,
             onclick: function() {
                 this.mybibitem.parentNode.removeChild(this.mybibitem);
+                this.mycard.biblastchanged =
+                    Math.floor((new Date()).getTime()/1000);
+                this.mycard.updatebibbuttons();
             }
         });
         // function to update the label
