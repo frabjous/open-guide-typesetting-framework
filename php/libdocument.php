@@ -51,7 +51,7 @@ function apply_bibitem($markdown, $bibitem) {
         }
         // if there is an end-year
         if ((count($bibitem->issued->{"date-parts"}) > 1) &&
-            (count($bibitem->issues->{"date-parts"}[1]) > 0)) {
+            (count($bibitem->issued->{"date-parts"}[1]) > 0)) {
             $year .= '[-–—]+' . strval($bibitem->issued->{"date-parts"}[1][0]);
         }
     }
