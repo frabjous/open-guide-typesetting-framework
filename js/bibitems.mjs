@@ -640,13 +640,19 @@ export function addbibitems(itemarray) {
                                     nameobj.given = nameobj.given.replace(/^([A-Z]\.) ?([A-Z]\.) ? ([A-Z]\.)/,"$1 $2 $3");
                                     nf.given.value = nameobj.given;
                                 }
-                            }/*
+                            }
+                            /*
                             for (const prtcl of ['von ', 'van ', 'de ', 'del ', 'der ', 'du ']) {
                                 if (family.substr(0, prtcl.length) == prtcl) {
                                     nameobj["non-dropping-particle"] = prtcl.trim();
                                     family = family.substr(prtcl.length);
                                 }
                             }*/
+                            for (const prtcl of ['von ', 'van ', 'de ', 'del ', 'der ', 'du ']) {
+                                if (family.substr(0, prtcl.length) == prtcl) {
+                                    nameobj["non-dropping-particle"] = '';
+                                }
+                            }
                             nameobj.family = family;
                             rv.push(nameobj);
                         }
