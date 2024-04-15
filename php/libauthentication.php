@@ -49,7 +49,7 @@ function load_users($project) {
             }
         }
         if ($userchanged) {
-            $users->{$user}->newpwdlinks = $newlinkarray;
+            $users->{$username}->newpwdlinks = $newlinkarray;
             $changed = true;
         }
     }
