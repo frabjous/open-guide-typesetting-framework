@@ -12,7 +12,7 @@ require_once(dirname(__FILE__) . '/../open-guide-editor/open-guide-misc/pipe.php
 $curl = curl_init();
 
 // fix philpapers' annoying habit of sticking location
-// inside 
+// inside
 function bib_fix($bib) {
     $bib = mb_ereg_replace('publisher = {([^}:]*): ',
         "address = {\\1},\n    publisher = {", $bib);
@@ -42,6 +42,7 @@ function curl_get($url) {
     if (curl_error($curl) != ''){
         error_log(curl_error($curl));
     }
+    error_log('result-------' . $result);
     return $result;
 }
 
