@@ -10,6 +10,8 @@
 require_once(dirname(__FILE__) . '/../open-guide-editor/open-guide-misc/pipe.php');
 
 $curl = curl_init();
+curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36');
+curl_setopt($curl, CURLOPT_REFERER, 'https:/philpapers.org');
 
 // fix philpapers' annoying habit of sticking location
 // inside
@@ -42,7 +44,6 @@ function curl_get($url) {
     if (curl_error($curl) != ''){
         error_log(curl_error($curl));
     }
-    error_log('result-------' . $result);
     return $result;
 }
 
