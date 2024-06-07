@@ -10,8 +10,8 @@
 require_once(dirname(__FILE__) . '/../open-guide-editor/open-guide-misc/pipe.php');
 
 $curl = curl_init();
-curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36');
-curl_setopt($curl, CURLOPT_REFERER, 'https:/philpapers.org');
+curl_setopt($curl, CURLOPT_USERAGENT,  'Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/81.0');
+//curl_setopt($curl, CURLOPT_REFERER, 'https:/philpapers.org');
 
 // fix philpapers' annoying habit of sticking location
 // inside
@@ -160,7 +160,7 @@ Usage: philpapers.php [options] [item1] [item2]
 Options may be:
 --bibtex    : use bibtex mode
 --count [n] : return n entries for each search item, rather than 1
---id        : remaining items will be interepreted as PhilPapers IDs
+--idmode    : remaining items will be interepreted as PhilPapers IDs
 --json      : use csl json mode
 --help      : show this help
 
