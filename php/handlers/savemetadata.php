@@ -60,7 +60,7 @@ if ((!isset($metadata->title)) &&
     isset($metadata->reviewedtitle)) {
     $yaml .= "title: 'Review of " . mb_ereg_replace("'","''", $metadata->reviewedtitle);
     if (isset($metadata->reviewedsubtitle)) {
-        $yaml . ': ' . mb_ereg_replace("'","''", $metadata->reviewedsubtitle);
+        $yaml .= ': ' . mb_ereg_replace("'","''", $metadata->reviewedsubtitle);
     }
     if (isset($metadata->reviewedauthor)) {
         $yaml .= ' by ';
