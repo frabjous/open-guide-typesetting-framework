@@ -1,9 +1,16 @@
-
-# Open Guide Typesetting Framework Documentation
+# Open Guide Typesetting Framework Documentation (PHP Branch)
 
 # Project Configuration and Settings
 
-It may be best to read and make use of this documentation after completing the [installation instructions](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) for the framework.
+## Major Version Change and Supported Platform
+
+As of 0.2.0, the Open Guide Typesetting Framework has transitioned from using php for the server back-end to using a router for ExpressJS-based server-side javascript. However, the older php code is still available in this php branch. If you are interested in the latest version, switch back to the main branch and view its documentation instead.
+
+The documentation in this branch applies to the **php branch only**.
+
+### Note
+
+It may be best to read and make use of this documentation after completing the [installation instructions](./installation.md) for the framework.
 
 ## Projects, Project Directories, and Settings Files
 
@@ -87,7 +94,7 @@ These replacements can be removed if unwanted, and more can be added if desired.
 The remainder of the settings fall under the "`assignmentTypes`" option.
 Each key found under "`assignmentType`" specifies a *type* of document or typesetting assignment used by the project.
 
-For example, he default `project-settings.json` file specifies two assignment types: `article` and `review`, which might be appropriate for a journal that publishes both articles and reviews.
+For example, the default `project-settings.json` file specifies two assignment types: `article` and `review`, which might be appropriate for a journal that publishes both articles and reviews.
 A third, say, `discussion`, could be added.
 
 An anthology might use a `chapter` or `contribution` assignment type instead. 
@@ -118,7 +125,7 @@ For example:
 ```
 
 This should be an HTML string that includes certain metadata fields written in all caps (in this example, "`VOLUME`", "`NUMBER`", "`TITLE`" and "`AUTHOR`").
-This is only used internally in the framework and specifies how the header for a listing for a document of a given type should appear inside the framework in the list of current assignments or archived assignments. 
+This is only used internally in the framework and specifies how the header for a listing for a document of a given type should appear inside the framework in the list of current assignments or archived assignments.
 
 ### `metadata` (assignment type option)
 
@@ -155,7 +162,7 @@ Optionally a `"placeholder"` may also be specified, whose value will appear in t
 If not specified, the label will be used for this purpose.
 
 For `"pandoc"`, there are five possibilities, `"yaml"`, `"yamlblock"`, `"yamlarray"`, `"yamllist"` and `"subelement"`.
-A simple metadata field will use `"yaml"`, which will simply insert the value into the `metadata.yaml` file using its item name followed by a colon followed by the value. 
+A simple metadata field will use `"yaml"`, which will simply insert the value into the `metadata.yaml` file using its item name followed by a colon followed by the value.
 
 `"yamlblock"` should be used instead if the value may consist of multiple lines.
 This will cause the item to be inserted using a "`|`" after the metadata item name and colon with the value of the field following with indented lines.
@@ -416,12 +423,11 @@ As examples, `.epub` files are just zipped `.(x)html` files, and unless a non-de
 Project leaders using the typesetting framework will most likely want to create pandoc templates for both html and LaTeX output, if not additional templates. These templates might make use of additional customized files such as css stylesheets, or LaTeX document packages/document classes. These are the main ways for a project to truly make its output files fit its own style and brand.
 
 The process of creating pandoc templates and related files is outside the scope of this documentation, but the [pandoc documentation on templates](https://pandoc.org/MANUAL.html#templates) is excellent. Even more fine-grained control can be accomplished with [pandoc filters](https://pandoc.org/filters.html) and the like. These are all compatible with the typesetting framework, and the command line flags to use them would simply have to be added to the `"output"` and/or `"createEdition"` options described above.
-<!-- TODO: add link to jhap/og templates when created. maybe fregeifier -->
 
 ## Other Documentation
 
-See also the other documentation files concerning [installation](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) and [regular usage (by editors and typesetters)](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/usage.md).
+See also the other documentation files concerning [installation](./installation.md) and [regular usage (by editors and typesetters)](./usage.md).
 
 ## License
 
-Copyright 2023 © Kevin C. Klement. This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).
+Copyright 2023–2024 © Kevin C. Klement. This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).

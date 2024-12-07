@@ -1,11 +1,16 @@
-
-# Open Guide Typesetting Framework Documentation
+# Open Guide Typesetting Framework Documentation (PHP Branch)
 
 # Installation Instructions (for system administrators)
 
+## Major Version Change and Supported Platform
+
+As of 0.2.0, the Open Guide Typesetting Framework has transitioned from using php for the server back-end to using a router for ExpressJS-based server-side javascript. However, the older php code is still available in this php branch. If you are interested in the latest version, switch back to the main branch and view its [installation documentation](../../main/doc/installation.md) instead.
+
+The documentation in this branch applies to the **php branch only**.
+
 ## Requirements
 
-You will need the following.
+To install the PHP version, you will need the following.
 
 1. A [php](https://www.php.net/)-enabled web server, probably something GNU/Linux based.
    Other Unix-like operating systems like FreeBSD or even MacOS may work, but have not been tested.
@@ -14,7 +19,7 @@ You will need the following.
     Instructions for setting up a standard php-enabled web-server are beyond the scope of this documentation, but there are many guides and tutorials for doing this online for all major linux distributions.
     A MySQL or other database is not needed.
 
-3. You will need to install the programs used in the typesetting, including [pandoc](https://pandoc.org), a TeX distribution such as [texlive](https://tug.org/texlive/), and others. See the [instructions for setting up the Open Guide Editor](https://github.com/frabjous/open-guide-editor/blob/main/doc/installation.md) for the full list of programs it uses by default.
+3. You will need to install the programs used in the typesetting, including [pandoc](https://pandoc.org), a TeX distribution such as [texlive](https://tug.org/texlive/), and others. See the [instructions for setting up the Open Guide Editor](https://github.com/frabjous/open-guide-editor/blob/php/doc/installation.md) for the full list of programs it uses by default.
     The sample settings also make use of [ghostscript](https://www.ghostscript.com/), which often comes bundled with your TeX distribution, and a zip implementation like [info-zip](https://infozip.sourceforge.net/Zip.html), but these are not necessary for basic functionality.
 
    All these programs can likely be installed easily with your linux distribution's package manager.
@@ -28,22 +33,22 @@ You will need the following.
 
 Installing the framework is straightforward.
 
-1. Clone this repository and its submodules somewhere inside the directories served by the webserver. First navigate to such a directory and run:
+1. Clone this repository and its sub-modules somewhere inside the directories served by the webserver. First navigate to such a directory and run:
 
     ```sh
-    git clone --recurse-submodules --depth 1 \
+    git clone --depth 1 --branch php \
         https://github.com/frabjous/open-guide-typesetting-framework.git
-    ```
-
-    This will also install the `open-guide-editor` git submodule and its own `open-guide-misc` submodule.
-
-    Change into the directory created.
-
-    ```sh
     cd open-guide-typesetting-framework
+    git clone --depth 1 --branch php \
+        https://github.com/frabjous/open-guide-editor.git
+    cd open-guide-editor
+    git clone --depth 1 \
+      https://github.com/frabjous/open-guide-misc
+    # return to the main typesetting framework directory
+    cd ..
     ```
 
-2. Follow the instructions for finishing [installing](https://github.com/frabjous/open-guide-editor/blob/main/doc/installation.md) and, if you wish to change the defaults, for [configuring](https://github.com/frabjous/open-guide-editor/blob/main/doc/settings.md), the Open Guide Editor used by the framework. (The `newproject.php` script, mentioned below, will do a minimal job doing this if it detects it hasn't been done already.)
+2. Follow the instructions for finishing [installing](https://github.com/frabjous/open-guide-editor/blob/php/doc/installation.md) and, if you wish to change the defaults, for [configuring](https://github.com/frabjous/open-guide-editor/blob/php/doc/settings.md), the Open Guide Editor (php branch) used by the framework. (The `newproject.php` script, mentioned below, will do a minimal job doing this if it detects it hasn't been done already.)
 
     This script can be run multiple times if you wish to use the same site for multiple projects.
        It can also be removed after use for security reasons.
@@ -88,9 +93,9 @@ If the typesetting framework finds such a script and it defines a function with 
 
 ## Other Documentation
 
-See also the other documentation files concerning [project configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) and [regular usage (by editors and typesetters)](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/usage.md).
+See also the other documentation files concerning [project configuration](./configuration.md) and [regular usage (by editors and typesetters)](./usage.md).
 
 ## License
 
-Copyright 2023 © Kevin C. Klement.
+Copyright 2023–2024 © Kevin C. Klement.
 This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).

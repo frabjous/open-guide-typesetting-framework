@@ -1,5 +1,10 @@
+# Open Guide Typesetting Framework Documentation (PHP Branch)
 
-# Open Guide Typesetting Framework Documentation
+## Major Version Change and Supported Platform
+
+As of 0.2.0, the Open Guide Typesetting Framework has transitioned from using php for the server back-end to using a router for ExpressJS-based server-side javascript. However, the older php code is still available in this php branch. If you are interested in the latest version, switch back to the main branch and view its documentation instead.
+
+The documentation in this branch applies to the **php branch only**.
 
 # Regular Usage (by typesetters and editors)
 
@@ -31,7 +36,7 @@ This is a purely aesthetic choice.
 The "current" page shows a listing of typesetting assignments or documents.
 
 A new document listing can be created by clicking the appropriate “add new …” button for the type of document/typesetting assignment.
-(For more on configuring document types, see the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) documentation.)
+(For more on configuring document types, see the [configuration](./configuration.md) documentation.)
 
 The first step after clicking this button is to fill in the document id field in the top left of the new listing.
 This can be anything unique to the document, a number, identifier, or even a short title, so long as it consists only of letters and digits, and is not already in use.
@@ -47,7 +52,7 @@ Each part is discussed in more detail below.
 Opening the metadata block allows the various metadata fields used by the project for the type of document to be filled in.
 These typically include things such as the title, author, abstract, and more.
 
-Exactly which fields are included and how they work depend on the project configuration; see the [configuration documentation](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md). 
+Exactly which fields are included and how they work depend on the project configuration; see the [configuration documentation](./configuration.md).
 Typically these fields will include all those used within the pandoc template used by the configuration.
 
 Fields left empty are ignored, and usually not all fields are required for every document.
@@ -142,14 +147,14 @@ However, it is possible to make use of plain-text based auxiliary files, such as
 The main document is a markdown file using pandoc's academic-oriented flavor of markdown.
 Editors or typesetters editing the document should be intimately familiar with pandoc's version of markdown. Pandoc's website provides a fairly [comprehensive overview of its markdown](https://pandoc.org/MANUAL.html#pandocs-markdown) in its [user's guide](https://pandoc.org/MANUAL.html).
 
-Those new to the typesetting framework should also consult the [Basic Usage, Buttons and Keybindings](https://github.com/frabjous/open-guide-editor/blob/main/doc/basic-usage.md) section of the documentation for the [Open Guide Editor](https://github.com/frabjous/open-guide-editor/) for information on how to use the editor, including the live-updating preview mechanisms, citation auto-completion, and more.
+Those new to the typesetting framework should also consult the [Basic Usage, Buttons and Keybindings](https://github.com/frabjous/open-guide-editor/blob/php/doc/basic-usage.md) section of the documentation for the [Open Guide Editor (php  branch)](https://github.com/frabjous/open-guide-editor/blob/php/README.md) for information on how to use the editor, including the live-updating preview mechanisms, citation auto-completion, and more.
 
 ## Proofs
 
 When the main document has been edited and is in good enough shape for page proofs to be shared with the author or authors, the Proofs block should be opened and the "create new proof set" button clicked.
 
 This button will make use of the current state of the main document to create all the different file formats specified in the "output" section of the project configuration for the document type.
-(See the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) documentation.)
+(See the [configuration](./configuration.md) documentation.)
 
 The new proof set will be added to a list of all the proof sets that have been created for the document.
 These will be listed by date created, and each will have downloads for the various file formats of the proofs that the project is configured to use.
@@ -171,7 +176,7 @@ This block is to be used when it is time to create a finalized version for publi
 There are two buttons, one for creating a new minor version (which raises the version number by 0.1) and one for creating a new major version (which raises the version to the next whole number, e.g., 1.0).
 Some typesetting projects may only target one published version; others may post new versions periodically, and it is a matter of individual policy what kind of revision should correspond to a minor or major version change.
 
-What files are created during this process depends once again on the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md).
+What files are created during this process depends once again on the [configuration](./configuration.md).
 Typically they will be the same file-types as were produced during the proofs stage, possibly with some post-processing done such as file-size or linearization optimizations.
 The framework can be configured to create a `.zip` file containing all the production files together, which will be listed for download first if created.
 If any of the produced files are plain-text files, a link will be added to view/extract them directly in the publication block.
@@ -186,9 +191,9 @@ The main purpose of archiving is simply to make it easier to find the currently 
 
 ## Other Documentation
 
-See also the other documentation files concerning [installation](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) and [project configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md).
+See also the other documentation files concerning [installation](./installation.md) and [project configuration](./configuration.md).
 
 ## License
 
-Copyright 2023 © Kevin C. Klement.
+Copyright 2023–2024 © Kevin C. Klement.
 This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).

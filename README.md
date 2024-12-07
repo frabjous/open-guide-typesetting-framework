@@ -1,4 +1,4 @@
-# Open Guide Typesetting Framework
+# Open Guide Typesetting Framework (PHP Branch)
 
 ## Introduction
 
@@ -18,6 +18,12 @@ This is a web-based text editor that provides live-updating previews of html- or
 The framework was created to be used by the [*Journal for the History of Analytical Philosophy*](https://jhaponline.org), as well as the forthcoming *Open Guide to Bertrand Russell’s Philosophy*, which I am editing.
 It may be useful to others undertaking similar projects.
 Thus, the framework is being made available open source and free for others to use, modify, and benefit from.
+
+## Major Version Change and Supported Platform
+
+As of 0.2.0, the Open Guide Typesetting Framework has transitioned from using php for the server back-end to using a router for ExpressJS-based server-side javascript. However, the older php code is still available in this php branch. If you are interested in the latest javascript version, switch back to the main branch and view its documentation instead.
+
+The documentation in this branch applies to the **php branch only**.
 
 ## Features
 
@@ -43,11 +49,11 @@ The Open Guide Typesetting Framework provides the following features:
 
 This repository contains additional documentation broken down into three additional files, on the following topics.
 
-* [Installation instructions](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) (for system administrators)
+* [Installation instructions](./doc/installation.md) (for system administrators)
 
-* [Project configuration and settings](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) (for project leaders and/or their technical support helpers)
+* [Project configuration and settings](./doc/configuration.md) (for project leaders and/or their technical support helpers)
 
-* [Regular usage information](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/usage.md) (for editors/typesetters)
+* [Regular usage information](./doc/usage.md) (for editors/typesetters)
 
 Hopefully answers to most questions can be found in the documents linked to above. If not, feel free to contact me.
 
@@ -66,6 +72,6 @@ This is a sequel to an earlier project entitled [journal-tools](https://bitbucke
 
 ## License
 
-Copyright 2023 © [Kevin C. Klement](https://people.umass.edu/klement). This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).
+Copyright 2023–2024 © [Kevin C. Klement](https://people.umass.edu/klement). This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).
 
 The favicon is based on [JS_Icon_Edit_White.svg](https://commons.wikimedia.org/wiki/File:JS_Icon_Edit_White.svg) by [Jstalins](https://commons.wikimedia.org/wiki/User:Stalinsunnykvj), licensed under a [Creative Commons Attribution Share-Alike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/deed.en) license.
