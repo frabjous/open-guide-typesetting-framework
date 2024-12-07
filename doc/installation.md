@@ -35,6 +35,7 @@ Follow these instructions to install the framework. You do not need root access 
 2. You will also need to clone the `open-guide-editor` repository. To install it as a subdirectory of the typesetting framework directory:
 
   ```
+  cd open-guide-typesetting-framework
   git clone --depth 1 https://github.com/frabjous/open-guide-editor.git
   ```
 
