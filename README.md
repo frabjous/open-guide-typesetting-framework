@@ -8,16 +8,20 @@ Web-based academic typesetting framework for open access guides, open access jou
 
 Although it can be configured to use other tools (additionally), it is primarily designed for typesetting academic works using [pandoc](https://pandoc.org/), and other open source tools like LaTeX.
 The framework makes use of the flexibility of pandoc's academic-oriented flavor of markdown in its source documents.
-These can in turn be used to create high-quality output production files in many different file formats.
+This can in turn be used to create high-quality output production files in many different file formats.
 Output formats can include typographically sophisticated pdfs, as well as more accessible formats such as html/web pages, and others such as ePub, for the distribution of academic publications in many forms and modalities.
 
-The framework includes the [Open Guide Editor](https://github.com/frabjous/open-guide-editor) as a submodule, to be used in the typesetting process.
+The framework employs the [Open Guide Editor](https://github.com/frabjous/open-guide-editor) to be used in the typesetting process.
 This is a web-based text editor that provides live-updating previews of html- or pdf-based output formats (or both) for the source file being edited.
 (A video showing its capabilities can be found on its GitHub page through the link just given.)
 
 The framework was created to be used by the [*Journal for the History of Analytical Philosophy*](https://jhaponline.org), as well as the forthcoming *Open Guide to Bertrand Russell’s Philosophy*, which I am editing.
 It may be useful to others undertaking similar projects.
 Thus, the framework is being made available open source and free for others to use, modify, and benefit from.
+
+## Major Version Change
+
+As of version 0.2.0, the Open Guide Typesetting Framework makes use of a router for [ExpressJS](https://expressjs.com) (or compatible) web servers, running on a javascript runtime such as [NodeJS](https://nodejs.org), for its server back-end. Previous versions used php instead. The php code is still available in this repository in the php branch. See [its corresponding documentation](https://github.com/frabjous/open-guide-typesetting-framework/blob/php/README.md) for more information.
 
 ## Features
 
@@ -43,21 +47,20 @@ The Open Guide Typesetting Framework provides the following features:
 
 This repository contains additional documentation broken down into three additional files, on the following topics.
 
-* [Installation instructions](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) (for system administrators)
+* [Installation instructions](./doc/installation.md) (for system administrators)
 
-* [Project configuration and settings](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) (for project leaders and/or their technical support helpers)
+* [Project configuration and settings](./doc/configuration.md) (for project leaders and/or their technical support helpers)
 
-* [Regular usage information](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/usage.md) (for editors/typesetters)
+* [Regular usage information](./doc/usage.md) (for editors/typesetters)
 
 Hopefully answers to most questions can be found in the documents linked to above. If not, feel free to contact me.
 
 ## TODO / Roadmap
 
 The framework is mostly feature-complete at this point, at least for my own use cases.
-However, more beta testing and bug fixing may be needed at this stage.
+However, more beta testing and bug fixing may be needed.
 Pull requests for expansions for other use cases are welcome.
 There are also areas for improvement, especially with regard to bibliographic management and automated interaction with bibliographic databases.
-Improvements will hopefully be implemented at some point.
 Feature requests and bug reports can be posted here on GitHub.
 
 ## Trivia
@@ -66,6 +69,6 @@ This is a sequel to an earlier project entitled [journal-tools](https://bitbucke
 
 ## License
 
-Copyright 2023 © [Kevin C. Klement](https://people.umass.edu/klement). This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).
+Copyright 2023–2024 © [Kevin C. Klement](https://people.umass.edu/klement). This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).
 
 The favicon is based on [JS_Icon_Edit_White.svg](https://commons.wikimedia.org/wiki/File:JS_Icon_Edit_White.svg) by [Jstalins](https://commons.wikimedia.org/wiki/User:Stalinsunnykvj), licensed under a [Creative Commons Attribution Share-Alike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/deed.en) license.

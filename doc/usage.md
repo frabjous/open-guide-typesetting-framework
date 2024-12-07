@@ -6,10 +6,10 @@
 ## Logging in
 
 Typically a user is added to the system by another user.
-The new user is sent a link allowing them to choose a password for the site.
+If email is enabled, the new user is sent a link allowing them to choose a password for the site.
 If a new user has not visited the site yet, or has not chosen to be remembered between visits, they will need to log in (and possibly choose what project to log in to) when first visiting the page.
 This is done through a typical username/login form.
-There is an option that allows a user to be remembered indefinitely by the site on a given device.
+There is an option that allows a user to be remembered by the site on a given device.
 Forgotten passwords can also be reset for existing users.
 
 ## Top Navigation and User Maintenance
@@ -31,7 +31,7 @@ This is a purely aesthetic choice.
 The "current" page shows a listing of typesetting assignments or documents.
 
 A new document listing can be created by clicking the appropriate “add new …” button for the type of document/typesetting assignment.
-(For more on configuring document types, see the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) documentation.)
+(For more on configuring document types, see the [configuration](./configuration.md) documentation.)
 
 The first step after clicking this button is to fill in the document id field in the top left of the new listing.
 This can be anything unique to the document, a number, identifier, or even a short title, so long as it consists only of letters and digits, and is not already in use.
@@ -47,7 +47,7 @@ Each part is discussed in more detail below.
 Opening the metadata block allows the various metadata fields used by the project for the type of document to be filled in.
 These typically include things such as the title, author, abstract, and more.
 
-Exactly which fields are included and how they work depend on the project configuration; see the [configuration documentation](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md). 
+Exactly which fields are included and how they work depend on the project configuration; see the [configuration documentation](./configuration.md).
 Typically these fields will include all those used within the pandoc template used by the configuration.
 
 Fields left empty are ignored, and usually not all fields are required for every document.
@@ -57,12 +57,11 @@ Values may be added or removed using the plus and minus buttons below the fields
 Markdown syntax such as asterisks and underscores may be used in metadata fields.
 
 Click the “save metadata” button at the bottom of the block to save the metadata.
-This will create (or edit) files named `metadata.json` and `metadata.yaml` in the document’s directory.
+This will create (or modify) files named `metadata.json` and `metadata.yaml` in the document’s directory.
 The latter is of the right form to be used with pandoc’s `--metadata-file` option.
 
 Saving the metadata will usually close the block but it can be reopened if need be.
 Changes to the metadata can be made later, and once saved, should be applied to any new processing of the document if everything is configured in a typical way.
-
 
 ## Uploads
 
@@ -86,22 +85,17 @@ More details on what it does can be found below.
 The other is an upload button for a separate structured bibliographic file such as a BibTeX `.bib` file, though other formats supported by pandoc's conversion methods are also allowed (`.ris`, Endnote `.xml` files, and CSL `.yaml` or `.json` files).
 These files will be converted into the format used by the framework and their entries will be added to the bibliographic listing below.
 
-The "extract" button takes each entry from the converted free-form bibliography and uses that text to search an online database.
-Currently only PhilPapers is supported but this may change.
-The process is deliberately made slow, so as not to overwhelm the database server it interacts with, or make it suspect a denial of service attack.
+The "extract" button takes each entry from the free-form bibliography found in the main upload, and parses it using the [anystyle](https://anystyle.io) ruby gem if installed on the server.
+This parser is far from perfect, and each parsed entry should be carefully checked for correctness and fixed if need be.
+It is also possible to enter an ID for a PhilPapers record, which can be used to import the bibliographic information from its database.
 PhilPapers uses IDs which are typically 5 or 6 uppercase letters, and are somewhat random, though the first three letters often match the author's name, and the following letters often have something to do with the title, but this is not consistent.
 These five or six digits are often followed by a hyphen and a number.
 These IDs can be found at the end of the URL when visiting a certain work's page on the PhilPapers site.
-The extraction process finds up to the top five matching PhilPapers IDs for each entry, and from them selects one (usually the first) and downloads a bibliographic record for it, and uses it to populate a listing in the Bibliography block.
-This process is currently very error prone, though I hope to make improvements.
-
-After extraction, each entry should be checked carefully.
-There is a drop-down list of the other PhilPapers IDs found in the search in the upper left of each converted listing, as well as an input field for inputting a new one, and a button for redoing the import.
 It is recommended that you have PhilPapers open in another window or tab when working on the bibliography.
-If possible, it's best to make changes and additions on PhilPapers itself, and then redo the import, if information is missing or incorrect, as this benefits everyone in the profession.
-However, entries can also be manually edited in the framework, and new ones inserted using the button at the bottom.
+If PhilPapers is used, it's best to make changes and additions on PhilPapers itself before import if information is missing or incorrect, as this benefits everyone in the profession.
+Currently only PhilPapers is supported for manual import but this may change.
 
-The format of the bibliographic entries is based on what is supported by [Citation Style Language](https://citationstyles.org/) (CSL). 
+The format of the bibliographic entries is based on what is supported by [Citation Style Language](https://citationstyles.org/) (CSL).
 When the bibliography is saved, it is saved as a [CSL JSON](https://citeproc-js.readthedocs.io/en/latest/csl-json/markup.html) file (`bibliography.json`) which is supported by pandoc's implementation of the [citeproc](https://github.com/jgm/citeproc) citation processor library.
 CSL supports many different types of bibliographic entries, and the different types of entries support many different kinds of fields.
 When the "type" of entry is chosen, the most common fields for the most common types of entries used in philosophy (at the top of the list of choices) are added to the listing, though other types of entries can also be used with more manual effort, and additional fields can be added with the drop-down at the bottom of the entry if needed.
@@ -118,7 +112,7 @@ The "id" field is what is used for citations in the markdown document.
 See the [citations section in the pandoc user's guide](https://pandoc.org/MANUAL.html#citations) for more information on its citation methods.
 
 The optional (and usually unused) "abbreviation" field is not a CSL field but a place to indicate that the work in question is referred to in the text with an abbreviation rather than by means of the usual author-date citations.
-When the bibliography is applied, an attempt will be made to link any occurrences of the abbreviation in the document to the appropriate bibliography entry.
+When the bibliography is applied, an attempt will be made to link any occurrences of the abbreviation in the document to the corresponding bibliography entry.
 
 When all items in the list have been checked and any missing or erroneous information supplied or fixed, click the "save bibliography" button at the bottom of the block.
 In addition to saving the bibliography on the server, this will also enable another button labelled "apply to document".
@@ -149,15 +143,15 @@ Those new to the typesetting framework should also consult the [Basic Usage, But
 When the main document has been edited and is in good enough shape for page proofs to be shared with the author or authors, the Proofs block should be opened and the "create new proof set" button clicked.
 
 This button will make use of the current state of the main document to create all the different file formats specified in the "output" section of the project configuration for the document type.
-(See the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) documentation.)
+(See the [configuration](./configuration.md) documentation.)
 
 The new proof set will be added to a list of all the proof sets that have been created for the document.
-These will be listed by date created, and each will have downloads for the various file formats of the proofs that the project is configured to use.
+These are listed by date created, and each has downloads for the various file formats of the proofs that the project is configured to use.
 There will also be two links, an "editor link" and an "author link".
 Typically, the editor creating the proofs should first visit the proofs page with the editor link, and add any "query"-type comments to the proofs.
 They should then send the "author link" (right click the link to copy the link url) to the authors to invite them to view the proofs.
 The authors can add comments and corrections to the proofs, and then submit them when completed.
-This will trigger an email to be sent to the editor who created the proofs.
+If an email script is enabled, this will also trigger an email to be sent to the editor who created the proofs.
 The editor should then revisit the proofs page with the editor link and view the comments and corrections.
 They should then reopen the "Edit document" section and make any necessary changes.
 Depending on circumstances, another proof set may need to be generated afterwards, or it may be time to move on to the next step.
@@ -171,7 +165,7 @@ This block is to be used when it is time to create a finalized version for publi
 There are two buttons, one for creating a new minor version (which raises the version number by 0.1) and one for creating a new major version (which raises the version to the next whole number, e.g., 1.0).
 Some typesetting projects may only target one published version; others may post new versions periodically, and it is a matter of individual policy what kind of revision should correspond to a minor or major version change.
 
-What files are created during this process depends once again on the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md).
+What files are created during this process depends once again on the [configuration](./configuration.md).
 Typically they will be the same file-types as were produced during the proofs stage, possibly with some post-processing done such as file-size or linearization optimizations.
 The framework can be configured to create a `.zip` file containing all the production files together, which will be listed for download first if created.
 If any of the produced files are plain-text files, a link will be added to view/extract them directly in the publication block.
@@ -186,9 +180,9 @@ The main purpose of archiving is simply to make it easier to find the currently 
 
 ## Other Documentation
 
-See also the other documentation files concerning [installation](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) and [project configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md).
+See also the other documentation files concerning [installation](./installation.md) and [project configuration](./configuration.md).
 
 ## License
 
-Copyright 2023 © Kevin C. Klement.
+Copyright 2023–2024 © Kevin C. Klement.
 This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).

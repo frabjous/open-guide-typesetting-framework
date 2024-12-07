@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Open Guide Typesetting Proofs">
+<meta name="author" content="Kevin C. Klement">
+<meta name="copyright" content="Copyright 2023–2024 © Kevin C. Klement">
+<meta name="keywords" content="academic,typesetting,journal,anthology,guide,pages,proofs">
+<meta name="dcterms.date" content="2024-12-03">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="shortcut icon" href="/⟨urlbase⟩/public/favicon.ico" type="image/x-icon">
+<title>Page Proofs | ⟨projecttitle⟩</title>
+<link rel="stylesheet" type="text/css" href="/⟨urlbase⟩/public/shared.css">
+<style>
+
+body {
+  font-family: var(--ogtffont-family);
+  font-size: 18px;
+  background-color: var(--ogtfbg);
+  color: var(--ogtffg);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100vh;
+  width: 100vw;
+  max-height: 100vh;
+  max-width: 100vw;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+header {
+  flex-shrink: 0;
+  background-color: var(--ogtfpanelbg);
+  border-bottom: 1px ridge var(--ogtfprimary);
+  padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+  user-select: none;
+}
+main {
+  flex-grow: 1;
+  background-color: white;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0px;
+}
+footer {
+  border-top: 1px ridge var(--ogtfprimary);
+  background-color: var(--ogtfpanelbg);
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  user-select: none;
+}
+footer p {
+  margin: 0;
+}
+a, a:link, a:visited {
+  text-decoration: none;
+  color: var(--ogtfprimary);
+}
+a:hover, a:link:hover, a:visited:hover {
+  color: var(--ogtfprimary-hover);
+  text-decoration: underline;
+}
+#projecthdr #projectname {
+  color: var(--ogtfprimary);
+}
+#projecthdr #tsf {
+  float: right;
+}
+#commoncontainer {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+}
+
+#instructionsholder,
+#pdfholder,
+#htmlholder {
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#instructionsholder {
+  overflow: auto;
+}
+
+#htmlholder {
+  overflow: auto;
+}
+
+#pdfproofs {
+  background-color: #4d606d;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  overflow-x: scroll;
+  overflow-y: auto;
+}
+/* pdf parent is what should grow and shrink with zoom */
+#pdfparent {
+  width: ⟨pdfparentstart⟩px;
+  margin: auto;
+}
+#pdfpages {
+  display: inline-block;
+  width: 96%;
+}
+#pdfproofs #pdfpages div.pdfpage {
+  background-color: white;
+  display: inline-block;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+#pdfproofs div.pdfpage img {
+  width: 100%;
+}
+iframe {
+  border: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+
+#pdfholder, #htmlholder, #instructionsholder {
+  display: none;
+}
+
+body.instructions #instructionsholder,
+body.html #htmlholder,
+body.pdf #pdfholder {
+  display: block;
+}
+
+#toppanel #viewselector {
+  float: left;
+}
+
+#toppanel #rightbuttons {
+  float: right;
+}
+
+#toppanel #rightbuttons #submitbutton,
+#toppanel div.viewoption {
+  padding: 0.2rem 0.8rem;
+  border: 2px solid var(--ogtfinactive);
+  color: var(--ogtfinactive);
+  border-radius: 1.5rem;
+  margin-left: 0.5rem;
+}
+
+#toppanel div.viewoption {
+  cursor: pointer;
+}
+
+#toppanel #rightbuttons #submitbutton.lookatme {
+  border: 2px solid var(--ogtfprimary);
+  color: var(--ogtffg);
+  cursor: pointer;
+  animation-name: showoff;
+  animation-duration: 0.7s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+}
+
+#toppanel #rightbuttons #submitbutton.submitting {
+  border: 2px solid var(--ogtfprimary);
+  color: var(--ogtffg);
+}
+
+#toppanel #rightbuttons #submitbutton.lookatme:hover,
+#toppanel div.viewoption:hover {
+  background-color: var(--ogtfbg);
+  color: var(--ogtfprimary);
+}
+
+body.instructions #toppanel div.viewoption.instructions,
+body.html #toppanel div.viewoption.html,
+body.pdf #toppanel div.viewoption.pdf {
+  color: var(--ogtffg);
+  border: 2px solid var(--ogtfprimary-hover);
+  background-color: var(--ogtfbg);
+  cursor: default;
+}
+
+#toppanel {
+  text-align: center;
+}
+
+#toppanel div {
+  display: inline-block;
+}
+
+#instructions {
+  padding: 2rem;
+}
+
+#instructionscore {
+  max-width: 40rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+  text-align: left;
+}
+
+#instructionscore img {
+  width: 35rem;
+  max-width: 100%;
+  border: 0.5px solid var(--ogtfinactive);
+}
+
+body #toppanel div.pdfonly {
+  display: none;
+}
+
+body.pdf #toppanel div.pdfonly {
+  display: inline-block;
+}
+
+#toppanel div.pdfbuttons {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#toppanel #rightbuttons div.downloadbutton,
+#toppanel div.pdfbuttons div.pdfbutton {
+  position: relative;
+  top: 0.3rem;
+  font-size: 140%;
+  color: var(--ogtfprimary);
+  cursor: pointer;
+}
+
+#toppanel #rightbuttons div.downloadbutton {
+  margin-left: 0.3rem;
+}
+
+
+#toppanel div.pdfbuttons div.pdfbutton {
+  margin-right: 0.5rem;
+}
+
+#toppanel #rightbuttons div.downloadbutton:hover,
+#toppanel div.pdfbuttons div.pdfbutton:hover {
+  color: var(--ogtfprimary-hover);
+}
+
+#toppanel input#pagejump {
+  width: 5.3rem;
+  padding: 0.3rem;
+  text-align: center;
+  margin-right: 0.4rem;
+}
+
+div.pdfpage {
+  position: relative;
+}
+
+div.pdfpage img {
+  user-select: none;
+  user-drag: none;
+}
+
+div.pdfpage .pdfcommentmarker {
+  border: 0.5px solid rgba(200, 200, 200, 0.5);
+}
+
+div.pdfpage .pdfcommentmarker.drawing {
+  background-color: var(--ogtfpurple);
+}
+
+body.editormode .pdfcommentmarker.drawing {
+  background-color: var(--ogtfgreen);
+}
+
+.pdfcommentmarker.deletion {
+  background-color: var(--ogtfpink);
+}
+
+.pdfcommentmarker.insertion {
+  background-color: var(--ogtfbluey);
+}
+
+.pdfcommentmarker.comment {
+  background-color: var(--ogtfyellow);
+}
+
+.pdfcommentmarker.query {
+  background-color: var(--ogtfgreen);
+}
+
+div#errormessage {
+  display: none;
+  background-color: var(--ogtfpink);
+  padding: 0.5rem;
+  border: 2px solid var(--ogtfred);
+  color: var(--ogtffg);
+}
+
+div#errormessage > span {
+  color: var(--ogtfred);
+}
+
+div#errormessage.okmsg {
+  border: 2px solid var(--ogtfprimary);
+  background-color: var(--ogtfpanelbg);
+}
+</style>
+
+<script>
+window.accesskey = '⟨key⟩';
+window.projectname = '⟨project⟩';
+window.urlbase = '⟨urlbase⟩';
+window.username = '⟨username⟩';
+window.assignmentId = '⟨assignmentId⟩';
+window.assignmentType = '⟨assignmentType⟩';
+window.proofset = '⟨proofset⟩';
+window.iseditor = ⟨iseditor⟩;
+window.usehtml = ⟨usehtml⟩;
+window.pdfpp = ⟨pdfpages⟩;
+window.downloads = ⟨downloads⟩;
+window.pdfzoom = ⟨pdfparentstart⟩;
+window.savedcomments = ⟨commentsjson⟩;
+window.starton = ⟨starton⟩;
+</script>
+
+<script type="module" src="/⟨urlbase⟩/public/js/proofs.mjs"></script>
+
+</head>
+<body⟨editorclass⟩>
+  <header>
+    <div id="projecthdr">
+      <div id="tsf">
+        typesetting framework
+      </div>
+      <div id="projectname">⟨projecttitle⟩</div>
+    </div>
+    <div id="toppanel">
+    </div>
+  </header>
+  <main>
+    <div id="commoncontainer">
+      <div id="instructionsholder">
+        <div id="instructions">
+          <div id="errormessage"></div>
+          <div id="instructionscore">
+            <h1>Instructions</h1>
+⟨editoronlyinstructions⟩
+⟨htmlonlyinstructions⟩
+⟨pdfonlyinstructions⟩
+<h2>Submitting your comments and corrections</h2>
+<p>
+When comments and corrections have been made, and all of them have been saved, you can click the flashing “submit” button in the upper right of the screen.
+(If it is not enabled, most likely there is a comment that has not yet been saved.
+Make sure they are all saved⟨onboth⟩ before submitting.)
+When changes and comments are submitted, the editor who created the proofs is notified by email.
+</p>
+
+<p>
+You can make further changes by revisiting the page later on with the same url. You can also wait until a subsequent visit to submit your comments to the editors if you are not ready yet to submit. Simply make sure that any comments/corrections you wish to preserve are saved before doing so.
+</p>
+
+<h2>Downloads</h2>
+<p>
+You can download (clean) files of the proofs by clicking the small icons in the upper right part of the screen.
+These may include other file formats that cannot be previewed in this browser window.
+</p>
+
+<h2>Problems or questions</h2>
+<p>
+If you have trouble with the site, please contact either the editor who emailed you the link, or the project site administrator⟨contactinfo⟩.
+</p>
+          </div>
+        </div>
+      </div>
+      <div id="htmlholder">
+        <iframe id="htmlproofs" ⟨htmlsrc⟩>
+        </iframe>
+      </div>
+      <div id="pdfholder">
+        <div id="pdfproofs">
+          <div id="pdfparent">
+            <div id="pdfpages">
+              ⟨pdfpagedivs⟩
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p><small>The Open Guide Typesetting Framework is Copyright
+      2023–2024 © <a href="https://people.umass.edu/klement"
+      target="_blank">Kevin C. Klement</a>. This is free software,
+      which can be redistributed and/or modified under the terms of the
+      <a href="https://www.gnu.org/licenses/gpl.html" target="_blank">
+      GNU General Public License (GPL), version 3</a>. See the <a
+      href="https://github.com/frabjous/open-guide-typesetting-framework"
+      target="_blank">project github page</a> for more information.
+    </small></p>
+  </footer>
+</body>
+</html>

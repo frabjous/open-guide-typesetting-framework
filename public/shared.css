@@ -1,0 +1,375 @@
+@charset 'UTF-8';
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Material+Symbols+Outlined');
+:root {
+  --ogtffont-family: 'Nunito Sans', 'Roboto', 'Noto Sans', 'TeX Gyre Heros', 'Arimo', 'Helvetica', 'Arial', sans-serif;
+  --ogtfprimary: hsl(195, 90%, 32%);
+  --ogtfprimary-hover: hsl(195, 90%, 42%);
+  --ogtfpanelbg: rgba(89, 107, 120, 0.125);
+  --ogtfinactive: hsl(205, 10%, 50%);
+  --ogtffg: hsl(205, 30%, 15%);
+  --ogtfbg: hsl(205, 20%, 94%);
+  --ogtfred: #c62828;
+  --ogtfpurple: rgb(148,0,255,0.3);
+  --ogtfgreen: rgb(87,180,71,0.3);
+  --ogtfpink: rgba(255,20,189,0.2);
+  --ogtfbluey: rgb(10,132,255,0.3);
+  --ogtfyellow: rgb(255,255,81,0.3);
+}
+
+@keyframes showoff {
+  from {background-color: var(--ogtfyellow);}
+  to {background-color: var(--ogtfbluey);}
+}
+
+@keyframes spin {
+  from {transform:rotate(0deg);}
+  to {transform:rotate(360deg);}
+}
+
+.rotating {
+  animation: spin 1.8s infinite linear;
+}
+
+.proofsetaddition {
+  all: unset;
+  font-family: var(--ogtffont-family);
+  font-size: 18px;
+  background-color: var(--ogtfbg);
+  color: var(--ogtffg);
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  text-indent: 0px;
+}
+
+.commentselectorholder {
+  display: inline-block;
+  position: absolute;
+  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.commentselector {
+  white-space: nowrap;
+}
+
+.commentselector div {
+  display: inline-block;
+}
+
+.commentselector .commenttype {
+  padding: 0.2rem;
+  border: 1px solid var(--ogtfinactive);
+  cursor: pointer;
+  border-radius: 0.2rem;
+  margin: 0.2rem;
+}
+
+.commentselector .commenttype.del {
+  text-decoration: line-through;
+  text-decoration-color: var(--ogtfred);
+  background-color: var(--ogtfpink);
+}
+
+.commentselectorholder.noselection .commentselector .commenttype.del {
+  display: none;
+}
+
+.commentselector .commenttype.ins {
+  background-color: var(--ogtfbluey);
+  display: none;
+}
+
+.pdfpage .commentselector .commenttype.ins {
+  display: inline-block;
+}
+
+.commentselectorholder.noselection .commentselector .commenttype.ins {
+  display: inline-block;
+}
+
+.commentselector .commenttype.comment {
+  background-color: var(--ogtfyellow);
+}
+
+.commentselector .commenttype.query {
+  background-color: var(--ogtfgreen);
+}
+
+body.editormode .commentselector .commenttype.ins,
+body.editormode .pdfpage .commentselector .commenttype.ins,
+body.editormode .commentselectorholder.noselection .commentselector .commenttype.ins,
+body.editormode .commentselector .commenttype.del,
+body.editormode .commentselector .commenttype.comment {
+  display: none;
+}
+
+.commentselector .commentselectorcancel {
+  cursor: pointer;
+  color: var(--ogtfred);
+  position: relative;
+  top: 0.4rem;
+}
+
+.commentselector .commenttype:hover,
+.commentselector .commenttype.del:hover,
+.commentselector .commenttype.ins:hover,
+.commentselector .commenttype.comment:hover {
+  background-color: var(--ogtfbg);
+  border: 1px solid var(--ogtfprimary-hover);
+}
+
+span.htmlcommentmarker {
+  display: inline-block;
+}
+
+span.innermarker {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+span.visiblemarker {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  z-index: 50;
+  display: inline-block;
+  left: -10px;
+  top: -20px;
+}
+
+span.visiblemarker.query {
+  background-color: var(--ogtfgreen);
+}
+
+span.visiblemarker.comment {
+  background-color: var(--ogtfyellow);
+}
+
+.commentwidget {
+  position: absolute;
+  display: inline-block;
+  background-color: var(--ogtfbg);
+  bottom: 100%;
+  left: -1rem;
+  opacity: 1;
+  z-index: 200;
+}
+
+.commentwidget.underneath {
+  background-color: var(--ogtfbg);
+  top: 100%;
+  bottom: auto;
+}
+
+.commentwidget.pushleft {
+  background-color: var(--ogtfbg);
+  right: -1rem;
+  left: auto;
+}
+
+.commentwidget.minimized,
+.commentwidget.minimized.underneath,
+.commentwidget.minimized.pushleft {
+  background-color: transparent;
+  left: -1rem;
+  top: -0.8rem;
+  bottom: auto;
+  right: auto;
+  z-index: 100;
+}
+
+span.htmlcommentmarker .commentwidget.minimized,
+span.htmlcommentmarker .commentwidget.minimized.underneath,
+span.htmlcommentmarker .commentwidget.minimized.pushleft {
+  top: -1.5rem;
+}
+
+.commentwidget span.minimizemarker {
+  display: none;
+  color: var(--ogtfprimary);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.commentwidget.minimized span.minimizemarker {
+  display: inline-block;
+}
+
+.commentwidget.minimized span.minimizemarker:hover {
+  color: var(--ogtfprimary-hover);
+}
+
+.commentwidget.selecting {
+  padding: 0.5rem 2rem 0.5rem 2rem;
+  border-radius: 2rem;
+}
+
+.commentwidget.deletion,
+.commentwidget.insertion,
+.commentwidget.comment,
+.commentwidget.query {
+  border-radius: 1rem;
+}
+
+span.commentform {
+  width: 18rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  text-align: left;
+  display: block;
+}
+
+.commentwidget.minimized span.commentform {
+  display: none;
+}
+
+span.commentform label {
+  display: block;
+}
+
+span.commentformaddressedarea {
+  display: none;
+}
+
+body.editormode span.commentform span.commentformaddressedarea {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+body.editormode span.commentform span.commentformaddressedarea input {
+  height: 1.2rem; width: 1.2rem;
+  margin: 0;
+}
+
+span.commentform label.commentformaddressedlabel {
+  padding-left: 0.5rem;
+  display: inline;
+}
+
+span.commentform textarea {
+  resize: none;
+  width: 100%;
+  box-sizing: border-box;
+  height: 4rem;
+  font-family: var(--ogtffont-family);
+}
+
+span.commentform.query {
+  background-color: var(--ogtfgreen);
+}
+
+span.commentform.comment {
+  background-color: var(--ogtfyellow);
+}
+
+span.commentform.insertion {
+  background-color: var(--ogtfbluey);
+}
+
+span.commentform.deletion {
+  background-color: var(--ogtfpink);
+}
+
+span.commentform.query .ins,
+span.commentform.query .del,
+span.commentform.comment .del,
+span.commentform.comment .response,
+span.commentform.comment .ins,
+span.commentform.deletion .response,
+span.commentform.insertion .del,
+span.commentform.insertion .response {
+  display: none;
+}
+
+span.commentform span.commentformbuttons {
+  display: block;
+  width: 100%;
+  user-select: none;
+}
+
+span.commentform span.commentformbuttons span.commentformbutton {
+  color: var(--ogtfprimary);
+  display: inline-block;
+  cursor: pointer;
+}
+
+span.commentform span.commentformbuttons span.commentformbutton:hover {
+  color: var(--ogtfprimary-hover);
+}
+
+span.commentform span.commentformbuttons span.commentformbutton.disabled:hover,
+span.commentform span.commentformbuttons span.commentformbutton.disabled {
+  cursor: default;
+  color: var(--ogtfdisabled);
+}
+
+span.commentform.saving span.commentformbuttons span.commentformbutton.savebutton {
+  cursor: default;
+}
+
+span.commentform.saving span.commentformbuttons span.commentformbutton.savebutton:hover {
+  color: var(--ogtfprimary);
+}
+
+span.commentform span.commentformbuttons span.commentformbutton span.material-symbols-outlined {
+  position: relative;
+  top: 0.3rem;
+}
+
+span.commentform.query span.commentformbuttons span.commentformbutton.removebutton {
+  display: none;
+}
+
+body.editormode span.commentform.query span.commentformbuttons span.commentformbutton.removebutton {
+  display: inline-block;
+}
+
+
+span.commentform span.commentformbuttons span.commentformbutton.removebutton {
+  color: var(--ogtfred);
+}
+
+span.commentform.unsaved span.commentformbuttons span.commentformbutton.minimize {
+  display: none;
+}
+
+span.commentform span.commentformbuttons span.commentformrightbuttons {
+  float: right;
+  display: inline-block;
+}
+
+span.commentform span.commentformbuttons span.commentformleftbuttons {
+  float: left;
+  display: inline-block;
+}
+
+span.commentform br {
+  clear: both;
+}
+
+.ogtfchange.ogtfquery {
+  background-color: var(--ogtfgreen);
+}
+
+.ogtfchange.ogtfcomment {
+  background-color: var(--ogtfyellow);
+}
+
+del.ogtfchange {
+  background-color: var(--ogtfpink);
+  text-decoration: line-through;
+  text-decoration-color: var(--ogtfred);
+  text-decoration-thickness: 0.1em;
+}
+
+ins.ogtfchange {
+  background-color: var(--ogtfbluey);
+}
+

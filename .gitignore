@@ -1,3 +1,9 @@
+open-guide-editor/
+node_modules/
+package-lock.json
 settings.json
+oge-settings.json
+README.html
+README.pdf
 doc/*.html
 doc/*.pdf

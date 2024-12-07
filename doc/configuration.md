@@ -3,32 +3,32 @@
 
 # Project Configuration and Settings
 
-It may be best to read and make use of this documentation after completing the [installation instructions](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) for the framework.
+It may be best to read and make use of this documentation after completing the [installation instructions](./installation.md) for the framework.
 
 ## Projects, Project Directories, and Settings Files
 
-Each installation site of the typesetting framework must host one or more "projects".
+Each installation site of the typesetting framework hosts one or more "projects".
 A "project" could be a journal, or an anthology, an online guide, or similar.
 Each login account and typesetting assignment will be attached to a project.
-A first (or additional) project can be created by running the `newproject.php` script in the `php` subdirectory of the cloned git repo from the command line.
+A first (or additional) project can be created by running the `newproject.mjs` script in the `cli` subdirectory of the cloned git repo from the command line.
 
 ```sh
-php php/newproject.php
+node cli/newproject.mjs
 ```
 
 Answer the prompts in the terminal to complete the process.
 
 Each project has its own subdirectory of the site's data directory (using its "short name").
-Projects can also be created by simply copying an existing project subdirectory to create another subdirectory with a different name, and editing its settings.
+Projects can also be created by simply copying an existing project subdirectory to create another subdirectory with a different name, and editing its settings files.
 
 Inside each project's subdirectory is a file, "`project-settings.json`", which is where the settings for each project are configured, and customizations should be made.
-If the project was created with the `newproject.php` script, this file will begin as a near-clone of the `sample-project-settings-journal.json` file found in the main directory of the git repo. 
+If the project was created with the `newproject.mjs` script, this file will begin as a near-clone of the `sample-project-settings-journal.json` file found in the `sample/` subdirectory of the git repo.
 These settings are appropriate for a journal.
 
 For any other kind of project, and most likely even for a journal, the `project-settings.json` file should be edited and customized for the actual project.
-Most of the rest of this documentation file describes what it is in `project-settings.json` and how it can be tweaked.
+Most of the rest of this documentation file describes what is in `project-settings.json` and how it can be tweaked.
 
-Consult the file itself (or the sample file) to see its full structure, as this documentation will only show some parts at a time.
+Consult the file itself (or the sample file) to see its full structure. This documentation only shows certain parts at a time.
 
 ## Title, Contact Name and Contact Email
 
@@ -36,16 +36,16 @@ For example:
 
 ```json
 {
-    "title": "Journal of Something",
-    "contactname": "Sydney B. Someone",
-    "contactemail": "sydney@someone.net"
+  "title": "Journal of Something",
+  "contactname": "Sydney B. Someone",
+  "contactemail": "sydney@someone.net"
 }
 
 ```
 
-These settings specify the full title of the project, the main contact person for the project's name and email. The full project name appears at the top of the typesetting framework's pages and in various other places. The contact name and email are used in headers of emails sent (unless a custom script is used) and in certain error messages in the typesetting framework itself.
+These settings specify the full title of the project, the main contact person for the project's name and email. The full project name appears at the top of the typesetting framework's pages and in various other places. The contact name and email are used in headers of emails sent (if an email script is used) and in certain error messages in the typesetting framework itself.
 
-These options are set by the `newproject.php` script if used, but may be changed at any time.
+These options are set by the `newproject.mjs` script if used, but may be changed at any time.
 
 ## Import Replacements
 
@@ -53,20 +53,20 @@ For example:
 
 ```json
 {
-    "importreplacements": {
-        " -- ": "---",
-        "\\. \\. \\.": "…",
-        "\\[\\.\\.\\.\\]": "…",
-        "\\[…\\]": "…",
-        "\\b([A-Z])\\. ?([A-Z])\\. ?([A-Z])\\.": "\\1. \\2. \\3.",
-        "\\b([A-Z])\\. ?([A-Z])\\.": "\\1. \\2."
-    }
+  "importreplacements": {
+    " -- ": "---",
+    "\\. \\. \\.": "…",
+    "\\[\\.\\.\\.\\]": "…",
+    "\\[…\\]": "…",
+    "\\b([A-Z])\\. ?([A-Z])\\. ?([A-Z])\\.": "\\1. \\2. \\3.",
+    "\\b([A-Z])\\. ?([A-Z])\\.": "\\1. \\2."
+  }
 }
 ```
 
-This setting consists of key--value pairs, and are used during the document conversion process.
+This setting consists of key–value pairs.
+These are used during the document conversion process.
 Each key is a regular expression search term, and each value is a regular expression replacement term.
-Each pair is applied as the first two arguments to php's `mb_ereg_replace(…)` (see [here](https://www.php.net/manual/en/function.mb-ereg-replace.php)) function, and applied to the markdown document that results after converting the main upload.
 
 Note, however, that json requires that backslashes must be escaped as double backslashes.
 Since backslashes occur often in regular expressions, they must all occur as double backslashes here.
@@ -85,12 +85,12 @@ These replacements can be removed if unwanted, and more can be added if desired.
 ## Assignment Types
 
 The remainder of the settings fall under the "`assignmentTypes`" option.
-Each key found under "`assignmentType`" specifies a *type* of document or typesetting assignment used by the project.
+Each key found under "`assignmentTypes`" specifies a *type* of document or typesetting assignment used by the project.
 
-For example, he default `project-settings.json` file specifies two assignment types: `article` and `review`, which might be appropriate for a journal that publishes both articles and reviews.
+For example, the default `project-settings.json` file specifies two assignment types: `article` and `review`, which might be appropriate for a journal that publishes both articles and reviews.
 A third, say, `discussion`, could be added.
 
-An anthology might use a `chapter` or `contribution` assignment type instead. 
+An anthology might use a `chapter` or `contribution` assignment type instead.
 The framework does not place any limitation on the names of the assignment types, but it is best to use a single word, and in particular, a singular noun that can be pluralized by adding an "s".
 
 Each project should have at least one assignment type, but needs to have no more than that.
@@ -98,9 +98,9 @@ A project could have any number of assignment types otherwise.
 
 Typesetting assignments/documents in the typesetting framework are sorted by assignment type.
 Each assignment type is given its own "add new …" button.
-The files for a documents of a given assignment type can be found in a subdirectory of the project directory named after the assignment type with an `s` at the end, e.g., `articles` (for the `article` assignment type).
+The files for documents of a given assignment type can be found in a subdirectory of the project directory named after the assignment type with an `s` at the end, e.g., `articles` (for the `article` assignment type).
 
-Each assignment type key under `assignmentTypes` in the `project-settings.json` file must have various suboptions (with the appropriate keys) as described below.
+Each assignment type key under `assignmentTypes` in the `project-settings.json` file must have various sub-options (with the appropriate keys) as described below.
 These keys may occur in any order, and most likely will not occur in the order in which they are discussed below.
 
 ### `display` (assignment type option)
@@ -109,16 +109,16 @@ For example:
 
 ```json
 {
-    "assignmentTypes": {
-        "article": {
-            "display": "[VOLUME.NUMBER] “<em>TITLE</em>”<br>by AUTHOR"
-        }
+  "assignmentTypes": {
+    "article": {
+      "display": "[VOLUME.NUMBER] “<em>TITLE</em>”<br>by AUTHOR"
     }
+  }
 }
 ```
 
 This should be an HTML string that includes certain metadata fields written in all caps (in this example, "`VOLUME`", "`NUMBER`", "`TITLE`" and "`AUTHOR`").
-This is only used internally in the framework and specifies how the header for a listing for a document of a given type should appear inside the framework in the list of current assignments or archived assignments. 
+This is only used internally in the framework and specifies how the header for a listing for a document of a given type should appear inside the framework in the list of current assignments or archived assignments.
 
 ### `metadata` (assignment type option)
 
@@ -129,18 +129,18 @@ A typical metadata item specification could look like this:
 
 ```json
 {
-    "assignmentTypes": {
-        "article": {
-            "metadata": {
-                "title": {
-                    "required": true,
-                    "label": "Title",
-                    "inputtype": "text",
-                    "pandoc": "yaml"
-                }
-            }
+  "assignmentTypes": {
+    "article": {
+      "metadata": {
+        "title": {
+          "required": true,
+          "label": "Title",
+          "inputtype": "text",
+           "pandoc": "yaml"
         }
+      }
     }
+  }
 }
 ```
 
@@ -155,7 +155,7 @@ Optionally a `"placeholder"` may also be specified, whose value will appear in t
 If not specified, the label will be used for this purpose.
 
 For `"pandoc"`, there are five possibilities, `"yaml"`, `"yamlblock"`, `"yamlarray"`, `"yamllist"` and `"subelement"`.
-A simple metadata field will use `"yaml"`, which will simply insert the value into the `metadata.yaml` file using its item name followed by a colon followed by the value. 
+A simple metadata field will use `"yaml"`, which will simply insert the value into the `metadata.yaml` file using its item name followed by a colon followed by the value.
 
 `"yamlblock"` should be used instead if the value may consist of multiple lines.
 This will cause the item to be inserted using a "`|`" after the metadata item name and colon with the value of the field following with indented lines.
@@ -166,19 +166,19 @@ If the specifier for a metadata item is wrapped in (json array) brackets, this m
 
 ```json
 {
-    "assignmentTypes": {
-        "review": {
-            "metadata": {
-                "reviewedauthor": [{
-                    "required": false,
-                    "inputtype": "text",
-                    "label": "Author(s) of reviewed work",
-                    "placeholder": "Editor name",
-                    "pandoc": "yamllist"
-                }]
-            }
-        }
+  "assignmentTypes": {
+    "review": {
+      "metadata": {
+        "reviewedauthor": [{
+          "required": false,
+          "inputtype": "text",
+          "label": "Author(s) of reviewed work",
+          "placeholder": "Editor name",
+          "pandoc": "yamllist"
+        }]
+      }
     }
+  }
 }
 ```
 
@@ -197,34 +197,34 @@ Here is an example:
 
 ```json
 {
-    "assignmentTypes": {
-        "article": {
-            "metadata": {
-                "author": {
-                    "subcategories": true,
-                    "label": "Author(s)",
-                    "name": {
-                        "required": true,
-                        "inputtype": "text",
-                        "label": "Name",
-                        "pandoc": "subelement"
-                    },
-                    "affiliation": {
-                        "required": false,
-                        "inputtype": "text",
-                        "label": "Affiliation",
-                        "pandoc": "subelement"
-                    },
-                    "email": {
-                        "required": false,
-                        "inputtype": "email",
-                        "label": "Email",
-                        "pandoc": "subelement"
-                    }
-                }
-            }
+  "assignmentTypes": {
+    "article": {
+      "metadata": {
+        "author": {
+          "subcategories": true,
+          "label": "Author(s)",
+          "name": {
+            "required": true,
+            "inputtype": "text",
+            "label": "Name",
+            "pandoc": "subelement"
+          },
+          "affiliation": {
+            "required": false,
+            "inputtype": "text",
+            "label": "Affiliation",
+            "pandoc": "subelement"
+          },
+          "email": {
+            "required": false,
+            "inputtype": "email",
+            "label": "Email",
+            "pandoc": "subelement"
+          }
         }
+      }
     }
+  }
 }
 ```
 
@@ -244,11 +244,11 @@ For example:
 
 ```json
 {
-    "assignmentTypes": {
-        "article": {
-            "convert": "pandoc %upload% -t markdown --quiet --reference-location=block --wrap=none"
-        }
+  "assignmentTypes": {
+    "article": {
+      "convert": "pandoc %upload% -t markdown --quiet --reference-location=block --wrap=none"
     }
+  }
 }
 ```
 
@@ -262,17 +262,17 @@ The option `-o main.md` will be added to the command to write to a file named `m
 
 ```json
 {
-    "assignmentTypes": {
-        "article": {
-            "splitsentences": true
-        }
+  "assignmentTypes": {
+    "article": {
+      "splitsentences": true
     }
+  }
 }
 ```
 
 This is a simple boolean option (`true`/`false`).
 If set to `true`, paragraphs of text in the markdown document will be split so as to have one sentence per line.
-The sentence-break detection algorithm is not perfect, and it may miss some, especially when a sentence ends with an uppercase letter or unusual punctuation. 
+The sentence-break detection algorithm is not perfect, and it may miss some, especially when a sentence ends with an uppercase letter or unusual punctuation.
 In these cases, multiple sentences will appear on the same line, but this is usually harmless.
 Paragraph breaks are indicated in markdown with blank lines between lines of text, which should not be affected by this option.
 This option exists simply for the convenience of the editor in locating individual sentences in a paragraph when editing.
@@ -286,21 +286,21 @@ Here is an example:
 
 ```json
 {
-    "assignmentTypes": {
-        "article": {
-            "output": {
-                "pdf": {
-                    "editorcommand": "pandoc --metadata-file metadata.yaml --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t pdf -o %outputfile% %rootdocument%"
-                },
-                "html": {
-                    "editorcommand": "pandoc --metadata-file metadata.yaml --wrap preserve --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t html -o %outputfile% %rootdocument%"
-                },
-                "epub": {
-                    "editorcommand": "pandoc --metadata-file metadata.yaml --wrap preserve --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t epub -o %outputfile% %rootdocument%"
-                }
-            }
+  "assignmentTypes": {
+    "article": {
+      "output": {
+        "pdf": {
+          "editorcommand": "pandoc --metadata-file metadata.yaml --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t pdf -o %outputfile% %rootdocument%"
+        },
+        "html": {
+          "editorcommand": "pandoc --metadata-file metadata.yaml --wrap preserve --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t html -o %outputfile% %rootdocument%"
+        },
+        "epub": {
+          "editorcommand": "pandoc --metadata-file metadata.yaml --wrap preserve --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t epub -o %outputfile% %rootdocument%"
         }
+      }
     }
+  }
 }
 ```
 
@@ -311,7 +311,7 @@ Such settings files can be used to set the main or "root" document for each type
 For more information on `oge-settings.json` files and their syntax, see the [settings documentation](https://github.com/frabjous/open-guide-editor/blob/main/doc/settings.md) for the Open Guide Editor.
 
 Each key in the assignment type `"output"` option should be the file extension for an output file which can be created from the input markdown document.
-The `"editorcommand"` attribute of the object the extension is mapped to in the json will be used as the value of the `command` attribute in the editor's preview "routine" as set in the `oge-settings.file`.
+The `"editorcommand"` attribute of the object for the extension will be used as the value of the `command` attribute in the editor's preview "routine" as set in the `oge-settings.file`.
 This is in effect the command used to create the output file from the main source document.
 
 The syntax of the command is the same as that described in the Open Guide Editor documentation, and allows the same placeholders, such as `%rootdocument%` (for the main file being edited) and `%outputfile%` for the file being created.
@@ -323,13 +323,13 @@ In a typical set up, these will make use of pandoc with options appropriate for 
 Certain pandoc options here are almost a requirement. Consider using these:
 
 - `--metadata-file metadata.yaml` – Without this, the metadata specified in the metadata block will not be passed to pandoc.
-- `--number-sections` – Without this, sections and subsections in the output document will not have numbers. 
+- `--number-sections` – Without this, sections and subsections in the output document will not have numbers.
 - `--citeproc` – without this, no citations in the document will be processed or linked to the bibliography.
 - `--bibliography bibliography.json` – without this, the bibliographic information specified in the framework's Bibliography block will not be used.
 - `--resource-path .:%projectdir%` (or similar) – without this, assets such as images and auxiliary files will probably not be located by pandoc.
     Note this example starts with "`.:`" which specifies that the document's own directory should be searched first, and only then the project-wide resource directory if the required resource is not found in the document directory.
 - `--template=[filename]` – Without this, the default pandoc template will be used. This may not be a problem if you have created your own pandoc settings folder with your own templates.
-- `--standalone` and `--embed-resources` — Without using these for html output, the resulting html file will not be a complete file with a header and template applied, and resources such as images and stylesheets will likely not be available in the editor preview window.
+- `--standalone` and `--embed-resources` — Without using these for html output, the resulting html file will not be a complete file with a header and template applied, and resources such as images and stylesheets might not be available in the editor preview window.
 
 There are many other options to consider, such as `--css` to add stylesheets to html and html-based output files, `--csl` to specify a citation and bibliography style different from the default Chicago style, and so on.
 
@@ -337,7 +337,7 @@ Some of the above could also be done using a pandoc defaults file (see [here](ht
 
 The other thing the `output` option configures is how proof sets are created.
 The creation process will run the same commands as used by the editor to produce all the output file-types whose extensions are listed.
-Typically at least both an `html` and `pdf` output routine should be specified, and optionally others such as `epub`, etc.
+Typically at least both `html` and `pdf` output routines should be specified, and optionally others such as `epub`, etc.
 
 ### `createEdition` (assignment type option)
 
@@ -347,40 +347,40 @@ Here is an example:
 
 ```json
 {
-    "assignmentTypes": {
-        "article": {
-            "createEdition": [
-                {
-                    "command": "pandoc --metadata-file metadata.yaml --wrap preserve --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t epub -o %documentid%-%version%.epub main.md",
-                    "outputfile": "%documentid%-%version%.epub"
-                },
-                {
-                    "command": "pandoc --metadata-file metadata.yaml --wrap preserve --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t html -o %documentid%-%version%.html main.md",
-                    "outputfile": "%documentid%-%version%.html"
-                },
-                {
-                    "command": "cp main.md %documentid%-%version%.md",
-                    "outputfile": "%documentid%-%version%.md"
-                },
-                {
-                    "command": "pandoc --metadata-file metadata.yaml --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t pdf -o %documentid%-%version%-tmp.pdf main.md && gs -dNOPAUSE -dFastWebView -sDEVICE=pdfwrite -sOUTPUTFILE=%documentid%-%version%.pdf -dBATCH %documentid%-%version%-tmp.pdf && rm %documentid%-%version%-tmp.pdf",
-                    "outputfile": "%documentid%-%version%.pdf"
-                },
-                {
-                    "command": "php -r 'echo json_decode(file_get_contents(\"metadata.json\"))->abstract;' | pandoc -f markdown -t plain --wrap none -o abstract.txt",
-                    "outputfile": "abstract.txt"
-                },
-                {
-                    "command": "echo \"\" | pandoc --metadata-file metadata.yaml --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --wrap none -t plain -o references.txt",
-                    "outputfile": "references.txt"
-                },
-                {
-                    "command": "cd editions/%version% && zip ../../%documentid%-%version%.zip *",
-                    "outputfile": "%documentid%-%version%.zip"
-                }
-            ]
+  "assignmentTypes": {
+    "article": {
+      "createEdition": [
+        {
+          "command": "pandoc --metadata-file metadata.yaml --wrap preserve --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t epub -o %documentid%-%version%.epub main.md",
+          "outputfile": "%documentid%-%version%.epub"
+        },
+        {
+          "command": "pandoc --metadata-file metadata.yaml --wrap preserve --embed-resources --standalone --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t html -o %documentid%-%version%.html main.md",
+          "outputfile": "%documentid%-%version%.html"
+        },
+        {
+          "command": "cp main.md %documentid%-%version%.md",
+          "outputfile": "%documentid%-%version%.md"
+        },
+        {
+          "command": "pandoc --metadata-file metadata.yaml --number-sections --citeproc --bibliography bibliography.json --resource-path .:%projectdir% -t pdf -o %documentid%-%version%-tmp.pdf main.md && gs -dNOPAUSE -dFastWebView -sDEVICE=pdfwrite -sOUTPUTFILE=%documentid%-%version%.pdf -dBATCH %documentid%-%version%-tmp.pdf && rm %documentid%-%version%-tmp.pdf",
+          "outputfile": "%documentid%-%version%.pdf"
+        },
+        {
+          "command": "jq -r .abstract metadata.json | pandoc -f markdown -t plain --wrap none -o abstract.txt",
+          "outputfile": "abstract.txt"
+        },
+        {
+          "command": "echo \"\" | pandoc --metadata-file metadata.yaml --citeproc --bibliography bibliography.json --resource-path .:%projectdir% --wrap none -t plain -o references.txt",
+          "outputfile": "references.txt"
+        },
+        {
+          "command": "cd editions/%version% && zip ../../%documentid%-%version%.zip *",
+          "outputfile": "%documentid%-%version%.zip"
         }
+      ]
     }
+  }
 }
 ```
 
@@ -415,13 +415,16 @@ As examples, `.epub` files are just zipped `.(x)html` files, and unless a non-de
 
 Project leaders using the typesetting framework will most likely want to create pandoc templates for both html and LaTeX output, if not additional templates. These templates might make use of additional customized files such as css stylesheets, or LaTeX document packages/document classes. These are the main ways for a project to truly make its output files fit its own style and brand.
 
-The process of creating pandoc templates and related files is outside the scope of this documentation, but the [pandoc documentation on templates](https://pandoc.org/MANUAL.html#templates) is excellent. Even more fine-grained control can be accomplished with [pandoc filters](https://pandoc.org/filters.html) and the like. These are all compatible with the typesetting framework, and the command line flags to use them would simply have to be added to the `"output"` and/or `"createEdition"` options described above.
-<!-- TODO: add link to jhap/og templates when created. maybe fregeifier -->
+The process of creating pandoc templates and related files is outside the scope of this documentation, but the [pandoc documentation on templates](https://pandoc.org/MANUAL.html#templates) is excellent.  These are all compatible with the typesetting framework, and the command line flags to use them (e.g., `--template mytemplate`) would simply have to be added to the `"output"` and `"createEdition"` options described above.
+
+You might consult [the templates used by the Journal for the History of Analytical Philosophy](https://github.com/frabjous/jhap-templates) as examples.
+
+Even more fine-grained control can be accomplished with [pandoc filters](https://pandoc.org/filters.html). For example, the filter I created for [the Amazing Fregeifier](https://github.com/frabjous/fregeifier) allows the use of complex and bespoke mathematics, such as Frege’s logical notation, in non-LaTeX-based outputs. These can be employed by adding the `--filter [filtername]` option to the `"output"` and `"createEdition"`options.
 
 ## Other Documentation
 
-See also the other documentation files concerning [installation](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/installation.md) and [regular usage (by editors and typesetters)](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/usage.md).
+See also the other documentation files concerning [installation](./installation.md) and [regular usage (by editors and typesetters)](./usage.md).
 
 ## License
 
-Copyright 2023 © Kevin C. Klement. This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).
+Copyright 2023–2024 © Kevin C. Klement. This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).

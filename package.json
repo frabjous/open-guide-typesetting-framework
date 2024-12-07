@@ -1,0 +1,38 @@
+{
+  "name": "open-guide-typesetting-framework",
+  "version": "0.2.0",
+  "description": "Framework for typesetting academic work with multiple output formats",
+  "main": "test-server.mjs",
+  "scripts": {
+    "test": "nodemon test-server.mjs",
+    "production": "node test-server.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frabjous/open-guide-typesetting-framework.git"
+  },
+  "keywords": [
+    "academic",
+    "typesetting",
+    "markdown",
+    "pdf",
+    "html",
+    "pandoc",
+    "open",
+    "guide",
+    "bibliographies"
+  ],
+  "author": "Kevin C. Klement",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/frabjous/open-guide-typesetting-framework/issues"
+  },
+  "homepage": "https://github.com/frabjous/open-guide-typesetting-framework#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-session": "^2.1.0",
+    "express": "^4.21.1",
+    "express-fileupload": "^1.5.1",
+    "nocache": "^4.0.0"
+  }
+}

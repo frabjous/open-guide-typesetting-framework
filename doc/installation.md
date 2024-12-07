@@ -3,94 +3,205 @@
 
 # Installation Instructions (for system administrators)
 
+## Note on Version Change and Underlying Platform
+
+As of version 0.2.0, the Open Guide Typesetting Framework makes use of a router for [ExpressJS](https://expressjs.com) (or compatible) web servers, running on a javascript runtime such as [NodeJS](https://nodejs.org), for its server back-end. Previous versions used php instead. The php code is still available in this repository in the php branch. See [its corresponding documentation](https://github.com/frabjous/open-guide-typesetting-framework/blob/php/doc/installation.md) for information on installing the php version.
+
+The instructions below cover the newer, server-side javascript version.
+
 ## Requirements
 
-You will need the following.
+1. You will need a server on which to install the framework (or a local machine running server software). I have only tested it on Linux, but it may be compatible with other operating systems.
 
-1. A [php](https://www.php.net/)-enabled web server, probably something GNU/Linux based.
-   Other Unix-like operating systems like FreeBSD or even MacOS may work, but have not been tested.
-   You will probably want to use [nginx](https://www.nginx.com/) or [apache](https://httpd.apache.org/).
+2. [NodeJS](https://nodejs.org) or compatible javascript runtime, as well as a package manager for it such as [npm](https://npmjs.com).
 
-    Instructions for setting up a standard php-enabled web-server are beyond the scope of this documentation, but there are many guides and tutorials for doing this online for all major linux distributions.
-    A MySQL or other database is not needed.
+3. [Git](https://git-scm.com) to clone this repository (or another way of cloning it). There's a good chance you have this installed already.
 
-3. You will need to install the programs used in the typesetting, including [pandoc](https://pandoc.org), a TeX distribution such as [texlive](https://tug.org/texlive/), and others. See the [instructions for setting up the Open Guide Editor](https://github.com/frabjous/open-guide-editor/blob/main/doc/installation.md) for the full list of programs it uses by default.
-    The sample settings also make use of [ghostscript](https://www.ghostscript.com/), which often comes bundled with your TeX distribution, and a zip implementation like [info-zip](https://infozip.sourceforge.net/Zip.html), but these are not necessary for basic functionality.
+4. You will need to install the programs used in the typesetting, including [pandoc](https://pandoc.org), a TeX distribution such as [texlive](https://tug.org/texlive/), and others. See the [instructions for setting up the Open Guide Editor](https://github.com/frabjous/open-guide-editor/blob/main/doc/installation.md) for the full list of programs it uses by default. The sample settings also make use of [ghostscript](https://www.ghostscript.com/), which often comes bundled with your TeX distribution for compressing pdfs, [jq](https://jqlang.github.io/jq/) for extracting abstracts from json files, [anystyle](https://anystyle.io) for parsing plain text bibliographies, and a zip implementation like [info-zip](https://infozip.sourceforge.net/Zip.html). However, the framework can be configured to use almost any software in place of these.
 
-   All these programs can likely be installed easily with your linux distribution's package manager.
+   All these programs can likely be installed with your linux distribution's package manager. Anystyle is a possible exception, but it can be installed as a ruby gem if the `rubygems` package is installed. (See [its page on the rubygems catalog](https://rubygems.org/gems/anystyle). The framework automatically adds gem binary directories matching `$HOME/.local/share/gem/ruby/*/bin` to its `$PATH`.)
 
-5. You will need the programs used in the installation steps, including [git](https://git-scm.com/) and [npm](https://www.npmjs.com/).
-    There’s a good chance that you have these installed already.
-    They do not need root access.
-    Again, if they are not already installed, your linux distribution's package manager will be able to install them.
+## Installation Steps
 
-## Steps
+Follow these instructions to install the framework. You do not need root access for any of these steps.
 
-Installing the framework is straightforward.
+1. Clone this repository. First navigate to the directory where you want it located, then run:
 
-1. Clone this repository and its submodules somewhere inside the directories served by the webserver. First navigate to such a directory and run:
+   ```sh
+   git clone --depth 1 \
+     https://github.com/frabjous/open-guide-typesetting-framework.git
+   ```
 
-    ```sh
-    git clone --recurse-submodules --depth 1 \
-        https://github.com/frabjous/open-guide-typesetting-framework.git
-    ```
+2. You will also need to clone the `open-guide-editor` repository. To install it as a subdirectory of the typesetting framework directory:
 
-    This will also install the `open-guide-editor` git submodule and its own `open-guide-misc` submodule.
+  ```
+  git clone --depth 1 https://github.com/frabjous/open-guide-editor.git
+  ```
 
-    Change into the directory created.
+3. Use npm or another package manager to install the node module dependencies needed by both the typesetting framework and editor. Also use the editor’s npm "build" script to bundle the [codemirror](https://codemirror.net) packages it needs.
 
-    ```sh
-    cd open-guide-typesetting-framework
-    ```
+  ```sh
+  npm install
+  cd open-guide-editor
+  npm install
+  npm run build
+  cd ..
+  ```
 
-2. Follow the instructions for finishing [installing](https://github.com/frabjous/open-guide-editor/blob/main/doc/installation.md) and, if you wish to change the defaults, for [configuring](https://github.com/frabjous/open-guide-editor/blob/main/doc/settings.md), the Open Guide Editor used by the framework. (The `newproject.php` script, mentioned below, will do a minimal job doing this if it detects it hasn't been done already.)
+  See the [installation](https://github.com/frabjous/open-guide-editor/blob/main/doc/installation.md) and [settings configuration](https://github.com/frabjous/open-guide-editor/blob/main/doc/settings.md) documentation for the editor for more information about the editor.
 
-    This script can be run multiple times if you wish to use the same site for multiple projects.
-       It can also be removed after use for security reasons.
-       Projects can also be created manually by copying an existing project in the data directory and renaming it and changing its settings files.
+4. Create at least one project by running the `newproject.mjs` script in the `cli/` subdirectory of the main repository to create your first typesetting project. (This script will also complete steps 2–3 above if not done already.)
 
-3. Configure the directory where all data will be kept (preferably outside the directories served by the web server) by copying the file `sample-settings.json` to become `settings.json` and editing it.
-    (The `newproject.php` script will also prompt you for this information if it detects it hasn't been done already.)
+  ```sh
+  node cli/newproject.mjs
+  ```
 
-4. Create at least one project by running the `newproject.php` script, which must be run from the command line:
+  This will prompt you for a short name as well as a full title for your project, as well as a site maintainer contact name and email. It will create an initial user of the site with the same name and email, and provide a password.
 
-    ```sh
-    php php/newproject.php
-    ```
+  This script can be run multiple times if you wish to use the same site/server for multiple projects.
 
-    This will prompt you for a short name as well as a full title for your project, as well as a site maintainer contact name and email. It will create a initial user of the site with the same name and email, and provide a password.
+  Project typesetting data is stored in `$HOME/data/ogtf` (in subdirectories using the short name of each project) by default. However, this can be changed by setting the environmental variable `OGTFDATALOCATION` to another path, e.g., `OGTFDATALOCATION=$HOME/.local/share/ogtfdata node cli/newproject.mjs`. The router, discussed below, also respects this variable.
 
-5. You should now be able to visit the site if your web server is up and running, e.g.:
+  Projects can also be created manually by copying an existing project in the data directory and renaming it and changing its settings files.
 
-    ```
-    https://yourdomain.com/open-guide-typesetting-framework/
-    ```
+5. Run the server back-end either by running the test server (step 6), or by adding the router to an existing ExpressJS server project (step 7).
 
-    You can skip right to the log in for a given project by adding `?project=shortname` to the URL. Follow the [usage instructions](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/usage.md) for adding any additional editors. The site maintainer can then be removed as an editor if desired.
+6. You can run the test server with `npm run test` or `node test-server.mjs`. This will make the framework available at the url:
 
-   You can rename the directory hosting the framework to something shorter than `open-guide-typesetting-framework`, or even unpack it directly into the server's root directory, but the submodule directories like `open-guide-editor` and `open-guide-misc` are expected to remain as is.
+  ```
+  https://localhost:14747/typesetting
+  ```
 
-6. You will likely want to finish configuring your project by editing the `project-settings.json` file in the project’s subdirectory of the data directory.
-    Instructions for configuring projects can be found in the [configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) documentation.
+  The port number can be changed by setting the OGETESTSERVERPORT environmental variable to another number.
 
-## Optional Email Configuration
+7. To use the framework within another ExpressJS server app, you can import and mount the router.  This is done as follows:
 
-By default, the typesetting framework will use the default php `mail(…)` function to send email, using the site’s contact name and email in the headers.
+  ```javascript
+  import express from 'express';
+  import ogtfRouter from './ogtfRouter.mjs';
 
-Depending on your server configuration, however, this function can lead to email that goes straight into people’s spam/junk folders.
+  const app = express();
 
-As an alternative, a php script named `customemail.php` can be created and placed in the project subdirectory of the main data directory.
-This script should define a php function named `custom_send_email($to, $subject, $htmlcontent)` which takes three arguments: the email address of the recipient, the subject of the email, and the (html) contents of the message, in that order.
+  // pre-ogtf routes here...
 
-Creating such a script requires some knowledge of php, but a standard use case would be to define such a function as a wrapper around something like the [phpmailer](https://github.com/PHPMailer/PHPMailer) package or similar, to make use of its capabilities.
+  // mount router
+  app.use(await ogtfRouter());
 
-If the typesetting framework finds such a script and it defines a function with that name, it will be used instead of the default php `mail(…)` function to send email.
+  // post-ogtf routes here...
+
+  ```
+
+  See the ExpressJS documentation on [routing](https://expressjs.com/en/guide/routing.html) and [middleware](https://expressjs.com/en/guide/using-middleware.html) if necessary. The code in `test-server.mjs` gives a full example of how to use the router in an ExpressJS app, albeit one that does nothing else.
+
+  The ogtfRouter function optionally takes an argument, with two possible options:
+
+  ```javascript
+  app.use(await ogtfRouter({
+    baseurl: 'typesetting',
+    ogepath: '/path/to/open-guide-editor'
+  }))
+  ```
+
+  The `baseurl` option determines the url path on the server used by the framework. For example, if set to `"typesetting"` as above, the framework will be available at:
+
+  ```
+  https://yourdomain.net/typesetting
+  ```
+
+  If unset, the framework will use `ogtf` as its main route:
+
+  ```
+  https://yourdomain.net/ogtf
+  ```
+
+  All other paths used by the framework will begin with the base url, and it is a good idea to set it to something not used elsewhere on your server. Paths beginning  with `/oge` will also be used by the Open Guide editor's router, which the typesetting framework also mounts.
+
+  The `ogepath` option tells the router where to look for the `open-guide-editor` repository if it was not cloned into a subdirectory of the `open-guide-typesetting-framework` repository. (If it was cloned there, this option need not be set.)
+
+8. You should now be able to login to the framework at `http://localhost:14747/typesetting` or `https://yourdomain.net/ogtf` depending on exactly what was done in the previous two steps.
+
+  If there are multiple projects, you will first need to choose which one to log in to. You can skip right to the login form for a project by adding `?project=shortname` (replacing "`shortname`" with the short name of the project configured in step 4 above) to the end of the url.
+
+9. Follow the [usage instructions](./usage.md) for adding additional editors. The site maintainer can also be removed as an editor if desired.
+
+10. You will likely want to finish configuring your project by editing the `project-settings.json` file in the project’s subdirectory of the data directory. Instructions for configuring projects can be found in the [configuration](./configuration.md) documentation.
+
+## Usage on a Different Server
+
+If you would like to integrate the open guide typesetting framework on another web server, one not using ExpressJS, you have two options.
+
+You can use the php branch instead, which can be used with any web server supporting php.
+
+Alternatively, you can run the framework’s test server, and configure your web server to re-route requests to it via a reverse proxy or similar. For example, with [nginx](https://nginx.org/), you might put something like this in your `nginx.conf` file:
+
+
+```
+server {
+  listen 80;
+  listen [::]:80;
+  server_name yourdomain.net;
+  location /oge* {
+    proxy_pass http://localhost:14747;
+  }
+  location /ogtf* {
+    proxy_pass http://localhost:14747;
+  }
+}
+```
+
+Experienced sysadmins can no doubt think of other solutions tailored to the individual use case.
+
+## Email Configuration
+
+It is very useful if the framework is able to send email, for example, to inform an editor that proof corrections have been submitted, or allow an editor to reset their password. It is outside the scope of the project to implement a method that will work universally. Unless a custom email function is added, the server will simply save emails to an `emaillog/` subdirectory of the project’s data directory.
+
+However, if a javascript module named `customemail.mjs` exists in the project data directory, the framework will import the default (async) function defined therein, and call it when it would make sense to send an email. The script should take this basic form:
+
+```javascript
+
+// Filename: $HOME/data/ogtf/myproject/customemail.mjs
+
+export default async function customemail(to, subject, html, from) {
+  // ... implement your own script here
+}
+
+```
+
+The default export should be an asynchronous function taking four arguments, (a) the recipient (to: header), (b) the subject of the email, (c) the html body of the email, and (d) the sender (from: header).
+
+The script might, for example, be a wrapper around [nodemailer](https://www.nodemailer.com/):
+
+
+```javascript
+// Filename: $HOME/data/ogtf/myproject/customemail.mjs
+
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.myprovider.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: 'myname@myprovider.com',
+    pass: 'mysecretpassword'
+  }
+});
+
+export default async function customemail(to, subject, html, from) {
+  return await transporter.sendMail({
+    to, from, subject, html
+  });
+}
+
+```
+
+Such a script is not necessary to run the framework, but without it no email will be sent.
 
 ## Other Documentation
 
-See also the other documentation files concerning [project configuration](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/configuration.md) and [regular usage (by editors and typesetters)](https://github.com/frabjous/open-guide-typesetting-framework/blob/main/doc/usage.md).
+See also the other documentation files concerning [project configuration](./configuration.md) and [regular usage (by editors and typesetters)](./usage.md).
 
 ## License
 
-Copyright 2023 © Kevin C. Klement.
+Copyright 2023–2024 © Kevin C. Klement.
 This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).
