@@ -102,6 +102,8 @@ export function extractBibliography(markdown) {
           .replace(/^[ ,\.]*/g, '')
           // remove escaped single quotes
           .replace(/\\\'/g, "'")
+          // remove escaped double quotes
+          .replace(/\\\"/g, '"')
           // remove escaped brackets
           .replace(/\\\[/g,'[')
           .replace(/\\\]/g,']');
