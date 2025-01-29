@@ -190,8 +190,9 @@ export default async function ogtfRouter(opts) {
       res.json({error: true, errMsg: 'Invalid request.'});
       return;
     }
-    req.body.reqUrl = req.protocol + '://' + req.get('host') +
-      req.originalUrl;
+    const reqproto = req.get('X-Forwarded-Proto') ?? req.protocol;
+    const reqhost = req.get('X-Forwarded-Host') ?? req.get('host');
+    req.body.reqUrl = reqproto + '://' + reqhost + req.originalUrl;
     const handlerres = await jsonhandler(req.body);
     // process login
     if (req?.body?.postcmd == 'login' &&
