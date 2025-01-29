@@ -195,6 +195,10 @@ You can fill in the “response” field for each query and save the query.
 </p>
 
 <p>
+If all individual comments are saved, you may close this page, and re-open it again using the same URL to continue your work. However, please do not have multiple instances of proofs open in multiple tabs, browsers, or devices at the same time, or changes in one may override those in another.
+</p>
+
+<p>
 When you are done adding comments and corrections, and all of them have been saved, you may submit your comments and corrections.
 </p>`) : '';
 
