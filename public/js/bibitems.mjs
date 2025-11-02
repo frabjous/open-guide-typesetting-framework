@@ -97,6 +97,7 @@ export function addbibitems(itemarray) {
     // input to add arbitrary new phil papers id
     bibitem.newppinput = addelem({
       tag: 'input',
+      type: 'text',
       parent: bibitem.widgets,
       placeholder: 'new PhilPapers ID'
     });
@@ -239,6 +240,7 @@ export function addbibitems(itemarray) {
         parent: this.infotablebody,
         bibproperty: key
       });
+      tr.classList.add('pubkey'+key);
       const keytd = addelem({
         tag: 'td',
         parent: tr,
