@@ -66,7 +66,7 @@ async function idToBib(id) {
   try {
     bibtext = execSync(cmd, {encoding: 'utf-8'});
   } catch(err) {
-    console.err(err, url)
+    console.error(err, url)
     return null;
   }
   return bibFix(bibtext);
