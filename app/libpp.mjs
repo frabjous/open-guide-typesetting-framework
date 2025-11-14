@@ -6,6 +6,17 @@
 // functions for interacting with the philpapers database
 
 import {execSync} from 'node:child_process';
+import fs from './fs.mjs';
+import {datadir} from './projects.mjs';
+import path from 'node:path';
+
+const goodUA = 'Mozilla/5.0 (X11; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0';
+
+const ppapifile = path.join(datadir, 'ppapi.json');
+let ppapiinfo = {};
+if (fs.isfile(ppapifile)) {
+  ppapiinfo = fs.loadjson(ppapifile);
+}
 
 // fix philpapers' annoying habit of sticking location inside
 // and other small niceties
@@ -46,12 +57,16 @@ export async function idToObj(id) {
 }
 
 async function idToBib(id) {
-  const url = 'https://philpapers.org/formats/item.bib?id=' + id;
+  let url = `https://philpapers.org/rec/${id}?format=bib`;
+  if (ppapiinfo?.apiid && ppapiinfo?.apikey) {
+    url += `&apiId=${ppapiinfo.apiid}&apiKey=${ppapiinfo.apikey}`
+  }
+  let cmd = `curl --silent -A "${goodUA}" "${url}"`
   let bibtext = null;
   try {
-    const response = await fetch(url);
-    bibtext = await response.text();
+    bibtext = execSync(cmd, {encoding: 'utf-8'});
   } catch(err) {
+    console.err(err, url)
     return null;
   }
   return bibFix(bibtext);

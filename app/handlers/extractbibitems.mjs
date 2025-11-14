@@ -17,10 +17,10 @@ if (!process.env.PATH.includes('ruby')) {
   const rubydir = path.join(
     process.env.HOME, '.local', 'share', 'gem', 'ruby'
   );
-  const rubysubdirs = fs.subdirs(rubydir);
+  const rubysubdirs = fs.subdirs(rubydir) ?? [];
   for (const rsd of rubysubdirs) {
     const bindir = path.join(rsd, 'bin');
-    if (fs.isdir(bindir)) {
+    if (fs.isdir(bindir) && !process.env.PATH.includes(bindir)) {
       process.env.PATH = process.env.PATH + ':' + bindir;
     }
   }

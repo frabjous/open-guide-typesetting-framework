@@ -108,7 +108,7 @@ export function extractBibliography(markdown) {
           .replace(/\\\[/g,'[')
           .replace(/\\\]/g,']');
         // add name from previous check if starts with numeral
-        if (/^[0-9]/.test(s)) {
+        if (/^[0-9]/.test(s) || /^\([0-9]/.test(s)) {
           if (savedname != '') s = savedname + ' ' + s;
         } else {
           // otherwise save the name for next pass
