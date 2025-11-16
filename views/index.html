@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta name="description" content="Open Guide Typesetting Framework">
     <meta name="author" content="Kevin C. Klement">
-    <meta name="copyright" content="Copyright 2023–2034 © Kevin C. Klement">
+    <meta name="copyright" content="Copyright 2023–2025 © Kevin C. Klement">
     <meta name="keywords" content="academic,typesetting,journal,anthology,guide">
-    <meta name="dcterms.date" content="2024-11-20">
+    <meta name="dcterms.date" content="2025-11-14">
     <meta name="robots" content="noindex,nofollow">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -26,6 +26,11 @@
         padding: 0;
         margin: 0;
       }
+      body.ogtfbody main.container {
+        max-width: 1024px;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
       header > nav {
         vertical-align: baseline;
         background-color: var(--secondary-focus);
@@ -34,7 +39,6 @@
         padding-right: 1rem;
         margin: 0;
       }
-
       nav a[role="button"] {
         height: 2.4rem;
         white-space: nowrap;
@@ -78,15 +82,69 @@
         border-radius: 5px;
         padding: 0.5rem;
       }
-      .cardmsg {
+      .ogtfmessage {
+        border-radius: 5px;
+        padding: 0.5rem;
+      }
+      .ogtfmessage.errmsg {
+        border: 3px solid var(--form-element-invalid-border-color);
+      }
+      .assignmenttable td a,
+      .assignmenttable td a:link,
+      .assignmenttable td a:visited {
+        color: var(--muted-color);
+      }
+      .assignmenttable td a strong,
+      .assignmenttable td a:link strong,
+      .assignmenttable td a:visited strong {
+        color: var(--primary);
+      }
+      .assignmenttable td a:hover,
+      .assignmenttable td a:hover:link,
+      .assignmenttable td a:hover:visited {
+        text-decoration: underline;
+        color: var(--contrast-hover);
+      }
+      .assignmenttable td button {
+        float: right;
+        width: auto;
+        margin-bottom: 4px;
+      }
+      .assignmenttable tr.othersassignment {
+        display: none;
+      }
+      .assignmenttable.showall tr.othersassignment {
+        display: table-row;
+      }
+      .assignmenttable tr td .assignmentlisttowhom {
+        display: none;
+      }
+      .assignmenttable.showall tr td .assignmentlisttowhom {
+        display: block;
+      }
+      .grid a[role="button"] {
+        margin-bottom: 1rem;
+      }
+      label.showallcbblock {
+        margin-bottom: 1.2rem;
+      }
+      .cardmsg  {
         color: var(--form-element-invalid-border-color);
         font-weight: bold;
       }
       .cardmsg.okmsg {
         color: inherit;
       }
-      #newpwdmsg.okmsg, #resetmsg.okmsg, #mainmsg.okmsg {
+      #newpwdmsg.okmsg, #resetmsg.okmsg, #mainmsg.okmsg, .ogtfmessage.okmsg {
         border: 3px solid var(--primary);
+      }
+      .ogtfmessageholder {
+        padding: 0 1rem;
+        background-color: var(--background-color);
+        border-radius: 5px;
+      }
+      .ogtfmessageholder .ogtfmessage {
+        margin: 2rem 0;
       }
       body > main.container {
         padding-top: 0;
@@ -197,39 +255,73 @@
         color: var(--color);
       }
       section article.assignment details.ogtf-assignmentblock div.editmainfilelabel,
-      section article.assignment details.ogtf-assignmentblock div.bibitemlabel {
+      section article div.bibitemlabel {
         font-weight: bold;
         margin-bottom: 0.5rem;
       }
-      section article.assignment details.ogtf-assignmentblock div.bibitem {
+      section article div.bibitem {
         border-bottom: 2px solid var(--muted-color);
         margin-bottom: 1rem;
       }
-      section article.assignment details.ogtf-assignmentblock button.bibremovebtn:hover {
+      section article div.bibitem div.bibitemlabel .material-symbols-outlined {
+        font-size: 1.2rem;
+        position: relative;
+        top: 0.3rem;
+        transform: rotate(90deg);
+      }
+      section article div.bibitem div.bibitemlabel {
+        cursor: pointer;
+      }
+      section article button.bibremovebtn:hover {
         color: var(--form-element-invalid-border-color);
       }
-      section article.assignment details.ogtf-assignmentblock button.bibremovebtn span {
+      section article button.bibremovebtn span {
         position: relative;
         top: 0.2rem;
       }
-      section article.assignment details.ogtf-assignmentblock div.bibmiddlebtns {
+      section article div.bibmiddlebtns {
         margin-bottom: 0.3rem;
       }
-      section article.assignment details.ogtf-assignmentblock div.bibitem td textarea {
+      section article .bibitem details {
+        margin-bottom: 0;
+        margin-top: 0;
+        border-bottom: none;
+        padding-bottom: 1rem;
+      }
+      section article .bibitem details > summary,
+      section article .bibitem details > summary:focus,
+      section article .bibitem details[open] > summary,
+      section article .bibitem details[open] > summary:focus,
+      section article .bibitem details > summary:not([role]),
+      section article .bibitem details[open] > summary:not([role]),
+      section article .bibitem details > summary:not([role]):not(:focus),
+      section article .bibitem details > summary:not([role]):not(:focus),
+      section article .bibitem details > summary:not([role]):focus,
+      section article .bibitem details[open] > summary:not([role]):focus {
+        color: inherit;
+      }
+      section article div.bibitem td textarea {
         height: 5rem;
         resize: none;
       }
-      section article.assignment details.ogtf-assignmentblock div.bibnamefieldbuttons {
+      section div.bibliographycard h3 {
+        margin-bottom: 2rem;
+        margin-top: 1rem;
+      }
+      section div.bibliographycard article {
+        margin-top: 0;
+      }
+      section article div.bibnamefieldbuttons {
         text-align: right;
       }
-      section article.assignment details.ogtf-assignmentblock div.bibnamefieldbuttons a {
+      section article div.bibnamefieldbuttons a {
         padding-left: 0.4rem;
         padding-right: 0.4rem;
         padding-top: 0.4rem;
         padding-bottom: 0.1rem;
         margin-left: 1rem;
       }
-      section article.assignment details.ogtf-assignmentblock div.bibitem table td:first-child {
+      section article div.bibitem table td:first-child {
         text-align: right;
         padding-top: 1rem;
         vertical-align: top;
@@ -243,13 +335,22 @@
       section article.assignment details.ogtf-assignmentblock div.pubversionextros label {
         margin-top: 1rem;
       }
-
       section article.assignment details.ogtf-assignmentblock div.pubversionextros textarea {
         resize: none;
         height: 10rem;
       }
       section article.assignment details.ogtf-assignmentblock div.pubversionextros div.copybuttondiv {
         text-align: right;
+      }
+      span.successconfirm,
+      label.successconfirm {
+        color: var(--form-element-valid-active-border-color);
+      }
+      section .bibliographycard .stickybuttons {
+        position: sticky;
+        bottom: 0;
+        background-color: var(--background-color);
+        padding: 1rem 1rem 0rem 1rem;
       }
     </style>
     <script>
@@ -268,7 +369,7 @@
       window.ogtf = ogtf;
     </script>
   </head>
-  <body>
+  <body class="ogtfbody">
     <header class="container-fluid"><nav>
       <ul><li id="projecttitle"><span>Open Guide Typesetting
         Framework</span><span><br>&nbsp;typesetting framework</span>
@@ -341,9 +442,11 @@
       </div>
       <div class="ogtfview" id="projectmain">
       </div>
+      <div class="ogtfview" id="assignmentmain">
+      </div>
     </main>
     <footer class="container-fluid">
-      <p><small>The Open Guide Typesetting Framework is Copyright 2023–2024 © <a href="https://people.umass.edu/klement" target="_blank">Kevin C. Klement</a>. This is free software, which can be redistributed and/or modified under the terms of the <a href="https://www.gnu.org/licenses/gpl.html" target="_blank"> GNU General Public License (GPL), version 3</a>. See the <a href="https://github.com/frabjous/open-guide-typesetting-framework" target="_blank">project github page</a> for more information.
+      <p><small>The Open Guide Typesetting Framework is Copyright 2023–2025 © <a href="https://people.umass.edu/klement" target="_blank">Kevin C. Klement</a>. This is free software, which can be redistributed and/or modified under the terms of the <a href="https://www.gnu.org/licenses/gpl.html" target="_blank"> GNU General Public License (GPL), version 3</a>. See the <a href="https://github.com/frabjous/open-guide-typesetting-framework" target="_blank">project github page</a> for more information.
       </small></p>
     </footer>
   </body>

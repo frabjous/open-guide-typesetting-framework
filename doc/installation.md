@@ -19,7 +19,11 @@ The instructions below cover the newer, server-side javascript version.
 
 4. You will need to install the programs used in the typesetting, including [pandoc](https://pandoc.org), a TeX distribution such as [texlive](https://tug.org/texlive/), and others. See the [instructions for setting up the Open Guide Editor](https://github.com/frabjous/open-guide-editor/blob/main/doc/installation.md) for the full list of programs it uses by default. The sample settings also make use of [ghostscript](https://www.ghostscript.com/), which often comes bundled with your TeX distribution for compressing pdfs, [jq](https://jqlang.github.io/jq/) for extracting abstracts from json files, [anystyle](https://anystyle.io) for parsing plain text bibliographies, and a zip implementation like [info-zip](https://infozip.sourceforge.net/Zip.html). However, the framework can be configured to use almost any software in place of these.
 
-   All these programs can likely be installed with your linux distribution's package manager. Anystyle is a possible exception, but it can be installed as a ruby gem if the `rubygems` package is installed. (See [its page on the rubygems catalog](https://rubygems.org/gems/anystyle). The framework automatically adds gem binary directories matching `$HOME/.local/share/gem/ruby/*/bin` to its `$PATH`.)
+   All these programs can likely be installed with your linux distribution's package manager. Anystyle is a possible exception, but it can be installed as a ruby gem if the `rubygems` package is installed. (See [its page on the rubygems catalog](https://rubygems.org/gems/anystyle).
+
+`gem install anystyle anystyle-cli erb`
+
+The framework automatically adds gem binary directories matching `$HOME/.local/share/gem/ruby/*/bin` to its `$PATH`.)
 
 ## Installation Steps
 
@@ -198,11 +202,27 @@ export default async function customemail(to, subject, html, from) {
 
 Such a script is not necessary to run the framework, but without it no email will be sent.
 
+## PhilPapers configuration
+
+If the site administrator has a PhilPapers API id and key, a file can be placed in the main data directory for the OGE installation named `ppapi.json` (typically `~/data/ogtf/ppapi.json`).
+Its contents should take the form:
+
+```json
+{
+  "apiid": "99999",
+  "apikey": "XXXXXXXXXXXXX"
+}
+```
+
+Of course, replace "99999" and "XXXXXXXXXXXXX" with the actual PhilPapers ID and key.
+If this file is in place when the server is started, the id and key will be used when the server attempts to retrieve bibliographical information.
+Unfortunately, even with these supplied, this process is very unreliable due to PhilPapers’ draconian security measures.
+
 ## Other Documentation
 
 See also the other documentation files concerning [project configuration](./configuration.md) and [regular usage (by editors and typesetters)](./usage.md).
 
 ## License
 
-Copyright 2023–2024 © Kevin C. Klement.
+Copyright 2023–2025 © Kevin C. Klement.
 This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).

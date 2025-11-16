@@ -36,8 +36,8 @@ export default async function applybibliography(reqbody) {
   const mainfile = path.join(assigndir, 'main.md');
   let mainmd = fs.readfile(mainfile);
   if (!mainmd) return {
-    error: true,
-    errMsg: 'Unable to read main file.'
+    nomainfile: true,
+    error: false
   }
   mainmd = applyAllBibdata(mainmd, bibdata);
   if (!fs.savefile(mainfile, mainmd)) return {

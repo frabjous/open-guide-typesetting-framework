@@ -38,7 +38,8 @@ export default async function savebibliography(reqbody) {
       'abbreviation',
       'possibilities',
       'philpapersid',
-      'extractedfrom'
+      'extractedfrom',
+      'collapsed'
     ]) {
       delete bibentry[goner];
     }

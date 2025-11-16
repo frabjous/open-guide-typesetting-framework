@@ -36,14 +36,36 @@ export function addbibitems(itemarray) {
       bibitem.extractedfrom = item.extractedfrom;
     }
     bibitem.inner = addelem({
-      tag: 'div',
+      //tag: 'div',
+      tag: 'details',
       parent: bibitem
+    });
+    if (item?.collapsed) {
+      bibitem.inner.removeAttribute('open');
+    } else {
+      bibitem.inner.setAttribute('open', 'true');
+    }
+    bibitem.itemsum = addelem({
+      tag: 'summary',
+      parent: bibitem.inner
     });
     // label at the top; should change when id changes
     bibitem.itemlabel = addelem({
-      tag: 'div',
+      tag: 'span',
       classes: ['bibitemlabel'],
-      parent: bibitem.inner
+      parent: bibitem.itemsum,
+      //parent: bibitem.inner,
+      mybibitem: bibitem,
+      title: 'toggle details'
+      // ,
+      // onclick: function() {
+      //   const bibitem = this.mybibitem;
+      //   if (bibitem.classList.contains('collapsed')) {
+      //     bibitem.classList.remove('collapsed');
+      //   } else {
+      //     bibitem.classList.add('collapsed');
+      //   }
+      // }
     });
     // buttons near top
     bibitem.widgets = addelem({
@@ -184,7 +206,7 @@ export function addbibitems(itemarray) {
           bibitem.updateLabel();
           bibitem.newppinput.removeAttribute('aria-invalid');
           this.mycard.biblastchanged = Date.now();
-          this.mycard.updatebibbuttons();
+          //this.mycard.updatebibbuttons();
         } else {
           if (bibitem.newppinput.value != '') {
             bibitem.newppinput.setAttribute('aria-invalid','true');
@@ -208,12 +230,16 @@ export function addbibitems(itemarray) {
       onclick: function() {
         this.mybibitem.parentNode.removeChild(this.mybibitem);
         this.mycard.biblastchanged = Date.now();
-        this.mycard.updatebibbuttons();
+        //this.mycard.updatebibbuttons();
       }
     });
     // function to update the label
     bibitem.updateLabel = function() {
-      this.itemlabel.innerHTML = '@' + (this.info?.id ?? '');
+      this.itemlabel.innerHTML =
+        '@' + (this.info?.id ?? ''); //+
+        //((this.info?.id) ?
+        //' <span class="material-symbols-outlined">chevron_right</span>'
+        //: '');
     }
     bibitem.infotable = addelem({
       tag: 'table',
@@ -329,7 +355,7 @@ export function addbibitems(itemarray) {
             }
           }
           this.mycard.biblastchanged = Date.now();
-          this.mycard.updatebibbuttons();
+          //this.mycard.updatebibbuttons();
         }
         bibitem.fields.type.getVal = function() {
           return this.value;
@@ -356,7 +382,7 @@ export function addbibitems(itemarray) {
             this.mybibitem.info.id = this.value.trim();
             this.mybibitem.updateLabel();
             this.mycard.biblastchanged = Date.now();
-            this.mycard.updatebibbuttons();
+            //this.mycard.updatebibbuttons();
           },
           getVal: function() {
             return this.value.trim();
@@ -385,7 +411,7 @@ export function addbibitems(itemarray) {
             this.mybibitem.info.abbreviation = this.value.trim();
             this.mybibitem.updateLabel();
             this.mycard.biblastchanged = Date.now();
-            this.mycard.updatebibbuttons();
+            //this.mycard.updatebibbuttons();
 
           },
           getVal: function() {
@@ -410,7 +436,7 @@ export function addbibitems(itemarray) {
           updateInfo: function() {
             this.mybibitem.info[this.mykey] = this.getVal();
             this.mycard.biblastchanged = Date.now();
-            this.mycard.updatebibbuttons();
+            //this.mycard.updatebibbuttons();
 
           }
         });
@@ -686,7 +712,7 @@ export function addbibitems(itemarray) {
         onchange: function() {
           this.mybibitem.info[this.mykey] = this.getVal();
           this.mycard.biblastchanged = Date.now();
-          this.mycard.updatebibbuttons();
+          //this.mycard.updatebibbuttons();
         }
       });
       if (key == 'categories') {
@@ -708,7 +734,7 @@ export function addbibitems(itemarray) {
     bibitem.addinfo('id', (bibitem?.info?.id ?? ''));
     bibitem.addinfo('type', (bibitem?.info?.type ?? ''));
     bibitem.addinfo('abbreviation',
-                    (bibitem?.info?.abbreviation ?? ''));
+      (bibitem?.info?.abbreviation ?? ''));
     // add all the rest already there
     for (const prop in bibitem.info) {
       // skip the ones already handled
@@ -791,6 +817,10 @@ export function getAllBibData(bibcontentsitems) {
     info.possibilities = bibitem.possibilities;
     info.philpapersid = bibitem.philpapersid;
     info.extractedfrom = bibitem.extractedfrom;
+    info.collapsed = (
+      bibitem?.inner && 
+      !bibitem.inner.hasAttribute('open')
+    );
     for (const field in bibitem.fields) {
       if (!bibitem.fields[field].getVal) {
         console.error('field ' + field + ' has no getVal ');

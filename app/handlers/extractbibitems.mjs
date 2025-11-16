@@ -45,6 +45,7 @@ export default async function extractbibitems(reqbody) {
   fs.savefile(lastextractedfile, '');
   const extractedBibfile = path.join(assigndir, 'extracted-bib.txt');
   if (!fs.isfile(extractedBibfile)) return {
+    noextractedbib: true,
     bibitems: [],
     additions: [],
     success: true,

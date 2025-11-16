@@ -14,11 +14,14 @@ Forgotten passwords can also be reset for existing users.
 
 ## Top Navigation and User Maintenance
 
-After logging in, there are four buttons near the top of the page which navigate between main parts of the framework.
-The "current" and "archived" buttons will show the documents currently being worked on, and those that have been archived, respectively.
-More on using those below.
+After logging in, there are six buttons near the top of the page which navigate between main parts of the framework.
+The "current" and "archived" buttons will show lists of the documents currently being worked on, and those that have been archived, respectively.
+Clicking the name of an assignment will open its assignment page, and there are buttons for (un)archiving each assignment.
 
-The "my details" button allows each site user (typesetter or editor) to change their name or email, or request a change in their password.
+The "assignment" and "bibliography" top buttons will return the user to the assignment workflow or bibliography page for whatever assignment was most recently open during this visit to the site.
+If no assignment has been visited yet, these redirect back to the list of current assignments.
+
+The "my details" button allows each site user to change their name or email, or request a change in their password.
 Hopefully it is self-explanatory how to do these things.
 The "users" button can be used to add users to or remove users from the site.
 Any one with access to the framework can invite other users or remove them, so be judicious about who is given access to the framework itself.
@@ -28,18 +31,21 @@ This is a purely aesthetic choice.
 
 ## Typesetting Workflow
 
-The "current" page shows a listing of typesetting assignments or documents.
-
-A new document listing can be created by clicking the appropriate “add new …” button for the type of document/typesetting assignment.
+The "current" page shows a listing of typesetting assignments or documents, organized by type.
+By default, these lists do not show assignments assigned to other users, but there is a check box to see all assignments.
 (For more on configuring document types, see the [configuration](./configuration.md) documentation.)
+A new document assignment can be created by clicking the appropriate “add new …” button for the type.
+Creating a new document. or clicking the title/document id of a preexisting item, takes you to the main page for that assignment.
 
-The first step after clicking this button is to fill in the document id field in the top left of the new listing.
+With a new assignment, the first step is to choose a document id to fill the field in the top left.
 This can be anything unique to the document, a number, identifier, or even a short title, so long as it consists only of letters and digits, and is not already in use.
 A document id must be assigned before any other work on the individual document/typesetting assignment can be saved.
 The document id also typically forms the basis for the production filenames created at the end of the process, so should be chosen appropriately.
+This also assigns the document to the active user, but it can be assigned to someone else using the widget that will appear in the upper right.
 
-Below this, each listing consists of six collapsible/expandable parts: "**Metadata**", "**Uploads**", "**Bibliography**", "**Edit document**", "**Proofs**", and "**Publication**".
-A typical typesetting job would go through each of these parts in the sequence in which they are listed.
+The main page for an assignment is organized to match the typical workflow.
+There are six collapsible/expandable parts: "**Metadata**", "**Uploads**", "**Bibliography**", "**Edit document**", "**Proofs**", and "**Publication**".
+Most typesetting jobs would go through these in the sequence in which they are listed.
 Each part is discussed in more detail below.
 
 ## Metadata
@@ -61,14 +67,14 @@ This will create (or modify) files named `metadata.json` and `metadata.yaml` in 
 The latter is of the right form to be used with pandoc’s `--metadata-file` option.
 
 Saving the metadata will usually close the block but it can be reopened if need be.
-Changes to the metadata can be made later, and once saved, should be applied to any new processing of the document if everything is configured in a typical way.
+Changes to the metadata can be made later, and once saved, the changes should apply to any new processing of the document if everything is configured in a typical way.
 
 ## Uploads
 
 The uploads section has two file upload fields, one for the main document, and another one for auxiliary files (such as images for figures and the like).
 
 The main uploaded file can be any file format pandoc can convert to its own markdown format, including `.docx` (MS Word/OnlyOffice), `.epub`, `.html` (web page), `.md` (markdown), `.odt` (LibreOffice/OpenOffice), `.rtf` (Rich Text/WordPad), and `.tex` (LaTeX) formats.
-This covers most use cases, but other formats (such as the ancient pre-2003 MS Word `.doc` format) should be converted to one of these before upload.
+This covers most use cases, but other formats (such as the pre-2003 MS Word `.doc` format) should be converted to one of these before upload.
 
 Upon upload, the file is automatically converted into the markdown format used by the typesetting framework, and certain changes are applied as specified by the project configuration.
 An attempt is also made to identify a free-form bibliography or reference section if one exists, and the extracted references made available to the next step.
@@ -78,22 +84,29 @@ It can also be replaced, which will regenerate the main markdown document, but t
 
 ## Bibliography
 
-There are two buttons near the top of the Bibliography section.
+This block contains two links, each of which takes the user to a separate page where the work on the bibliography. The only difference is that one opens it in a new tab, and the other in the current tab.
+
+On the bibliography page, there are two buttons near the top.
 The typical workflow would involve using one or the other to get started.
-If a free-form bibliography was found in the main document, the "extract from main file" button will be enabled.
+If a free-form bibliography was found in the main document, the "extract from main file" can be used.
 More details on what it does can be found below.
 The other is an upload button for a separate structured bibliographic file such as a BibTeX `.bib` file, though other formats supported by pandoc's conversion methods are also allowed (`.ris`, Endnote `.xml` files, and CSL `.yaml` or `.json` files).
 These files will be converted into the format used by the framework and their entries will be added to the bibliographic listing below.
 
 The "extract" button takes each entry from the free-form bibliography found in the main upload, and parses it using the [anystyle](https://anystyle.io) ruby gem if installed on the server.
 This parser is far from perfect, and each parsed entry should be carefully checked for correctness and fixed if need be.
-It is also possible to enter an ID for a PhilPapers record, which can be used to import the bibliographic information from its database.
+
+It was intended that entries could also be imported from PhilPapers.
+This method, however, is very unreliable because of PhilPapers' draconian security measures.
 PhilPapers uses IDs which are typically 5 or 6 uppercase letters, and are somewhat random, though the first three letters often match the author's name, and the following letters often have something to do with the title, but this is not consistent.
 These five or six digits are often followed by a hyphen and a number.
 These IDs can be found at the end of the URL when visiting a certain work's page on the PhilPapers site.
-It is recommended that you have PhilPapers open in another window or tab when working on the bibliography.
+When things do work, you can enter the PhilPapers ID in the first field and then click "(re)import" to fill in the bibliographic data into the entry.
+Again, unfortunately, this method is unreliable.
+<!--It is recommended that you have PhilPapers open in another window or tab when working on the bibliography.
 If PhilPapers is used, it's best to make changes and additions on PhilPapers itself before import if information is missing or incorrect, as this benefits everyone in the profession.
 Currently only PhilPapers is supported for manual import but this may change.
+-->
 
 The format of the bibliographic entries is based on what is supported by [Citation Style Language](https://citationstyles.org/) (CSL).
 When the bibliography is saved, it is saved as a [CSL JSON](https://citeproc-js.readthedocs.io/en/latest/csl-json/markup.html) file (`bibliography.json`) which is supported by pandoc's implementation of the [citeproc](https://github.com/jgm/citeproc) citation processor library.
@@ -114,13 +127,15 @@ See the [citations section in the pandoc user's guide](https://pandoc.org/MANUAL
 The optional (and usually unused) "abbreviation" field is not a CSL field but a place to indicate that the work in question is referred to in the text with an abbreviation rather than by means of the usual author-date citations.
 When the bibliography is applied, an attempt will be made to link any occurrences of the abbreviation in the document to the corresponding bibliography entry.
 
-When all items in the list have been checked and any missing or erroneous information supplied or fixed, click the "save bibliography" button at the bottom of the block.
-In addition to saving the bibliography on the server, this will also enable another button labelled "apply to document".
+When all items in the list have been checked and any missing or erroneous information supplied or fixed, click the "save bibliography" button at the bottom of the page.
+Then the bibliography can be "applied" by clicking the "apply to document" button.
 Applying the bibliography to the document involves a search of the converted main document for what appear to be author-date citations (or abbreviations) to the entries in the bibliography, and an automatic replacement of them with pandoc-style citations.
 This process of automatic identification is far from perfect, however, and the citations should be checked individually when the document is edited.
-It is usually best to "apply" the bibliography once before the main document is edited, which is why the "Bibliography" block appears before the "Edit document" block.
+It is usually best to "apply" the bibliography only once, when the bibliography is in good shape, but before the main document is edited.
+This is why the "Bibliography" block appears before the "Edit document" block.
 
-The Bibliography section can be reopened later and entries added or changed, and such changes should be applied to the document when next processed.
+The bibliography page can be reopened later and entries added or changed, then saved.
+Such changes should be applied to the document when next processed.
 However, "re-applying" the bibliography to an already-edited main file may have unexpected results, and is probably best avoided except in exceptional circumstances.
 
 ## Edit document
@@ -156,7 +171,10 @@ The editor should then revisit the proofs page with the editor link and view the
 They should then reopen the "Edit document" section and make any necessary changes.
 Depending on circumstances, another proof set may need to be generated afterwards, or it may be time to move on to the next step.
 
-The proofs page has its own instructions about how to add comments or corrections. These instructions are visible at first by default when using the author link. Editors can also view the instructions by clicking the button for viewing them on the panel. It is typically one of the three viewing options on the panel, in addition to viewing the html or pdf versions of the proofs (unless the project is configured not to use one of these).
+The proofs page has its own instructions about how to add comments or corrections.
+These instructions are visible at first by default when using the author link.
+Editors can also view the instructions by clicking the button for viewing them on the panel.
+It is typically one of the three viewing options on the panel, in addition to viewing the html or pdf versions of the proofs (unless the project is configured not to use one of these).
 
 ## Publication
 
@@ -168,15 +186,14 @@ Some typesetting projects may only target one published version; others may post
 What files are created during this process depends once again on the [configuration](./configuration.md).
 Typically they will be the same file-types as were produced during the proofs stage, possibly with some post-processing done such as file-size or linearization optimizations.
 The framework can be configured to create a `.zip` file containing all the production files together, which will be listed for download first if created.
-If any of the produced files are plain-text files, a link will be added to view/extract them directly in the publication block.
+If any of the produced files are plain-text `.txt` files, a link will be added to view/extract them directly in the publication block.
 There they can be copied to the clipboard, which can be useful for things like extracting an abstract or references list.
 
 ## Archiving and Unarchiving Documents
 
-Documents no longer being worked on can be archived by clicking the archive button on the top right of each listing.
+Documents no longer being worked on can be archived by clicking the archive button on its listing in the current assignments page.
 They will still be available under the "archived" section and can be "unarchived" in a similar manner.
-Proofs can only be viewed for current documents, but even old proof sets will become available again if a project is unarchived.
-The main purpose of archiving is simply to make it easier to find the currently relevant documents.
+The main purpose of archiving is to make it easier to find the currently relevant documents by shortening the list shown.
 
 ## Other Documentation
 
@@ -184,5 +201,5 @@ See also the other documentation files concerning [installation](./installation.
 
 ## License
 
-Copyright 2023–2024 © Kevin C. Klement.
+Copyright 2023–2025 © Kevin C. Klement.
 This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).

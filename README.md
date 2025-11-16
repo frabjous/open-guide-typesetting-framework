@@ -69,6 +69,6 @@ This is a sequel to an earlier project entitled [journal-tools](https://bitbucke
 
 ## License
 
-Copyright 2023–2024 © [Kevin C. Klement](https://people.umass.edu/klement). This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).
+Copyright 2023–2025 © [Kevin C. Klement](https://people.umass.edu/klement). This is free software, which can be redistributed and/or modified under the terms of the [GNU General Public License (GPL), version 3](https://www.gnu.org/licenses/gpl.html).
 
 The favicon is based on [JS_Icon_Edit_White.svg](https://commons.wikimedia.org/wiki/File:JS_Icon_Edit_White.svg) by [Jstalins](https://commons.wikimedia.org/wiki/User:Stalinsunnykvj), licensed under a [Creative Commons Attribution Share-Alike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/deed.en) license.
