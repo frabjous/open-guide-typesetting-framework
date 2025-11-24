@@ -32,8 +32,8 @@ This is a purely aesthetic choice.
 ## Typesetting Workflow
 
 The "current" page shows a listing of typesetting assignments or documents, organized by type.
-By default, these lists do not show assignments assigned to other users, but there is a check box to see all assignments.
 (For more on configuring document types, see the [configuration](./configuration.md) documentation.)
+By default, these lists do not show assignments assigned to other users, but there is a check box to see all assignments.
 A new document assignment can be created by clicking the appropriate “add new …” button for the type.
 Creating a new document. or clicking the title/document id of a preexisting item, takes you to the main page for that assignment.
 
