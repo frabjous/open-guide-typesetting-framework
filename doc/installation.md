@@ -65,7 +65,7 @@ Follow these instructions to install the framework. You do not need root access 
 
   This script can be run multiple times if you wish to use the same site/server for multiple projects.
 
-  Project typesetting data is stored in `$HOME/data/ogtf` (in subdirectories using the short name of each project) by default. However, this can be changed by setting the environmental variable `OGTFDATALOCATION` to another path, e.g., `OGTFDATALOCATION=$HOME/.local/share/ogtfdata node cli/newproject.mjs`. The router, discussed below, also respects this variable.
+  Project typesetting data are stored in `$HOME/data/ogtf` (in subdirectories using the short name of each project) by default. However, this can be changed by setting the environmental variable `OGTFDATALOCATION` to another path, e.g., `OGTFDATALOCATION=$HOME/.local/share/ogtfdata node cli/newproject.mjs`. The router, discussed below, also respects this variable.
 
   Projects can also be created manually by copying an existing project in the data directory and renaming it and changing its settings files.
 
