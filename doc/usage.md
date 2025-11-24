@@ -84,7 +84,8 @@ It can also be replaced, which will regenerate the main markdown document, but t
 
 ## Bibliography
 
-This block contains two links, each of which takes the user to a separate page where the work on the bibliography. The only difference is that one opens it in a new tab, and the other in the current tab.
+This block contains two links, each of which takes the user to a separate page where the work on the bibliography is done.
+The only difference is that one opens it in a new tab, and the other in the current tab.
 
 On the bibliography page, there are two buttons near the top.
 The typical workflow would involve using one or the other to get started.
