@@ -1489,6 +1489,9 @@ function setUpHtml() {
   });
 
   w.htmld.body.addEventListener('paste', (e) => {
+    if (e.target.tagName.toLowerCase() == 'textarea') {
+      return;
+    }
     e.preventDefault();
   });
 
