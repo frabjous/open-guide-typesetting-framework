@@ -739,6 +739,7 @@ export function addbibitems(itemarray) {
     for (const prop in bibitem.info) {
       // skip the ones already handled
       if (prop == 'id' || prop == 'extractedfrom' ||
+          prop == 'collapsed' ||
           prop == 'philpapersid' || prop == 'possibilities' ||
           prop == 'abbreviation' || prop == 'type') { continue; }
       bibitem.addinfo(prop, bibitem.info[prop]);
@@ -818,7 +819,7 @@ export function getAllBibData(bibcontentsitems) {
     info.philpapersid = bibitem.philpapersid;
     info.extractedfrom = bibitem.extractedfrom;
     info.collapsed = (
-      bibitem?.inner && 
+      bibitem?.inner &&
       !bibitem.inner.hasAttribute('open')
     );
     for (const field in bibitem.fields) {
