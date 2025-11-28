@@ -83,7 +83,7 @@ export function extractBibliography(markdown) {
     ln--;
     const line = lines[ln];
     const condensed = line.toLowerCase().replace(/[^a-z]/g, '');
-    if (['bibliography', 'workscited', 'references', 'thebibliography']
+    if (['bibliography', 'workscited', 'references', 'thebibliography', 'literature']
       .includes(condensed)) {
       const bibarray = lines.slice(ln+1).filter((l) => (/[A-Z]/.test(l)));
       let savedname = '';
