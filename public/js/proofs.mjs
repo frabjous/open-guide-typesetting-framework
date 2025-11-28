@@ -1476,6 +1476,9 @@ function setUpHtml() {
   // prevent actual editing?
   w.htmld.body.addEventListener('keydown', (e) => {
     if (e.forcethrough) { return true; }
+    if (e.target.tagName.toLowerCase() == 'textarea') {
+      return true;
+    }
     if (
       ((!e.metaKey && !e.ctrlKey && !e.altKey) && (e.key.length == 1)) ||
       (e.key == 'Backspace' || e.key == 'Delete') ||
@@ -1496,6 +1499,9 @@ function setUpHtml() {
   });
 
   w.htmld.body.addEventListener('cut', (e) => {
+    if (e.target.tagName.toLowerCase() == 'textarea') {
+      return;
+    }
     e.preventDefault();
   });
 
