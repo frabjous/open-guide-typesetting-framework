@@ -50,6 +50,14 @@ export function fixAnyStyle(anystyleitems) {
       asitem["container-title"] = asitem["container-title"].trim();
     }
 
+    // strip stray ending quotes
+    if (asitem?.title) {
+      const stripped = asitem.title.replace(/[“”"]$/,'');
+      if (stripped != asitem.title && !/[“”"]/.test(stripped)) {
+        asitem.title = stripped;
+      }
+    }
+
     // fix issued date
     if (asitem?.issued) {
       let year = parseInt(asitem.issued);
@@ -87,7 +95,8 @@ export function fixAnyStyle(anystyleitems) {
       const year = asitem?.issued?.["date-parts"]?.[0]?.[0]?.toString()
         ?? 'forthcoming';
       let id = asciiize((mergednames + year).toLowerCase());
-      let letterindex = -1;
+      // start with b, helps match with citeproc
+      let letterindex = 0;
       while (ids.includes(id) && letterindex < 25) {
         letterindex++;
         const letter = letters[letterindex];
