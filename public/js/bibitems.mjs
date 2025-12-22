@@ -671,7 +671,7 @@ export function addbibitems(itemarray) {
               }
               for (const prtcl of ['von ', 'van ', 'de ', 'del ', 'der ', 'du ']) {
                 if (family.substr(0, prtcl.length) == prtcl) {
-                  nameobj["non-dropping-particle"] = prtcl;
+                  nameobj["non-dropping-particle"] = prtcl.trim();
                   family = family.substr(prtcl.length);
                 }
               }
