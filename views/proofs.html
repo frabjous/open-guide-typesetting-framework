@@ -57,6 +57,18 @@ footer {
 footer p {
   margin: 0;
 }
+#closefooterbutton {
+  display: inline-block;
+  float: right;
+  margin-left: 1rem;
+  margin-bottom: 1 rem;
+  cursor: pointer;
+}
+#closefooterbutton:hover {
+  color: var(--ogtfred);
+}
+
+
 a, a:link, a:visited {
   text-decoration: none;
   color: var(--ogtfprimary);
@@ -403,6 +415,7 @@ If you have trouble with the site, please contact either the editor who emailed 
     </div>
   </main>
   <footer>
+    <div id="closefooterbutton" title="hide footer">🗙</div>
     <p><small>The Open Guide Typesetting Framework is Copyright
       2023–2025 © <a href="https://people.umass.edu/klement"
       target="_blank">Kevin C. Klement</a>. This is free software,

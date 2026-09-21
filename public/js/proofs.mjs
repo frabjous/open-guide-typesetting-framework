@@ -1547,3 +1547,11 @@ if (w?.starton) {
     changeMode('instructions');
   }
 }
+
+// make footer x clickable
+const footercloser = document.getElementById("closefooterbutton");
+if (footercloser) {
+  footercloser.onclick = function() {
+    this.parentNode.hidden = true;
+  }
+}
