@@ -1299,6 +1299,10 @@ if (w.pdfpp > 0) {
 // SET UP PDF LISTENERS
 //
 w.pdfpages.addEventListener('keydown', function(e) {
+  // don't block arrows in comment fields
+  if (['textarea','select', 'input'].includes(e.target.tagName.toLowerCase())) {
+    return;
+  }
   const w = this.clientWidth;
   const h = this.clientHeight;
   const pageamount = (h/w.pdfpp)*0.6;
